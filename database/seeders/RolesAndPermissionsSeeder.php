@@ -165,6 +165,7 @@ class RolesAndPermissionsSeeder extends Seeder
                     $permission = Permission::firstWhere('name', $permName);
                     if ($permission) {
                         if (!$role->hasPermissionTo($permission)) {
+                            // Direct Permission
                             $role->givePermissionTo($permission);
                         }
                     }

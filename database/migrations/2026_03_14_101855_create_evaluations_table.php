@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('organization_profile', function (Blueprint $table) {
+        Schema::create('evaluations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->constrained()->cascadeOnDelete();
-            $table->enum('type', ["Charitable organization", "Civil society organization", "Voluntary educational/university institution", "Hospital", "Religious organization", "Company with a Corporate Social Responsibility (CSR) program", "Student club/association", "Environmental organization"]);
+            $table->enum('rating', [1, 2, 3, 4, 5]);
+            $table->text('comment');
+            $table->morphs('evaluable');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('organization_profile');
+        Schema::dropIfExists('evaluations');
     }
 };

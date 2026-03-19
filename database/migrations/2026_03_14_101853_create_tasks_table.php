@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('volunteers', function (Blueprint $table) {
+        Schema::create('tasks', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('title');
+            $table->unsignedBigInteger('volunteer_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('opportunity_id')->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('profile_id')->constrained()->cascadeOnDelete();
-            $table->enum('experience_years', ["one year", "two years", "three years", "four years", "five years", "More than five years"]);
-            $table->enum('status', ["active", "In_active", "pending", "blocked"]);
-            $table->json('availability');
-            $table->string('languages');
+            $table->enum('status', ["in progress", "active", "completed", "cancelled"]);
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('volunteers');
+        Schema::dropIfExists('tasks');
     }
 };
