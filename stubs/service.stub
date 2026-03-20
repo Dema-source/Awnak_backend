@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Services;
+
+use App\Repositories\Interfaces\{{interfaceName}};
+
+class {{serviceName}}
+{
+    public function __construct(
+        protected {{interfaceName}} $repository
+    ) {}
+
+    public function getAll(array $filters = [], int $perPage = 15)
+    {
+        return $this->repository->getAll($filters, $perPage);
+    }
+
+    public function findById(int|string $id)
+    {
+        return $this->repository->findById($id);
+    }
+
+    public function create(array $data)
+    {
+        return $this->repository->create($data);
+    }
+
+    public function update(int|string $id, array $data)
+    {
+        return $this->repository->update($id, $data);
+    }
+
+    public function delete(int|string $id): bool
+    {
+        return $this->repository->delete($id);
+    }
+}

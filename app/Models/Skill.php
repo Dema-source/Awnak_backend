@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * App\Models\Skill
@@ -22,6 +23,8 @@ use Illuminate\Support\Carbon;
 
 class Skill extends Model
 {
+        use HasTranslations;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -30,6 +33,9 @@ class Skill extends Model
     protected $fillable = [
         'name',
     ];
+
+    public array $translatable = ['name'];
+
 
     /**
      * All profiles that has the Skill
