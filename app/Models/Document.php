@@ -9,9 +9,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
 
 /**
- * App/Model/Evaluation
- * Represents a piece of feedback left by a User.
- * This model is "Polymorphic", meaning it can belong to different parent entities
+ * App/Model/Document
+ * Represents a document added by User - Volunteer or Organization - 
  * (like an Volunteer or a Task) using the same database table.
  * 
  * @property int $id
