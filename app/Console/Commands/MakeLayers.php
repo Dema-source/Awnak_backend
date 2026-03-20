@@ -66,7 +66,7 @@ class MakeLayers extends Command
 
         $this->writeFile(
             $controllerPath,
-            $this->buildStub('controller-api.stub', [
+            $this->buildStub('controllerrepositoryapi.stub', [
                 'controllerName' => $controllerName,
                 'serviceName' => $serviceName,
                 'modelName' => $modelName,
