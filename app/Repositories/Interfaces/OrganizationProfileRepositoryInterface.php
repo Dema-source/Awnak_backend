@@ -3,14 +3,14 @@
 namespace App\Repositories\Interfaces;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use App\Models\{{modelName}};
+use App\Models\OrganizationProfile;
 
 /**
- * Interface {{interfaceName}}
+ * Interface OrganizationProfileRepositoryInterface
  *
  * Defines the contract for CRUD operations.
  */
-interface {{interfaceName}}
+interface OrganizationProfileRepositoryInterface
 {
     /**
      * Retrieve a paginated list of records with optional provided conditions.
@@ -25,26 +25,26 @@ interface {{interfaceName}}
      * Find a record by its ID.
      *
      * @param int|string $id The primary key value.
-     * @return {{modelName}} 
+     * @return OrganizationProfile 
      */
-    public function findById(int|string $id): {{modelName}};
+    public function findById(int|string $id): OrganizationProfile;
 
     /**
      * Create a new record using the given data array.
      *
      * @param array $data.
-     * @return {{modelName}}
+     * @return OrganizationProfile
      */
-    public function create(array $data): {{modelName}};
+    public function create(array $data): OrganizationProfile;
 
     /**
      * Update an existing record by ID with a given data.
      *
      * @param int|string $id The primary key value.
      * @param array $data.
-     * @return {{modelName}}
+     * @return OrganizationProfile
      */
-    public function update(int|string $id, array $data): {{modelName}};
+    public function update(int|string $id, array $data): OrganizationProfile;
 
     /**
      * Delete a record by ID.

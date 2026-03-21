@@ -2,21 +2,21 @@
 
 namespace App\Services;
 
-use App\Repositories\Interfaces\{{interfaceName}};
+use App\Repositories\Interfaces\TaskHourRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
- * Service layer for handling business logic related to the "{{interfaceName}}" repository.
+ * Service layer for handling business logic related to the "TaskHourRepositoryInterface" repository.
  */
-class {{serviceName}}
+class TaskHourService
 {
     /**
-     * {{serviceName}} Constructor.
+     * TaskHourService Constructor.
      *
-     * @param \App\Repositories\Interfaces\{{interfaceName}} $repository
+     * @param \App\Repositories\Interfaces\TaskHourRepositoryInterface $repository
      */
     public function __construct(
-        protected {{interfaceName}} $repository
+        protected TaskHourRepositoryInterface $repository
     ) {}
 
     /**

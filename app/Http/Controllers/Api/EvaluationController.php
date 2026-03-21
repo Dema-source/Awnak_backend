@@ -3,25 +3,25 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\{{modelName}}\{{storeRequestName}};
-use App\Http\Requests\Api\{{modelName}}\{{updateRequestName}};
-use App\Services\{{serviceName}};
+use App\Http\Requests\Api\Evaluation\StoreEvaluationRequest;
+use App\Http\Requests\Api\Evaluation\UpdateEvaluationRequest;
+use App\Services\EvaluationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class {{controllerName}} extends Controller
+class EvaluationController extends Controller
 {
     /**
-     * {{controllerName}} Constructor.
+     * EvaluationController Constructor.
      *
-     * @param {{serviceName}} $service.
+     * @param EvaluationService $service.
      */
     public function __construct(
-        protected {{serviceName}} $service
+        protected EvaluationService $service
     ) {}
 
     /**
-     * Display a paginated listing of {{modelName}}s.
+     * Display a paginated listing of Evaluations.
      *
      * @param Request $request The HTTP request containing query filters.
      * @return JsonResponse
@@ -33,24 +33,24 @@ class {{controllerName}} extends Controller
 
         $data = $this->service->getAll($filters, $perPage);
 
-        return $this->paginate($data, '{{modelName}} list fetched successfully');
+        return $this->paginate($data, 'Evaluation list fetched successfully');
     }
 
     /**
-     * Store a newly created {{modelName}} in storage.
+     * Store a newly created Evaluation in storage.
      *
-     * @param {{storeRequestName}} $request The validated form request.
+     * @param StoreEvaluationRequest $request The validated form request.
      * @return JsonResponse
      */
-    public function store({{storeRequestName}} $request): JsonResponse
+    public function store(StoreEvaluationRequest $request): JsonResponse
     {
         $item = $this->service->create($request->validated());
 
-        return $this->success($item, '{{modelName}} created successfully');
+        return $this->success($item, 'Evaluation created successfully');
     }
 
     /**
-     * Display the specified {{modelName}}.
+     * Display the specified Evaluation.
      *
      * @param int|string $id The primary key value.
      * @return JsonResponse
@@ -59,25 +59,25 @@ class {{controllerName}} extends Controller
     {
         $item = $this->service->findById($id);
 
-        return $this->success($item, '{{modelName}} fetched successfully');
+        return $this->success($item, 'Evaluation fetched successfully');
     }
 
     /**
-     * Update the specified {{modelName}} in storage.
+     * Update the specified Evaluation in storage.
      * 
-     * @param {{updateRequestName}} $request Validated input data.
+     * @param UpdateEvaluationRequest $request Validated input data.
      * @param int|string $id The primary key value.
      * @return JsonResponse
      */
-    public function update({{updateRequestName}} $request, int|string $id): JsonResponse
+    public function update(UpdateEvaluationRequest $request, int|string $id): JsonResponse
     {
         $item = $this->service->update($id, $request->validated());
 
-        return $this->success($item, '{{modelName}} updated successfully');
+        return $this->success($item, 'Evaluation updated successfully');
     }
 
     /**
-     * Remove the specified {{modelName}} from storage.
+     * Remove the specified Evaluation from storage.
      *
      * @param int|string $id The primary key value.
      * @return JsonResponse
@@ -86,6 +86,6 @@ class {{controllerName}} extends Controller
     {
         $this->service->delete($id);
 
-        return $this->success(null, '{{modelName}} deleted successfully');
+        return $this->success(null, 'Evaluation deleted successfully');
     }
 }

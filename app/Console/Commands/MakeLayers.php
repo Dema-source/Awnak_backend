@@ -23,27 +23,34 @@ class MakeLayers extends Command
         $interfaceName = "{$className}Interface";
         $serviceName = "{$baseName}Service";
         $controllerName = "{$baseName}Controller";
+        $storeRequestName = "Store{$baseName}Request";
+        $updateRequestName = "Update{$baseName}Request";
 
         $interfaceDir = app_path('Repositories/Interfaces');
         $repositoryDir = app_path('Repositories/Eloquent');
         $serviceDir = app_path('Services');
         $controllerDir = app_path('Http/Controllers/Api');
+        $RequestDir = app_path("Http/Requests/Api/{$baseName}");
         $providerPath = app_path('Providers/AppServiceProvider.php');
 
         $interfacePath = "{$interfaceDir}/{$interfaceName}.php";
         $repositoryPath = "{$repositoryDir}/{$className}.php";
         $servicePath = "{$serviceDir}/{$serviceName}.php";
         $controllerPath = "{$controllerDir}/{$controllerName}.php";
+        $storeRequestPath = "{$RequestDir}/{$storeRequestName}.php";
+        $updateRequestPath = "{$RequestDir}/{$updateRequestName}.php";
 
         File::ensureDirectoryExists($interfaceDir);
         File::ensureDirectoryExists($repositoryDir);
         File::ensureDirectoryExists($serviceDir);
         File::ensureDirectoryExists($controllerDir);
+        File::ensureDirectoryExists($RequestDir);
 
         $this->writeFile(
             $interfacePath,
             $this->buildStub('repository-interface.stub', [
                 'interfaceName' => $interfaceName,
+                'modelName' => $modelName,
             ])
         );
 
@@ -65,11 +72,28 @@ class MakeLayers extends Command
         );
 
         $this->writeFile(
+            $storeRequestPath,
+            $this->buildStub('storerequest.stub', [
+                'storeRequestName' => $storeRequestName,
+                'modelName' => $modelName,
+            ])
+        );
+
+        $this->writeFile(
+            $updateRequestPath,
+            $this->buildStub('updaterequest.stub', [
+                'updateRequestName' => $updateRequestName,
+                'modelName' => $modelName,
+            ])
+        );
+        $this->writeFile(
             $controllerPath,
             $this->buildStub('controllerrepositoryapi.stub', [
                 'controllerName' => $controllerName,
                 'serviceName' => $serviceName,
                 'modelName' => $modelName,
+                'storeRequestName' => $storeRequestName,
+                'updateRequestName' => $updateRequestName,
             ])
         );
 

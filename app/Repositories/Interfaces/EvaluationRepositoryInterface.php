@@ -3,14 +3,14 @@
 namespace App\Repositories\Interfaces;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use App\Models\{{modelName}};
+use App\Models\Evaluation;
 
 /**
- * Interface {{interfaceName}}
+ * Interface EvaluationRepositoryInterface
  *
  * Defines the contract for CRUD operations.
  */
-interface {{interfaceName}}
+interface EvaluationRepositoryInterface
 {
     /**
      * Retrieve a paginated list of records with optional provided conditions.
@@ -25,26 +25,26 @@ interface {{interfaceName}}
      * Find a record by its ID.
      *
      * @param int|string $id The primary key value.
-     * @return {{modelName}} 
+     * @return Evaluation 
      */
-    public function findById(int|string $id): {{modelName}};
+    public function findById(int|string $id): Evaluation;
 
     /**
      * Create a new record using the given data array.
      *
      * @param array $data.
-     * @return {{modelName}}
+     * @return Evaluation
      */
-    public function create(array $data): {{modelName}};
+    public function create(array $data): Evaluation;
 
     /**
      * Update an existing record by ID with a given data.
      *
      * @param int|string $id The primary key value.
      * @param array $data.
-     * @return {{modelName}}
+     * @return Evaluation
      */
-    public function update(int|string $id, array $data): {{modelName}};
+    public function update(int|string $id, array $data): Evaluation;
 
     /**
      * Delete a record by ID.

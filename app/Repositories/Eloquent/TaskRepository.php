@@ -2,19 +2,19 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Models\{{modelName}};
-use App\Repositories\Interfaces\{{interfaceName}};
+use App\Models\Task;
+use App\Repositories\Interfaces\TaskRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
-class {{className}} implements {{interfaceName}}
+class TaskRepository implements TaskRepositoryInterface
 {
     /**  
      * Dependency injection of the Eloquent model.  
      *  
-     * @param {{modelName}} $model  
+     * @param Task $model  
      */ 
     public function __construct(
-        protected {{modelName}} $model
+        protected Task $model
     ) {}
 
     /**  
@@ -41,9 +41,9 @@ class {{className}} implements {{interfaceName}}
      * Retrieve a single record by ID or throw an exception if not found.  
      *  
      * @param int|string $id  
-     * @return {{modelName}}  
+     * @return Task  
      */ 
-    public function findById(int|string $id): {{modelName}}
+    public function findById(int|string $id): Task
     {
         return $this->model->findOrFail($id);
     }
@@ -52,9 +52,9 @@ class {{className}} implements {{interfaceName}}
      * Create a new record in the database.  
      *  
      * @param array $data Mass-Assignment Attributes for creating the model.
-     * @return {{modelName}}  
+     * @return Task  
      */
-    public function create(array $data): {{modelName}}
+    public function create(array $data): Task
     {
         return $this->model->create($data);
     }
@@ -64,9 +64,9 @@ class {{className}} implements {{interfaceName}}
      *
      * @param int|string $id The primary key value.
      * @param array $data.
-     * @return {{modelName}}
+     * @return Task
      */
-    public function update(int|string $id, array $data): {{modelName}}
+    public function update(int|string $id, array $data): Task
     {
         $item = $this->findById($id);
         $item->update($data);

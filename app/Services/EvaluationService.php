@@ -2,21 +2,21 @@
 
 namespace App\Services;
 
-use App\Repositories\Interfaces\{{interfaceName}};
+use App\Repositories\Interfaces\EvaluationRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
- * Service layer for handling business logic related to the "{{interfaceName}}" repository.
+ * Service layer for handling business logic related to the "EvaluationRepositoryInterface" repository.
  */
-class {{serviceName}}
+class EvaluationService
 {
     /**
-     * {{serviceName}} Constructor.
+     * EvaluationService Constructor.
      *
-     * @param \App\Repositories\Interfaces\{{interfaceName}} $repository
+     * @param \App\Repositories\Interfaces\EvaluationRepositoryInterface $repository
      */
     public function __construct(
-        protected {{interfaceName}} $repository
+        protected EvaluationRepositoryInterface $repository
     ) {}
 
     /**

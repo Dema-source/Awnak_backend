@@ -2,19 +2,19 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Models\{{modelName}};
-use App\Repositories\Interfaces\{{interfaceName}};
+use App\Models\Application;
+use App\Repositories\Interfaces\ApplicationRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
-class {{className}} implements {{interfaceName}}
+class ApplicationRepository implements ApplicationRepositoryInterface
 {
     /**  
      * Dependency injection of the Eloquent model.  
      *  
-     * @param {{modelName}} $model  
+     * @param Application $model  
      */ 
     public function __construct(
-        protected {{modelName}} $model
+        protected Application $model
     ) {}
 
     /**  
@@ -41,9 +41,9 @@ class {{className}} implements {{interfaceName}}
      * Retrieve a single record by ID or throw an exception if not found.  
      *  
      * @param int|string $id  
-     * @return {{modelName}}  
+     * @return Application  
      */ 
-    public function findById(int|string $id): {{modelName}}
+    public function findById(int|string $id): Application
     {
         return $this->model->findOrFail($id);
     }
@@ -52,9 +52,9 @@ class {{className}} implements {{interfaceName}}
      * Create a new record in the database.  
      *  
      * @param array $data Mass-Assignment Attributes for creating the model.
-     * @return {{modelName}}  
+     * @return Application  
      */
-    public function create(array $data): {{modelName}}
+    public function create(array $data): Application
     {
         return $this->model->create($data);
     }
@@ -64,9 +64,9 @@ class {{className}} implements {{interfaceName}}
      *
      * @param int|string $id The primary key value.
      * @param array $data.
-     * @return {{modelName}}
+     * @return Application
      */
-    public function update(int|string $id, array $data): {{modelName}}
+    public function update(int|string $id, array $data): Application
     {
         $item = $this->findById($id);
         $item->update($data);

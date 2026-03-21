@@ -2,21 +2,21 @@
 
 namespace App\Services;
 
-use App\Repositories\Interfaces\{{interfaceName}};
+use App\Repositories\Interfaces\CertificateRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
- * Service layer for handling business logic related to the "{{interfaceName}}" repository.
+ * Service layer for handling business logic related to the "CertificateRepositoryInterface" repository.
  */
-class {{serviceName}}
+class CertificateService
 {
     /**
-     * {{serviceName}} Constructor.
+     * CertificateService Constructor.
      *
-     * @param \App\Repositories\Interfaces\{{interfaceName}} $repository
+     * @param \App\Repositories\Interfaces\CertificateRepositoryInterface $repository
      */
     public function __construct(
-        protected {{interfaceName}} $repository
+        protected CertificateRepositoryInterface $repository
     ) {}
 
     /**

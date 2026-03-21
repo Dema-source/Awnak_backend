@@ -2,21 +2,21 @@
 
 namespace App\Services;
 
-use App\Repositories\Interfaces\{{interfaceName}};
+use App\Repositories\Interfaces\LocationRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
- * Service layer for handling business logic related to the "{{interfaceName}}" repository.
+ * Service layer for handling business logic related to the "LocationRepositoryInterface" repository.
  */
-class {{serviceName}}
+class LocationService
 {
     /**
-     * {{serviceName}} Constructor.
+     * LocationService Constructor.
      *
-     * @param \App\Repositories\Interfaces\{{interfaceName}} $repository
+     * @param \App\Repositories\Interfaces\LocationRepositoryInterface $repository
      */
     public function __construct(
-        protected {{interfaceName}} $repository
+        protected LocationRepositoryInterface $repository
     ) {}
 
     /**

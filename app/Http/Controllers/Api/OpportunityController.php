@@ -3,25 +3,25 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\{{modelName}}\{{storeRequestName}};
-use App\Http\Requests\Api\{{modelName}}\{{updateRequestName}};
-use App\Services\{{serviceName}};
+use App\Http\Requests\Api\Opportunity\StoreOpportunityRequest;
+use App\Http\Requests\Api\Opportunity\UpdateOpportunityRequest;
+use App\Services\OpportunityService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class {{controllerName}} extends Controller
+class OpportunityController extends Controller
 {
     /**
-     * {{controllerName}} Constructor.
+     * OpportunityController Constructor.
      *
-     * @param {{serviceName}} $service.
+     * @param OpportunityService $service.
      */
     public function __construct(
-        protected {{serviceName}} $service
+        protected OpportunityService $service
     ) {}
 
     /**
-     * Display a paginated listing of {{modelName}}s.
+     * Display a paginated listing of Opportunitys.
      *
      * @param Request $request The HTTP request containing query filters.
      * @return JsonResponse
@@ -33,24 +33,24 @@ class {{controllerName}} extends Controller
 
         $data = $this->service->getAll($filters, $perPage);
 
-        return $this->paginate($data, '{{modelName}} list fetched successfully');
+        return $this->paginate($data, 'Opportunity list fetched successfully');
     }
 
     /**
-     * Store a newly created {{modelName}} in storage.
+     * Store a newly created Opportunity in storage.
      *
-     * @param {{storeRequestName}} $request The validated form request.
+     * @param StoreOpportunityRequest $request The validated form request.
      * @return JsonResponse
      */
-    public function store({{storeRequestName}} $request): JsonResponse
+    public function store(StoreOpportunityRequest $request): JsonResponse
     {
         $item = $this->service->create($request->validated());
 
-        return $this->success($item, '{{modelName}} created successfully');
+        return $this->success($item, 'Opportunity created successfully');
     }
 
     /**
-     * Display the specified {{modelName}}.
+     * Display the specified Opportunity.
      *
      * @param int|string $id The primary key value.
      * @return JsonResponse
@@ -59,25 +59,25 @@ class {{controllerName}} extends Controller
     {
         $item = $this->service->findById($id);
 
-        return $this->success($item, '{{modelName}} fetched successfully');
+        return $this->success($item, 'Opportunity fetched successfully');
     }
 
     /**
-     * Update the specified {{modelName}} in storage.
+     * Update the specified Opportunity in storage.
      * 
-     * @param {{updateRequestName}} $request Validated input data.
+     * @param UpdateOpportunityRequest $request Validated input data.
      * @param int|string $id The primary key value.
      * @return JsonResponse
      */
-    public function update({{updateRequestName}} $request, int|string $id): JsonResponse
+    public function update(UpdateOpportunityRequest $request, int|string $id): JsonResponse
     {
         $item = $this->service->update($id, $request->validated());
 
-        return $this->success($item, '{{modelName}} updated successfully');
+        return $this->success($item, 'Opportunity updated successfully');
     }
 
     /**
-     * Remove the specified {{modelName}} from storage.
+     * Remove the specified Opportunity from storage.
      *
      * @param int|string $id The primary key value.
      * @return JsonResponse
@@ -86,6 +86,6 @@ class {{controllerName}} extends Controller
     {
         $this->service->delete($id);
 
-        return $this->success(null, '{{modelName}} deleted successfully');
+        return $this->success(null, 'Opportunity deleted successfully');
     }
 }

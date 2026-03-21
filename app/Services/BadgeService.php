@@ -2,21 +2,21 @@
 
 namespace App\Services;
 
-use App\Repositories\Interfaces\{{interfaceName}};
+use App\Repositories\Interfaces\BadgeRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
- * Service layer for handling business logic related to the "{{interfaceName}}" repository.
+ * Service layer for handling business logic related to the "BadgeRepositoryInterface" repository.
  */
-class {{serviceName}}
+class BadgeService
 {
     /**
-     * {{serviceName}} Constructor.
+     * BadgeService Constructor.
      *
-     * @param \App\Repositories\Interfaces\{{interfaceName}} $repository
+     * @param \App\Repositories\Interfaces\BadgeRepositoryInterface $repository
      */
     public function __construct(
-        protected {{interfaceName}} $repository
+        protected BadgeRepositoryInterface $repository
     ) {}
 
     /**

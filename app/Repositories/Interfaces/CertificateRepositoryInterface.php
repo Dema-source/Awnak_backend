@@ -3,14 +3,14 @@
 namespace App\Repositories\Interfaces;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use App\Models\{{modelName}};
+use App\Models\Certificate;
 
 /**
- * Interface {{interfaceName}}
+ * Interface CertificateRepositoryInterface
  *
  * Defines the contract for CRUD operations.
  */
-interface {{interfaceName}}
+interface CertificateRepositoryInterface
 {
     /**
      * Retrieve a paginated list of records with optional provided conditions.
@@ -25,26 +25,26 @@ interface {{interfaceName}}
      * Find a record by its ID.
      *
      * @param int|string $id The primary key value.
-     * @return {{modelName}} 
+     * @return Certificate 
      */
-    public function findById(int|string $id): {{modelName}};
+    public function findById(int|string $id): Certificate;
 
     /**
      * Create a new record using the given data array.
      *
      * @param array $data.
-     * @return {{modelName}}
+     * @return Certificate
      */
-    public function create(array $data): {{modelName}};
+    public function create(array $data): Certificate;
 
     /**
      * Update an existing record by ID with a given data.
      *
      * @param int|string $id The primary key value.
      * @param array $data.
-     * @return {{modelName}}
+     * @return Certificate
      */
-    public function update(int|string $id, array $data): {{modelName}};
+    public function update(int|string $id, array $data): Certificate;
 
     /**
      * Delete a record by ID.
