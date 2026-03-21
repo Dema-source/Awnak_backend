@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * App/Model/Evaluation
@@ -26,6 +27,9 @@ use Illuminate\Support\Carbon;
 
 class Evaluation extends Model
 {
+
+    use HasTranslations;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -33,6 +37,15 @@ class Evaluation extends Model
      */
     protected $fillable = [
         'user_id',
+        'rating',
+        'comment',
+    ];
+
+    /**
+     * Fields to be translated.
+     * @var array
+     */
+    public array $translatable = [
         'rating',
         'comment',
     ];

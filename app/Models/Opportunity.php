@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * App\Models\Opportunity
@@ -32,7 +33,8 @@ use Illuminate\Support\Carbon;
 
 class Opportunity extends Model
 {
-    use HasDocuments;
+
+    use HasDocuments, HasTranslations;
 
     /**
      * The attributes that are mass assignable.
@@ -43,6 +45,19 @@ class Opportunity extends Model
         'title',
         'organization_profile_id',
         'location_id',
+        'expected_duration',
+        'start_date',
+        'end_date',
+        'required_volunteer',
+        'status',
+    ];
+
+    /**
+     * Fields to be translated.
+     * @var array
+     */
+    public array $translatable = [
+        'title',
         'expected_duration',
         'start_date',
         'end_date',

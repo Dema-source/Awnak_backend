@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * App\Models\Application
@@ -25,6 +26,9 @@ use Illuminate\Support\Carbon;
 
 class Application extends Model
 {
+
+    use HasTranslations;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -34,6 +38,14 @@ class Application extends Model
         'volunteer_id',
         'opportunity_id',
         'status',
+    ];
+
+    /**
+     * Fields to be translated.
+     * @var array
+     */
+    public array $translatable = [
+        'status'
     ];
 
     /**

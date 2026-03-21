@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * App\Models\Skill
@@ -30,7 +31,7 @@ use Illuminate\Support\Carbon;
 
 class Volunteer extends Model
 {
-    use HasEvaluates, HasDocuments;
+    use HasEvaluates, HasDocuments, HasTranslations;
 
     /**
      * The attributes that are mass assignable.
@@ -39,6 +40,17 @@ class Volunteer extends Model
      */
     protected $fillable = [
         'profile_id',
+        'experience_years',
+        'status',
+        'availability',
+        'languages',
+    ];
+
+    /**
+     * Fields to be translated.
+     * @var array
+     */
+    public array $translatable = [
         'experience_years',
         'status',
         'availability',

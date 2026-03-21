@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Spatie\Translatable\HasTranslations;
 
 
 /**
@@ -23,6 +24,9 @@ use Illuminate\Support\Carbon;
 
 class TaskHour extends Model
 {
+
+    use HasTranslations;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -30,6 +34,14 @@ class TaskHour extends Model
      */
     protected $fillable = [
         'task_id',
+        'hours',
+    ];
+
+    /**
+     * Fields to be translated.
+     * @var array
+     */
+    public array $translatable = [
         'hours',
     ];
 
