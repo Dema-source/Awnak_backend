@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
+use Spatie\Translatable\HasTranslations;
 
 
 /**
@@ -28,7 +29,8 @@ use Illuminate\Support\Carbon;
 
 class Task extends Model
 {
-    use HasEvaluates;
+    use HasEvaluates, HasTranslations;
+
 
     /**
      * The attributes that are mass assignable.
@@ -40,6 +42,15 @@ class Task extends Model
         'volunteer_id',
         'opportunity_id',
         'profile_id',
+        'status',
+    ];
+
+    /**
+     * Fields to be translated.
+     * @var array
+     */
+    public array $translatable = [
+        'title',
         'status',
     ];
 

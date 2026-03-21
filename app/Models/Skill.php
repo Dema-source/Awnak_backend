@@ -23,7 +23,7 @@ use Spatie\Translatable\HasTranslations;
 
 class Skill extends Model
 {
-        use HasTranslations;
+    use HasTranslations;
 
     /**
      * The attributes that are mass assignable.
@@ -40,7 +40,7 @@ class Skill extends Model
      */
     public array $translatable = [
         'name'
-        ];
+    ];
 
 
     /**

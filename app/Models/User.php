@@ -14,6 +14,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Carbon;
+use Spatie\Translatable\HasTranslations;
 
 
 /**
@@ -37,7 +38,8 @@ class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory>
      */
-    use HasRoles, HasFactory, Notifiable, HasApiTokens;
+    use HasRoles, HasFactory, Notifiable, HasApiTokens, HasTranslations;
+
 
     /**
      * The attributes that are mass assignable.
@@ -47,6 +49,18 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'phone',
+        'address',
+    ];
+
+    /**
+     * Fields to be translated.
+     * @var array
+     */
+    public array $translatable = [
         'name',
         'email',
         'password',

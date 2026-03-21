@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * App\Models\OrgaizationProfile
@@ -24,6 +25,9 @@ use Illuminate\Support\Carbon;
 
 class OrgaizationProfile extends Model
 {
+
+    use HasTranslations;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -32,6 +36,14 @@ class OrgaizationProfile extends Model
     protected $fillable = [
         'user_id',
         'type',
+    ];
+
+    /**
+     * Fields to be translated.
+     * @var array
+     */
+    public array $translatable = [
+        'type'
     ];
 
     /**

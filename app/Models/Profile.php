@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * App\Models\Profile
@@ -28,6 +29,9 @@ use Illuminate\Support\Carbon;
  */
 class Profile extends Model
 {
+
+    use HasTranslations;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -35,6 +39,16 @@ class Profile extends Model
      */
     protected $fillable = [
         'user_id',
+        'bio',
+        'age',
+        'gender',
+    ];
+
+    /**
+     * Fields to be translated.
+     * @var array
+     */
+    public array $translatable = [
         'bio',
         'age',
         'gender',
