@@ -34,7 +34,13 @@ class Skill extends Model
         'name',
     ];
 
-    public array $translatable = ['name'];
+    /**
+     * Fields to be translated.
+     * @var array
+     */
+    public array $translatable = [
+        'name'
+        ];
 
 
     /**

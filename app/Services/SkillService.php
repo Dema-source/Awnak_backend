@@ -2,21 +2,21 @@
 
 namespace App\Services;
 
-use App\Repositories\Interfaces\{{interfaceName}};
+use App\Repositories\Interfaces\SkillRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
- * Service layer for handling business logic related to the "{{interfaceName}}" repository.
+ * Service layer for handling business logic related to the "SkillRepositoryInterface" repository.
  */
-class {{serviceName}}
+class SkillService
 {
     /**
-     * {{serviceName}} Constructor.
+     * SkillService Constructor.
      *
-     * @param \App\Repositories\Interfaces\{{interfaceName}} $repository
+     * @param \App\Repositories\Interfaces\SkillRepositoryInterface $repository
      */
     public function __construct(
-        protected {{interfaceName}} $repository
+        protected SkillRepositoryInterface $repository
     ) {}
 
     /**

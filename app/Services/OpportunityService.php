@@ -2,21 +2,21 @@
 
 namespace App\Services;
 
-use App\Repositories\Interfaces\{{interfaceName}};
+use App\Repositories\Interfaces\OpportunityRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
- * Service layer for handling business logic related to the "{{interfaceName}}" repository.
+ * Service layer for handling business logic related to the "OpportunityRepositoryInterface" repository.
  */
-class {{serviceName}}
+class OpportunityService
 {
     /**
-     * {{serviceName}} Constructor.
+     * OpportunityService Constructor.
      *
-     * @param \App\Repositories\Interfaces\{{interfaceName}} $repository
+     * @param \App\Repositories\Interfaces\OpportunityRepositoryInterface $repository
      */
     public function __construct(
-        protected {{interfaceName}} $repository
+        protected OpportunityRepositoryInterface $repository
     ) {}
 
     /**

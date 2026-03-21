@@ -2,6 +2,36 @@
 
 namespace App\Providers;
 
+use App\Repositories\Interfaces\DocumentRepositoryInterface;
+use App\Repositories\Eloquent\DocumentRepository;
+use App\Repositories\Interfaces\EvaluationRepositoryInterface;
+use App\Repositories\Eloquent\EvaluationRepository;
+use App\Repositories\Interfaces\TaskHourRepositoryInterface;
+use App\Repositories\Eloquent\TaskHourRepository;
+use App\Repositories\Interfaces\TaskRepositoryInterface;
+use App\Repositories\Eloquent\TaskRepository;
+use App\Repositories\Interfaces\ApplicationRepositoryInterface;
+use App\Repositories\Eloquent\ApplicationRepository;
+use App\Repositories\Interfaces\LocationRepositoryInterface;
+use App\Repositories\Eloquent\LocationRepository;
+use App\Repositories\Interfaces\OpportunityRepositoryInterface;
+use App\Repositories\Eloquent\OpportunityRepository;
+use App\Repositories\Interfaces\BadgeRepositoryInterface;
+use App\Repositories\Eloquent\BadgeRepository;
+use App\Repositories\Interfaces\CertificateRepositoryInterface;
+use App\Repositories\Eloquent\CertificateRepository;
+use App\Repositories\Interfaces\VolunteerRepositoryInterface;
+use App\Repositories\Eloquent\VolunteerRepository;
+use App\Repositories\Interfaces\SkillRepositoryInterface;
+use App\Repositories\Eloquent\SkillRepository;
+use App\Repositories\Interfaces\OrganizationProfileRepositoryInterface;
+use App\Repositories\Eloquent\OrganizationProfileRepository;
+use App\Repositories\Interfaces\ProfileRepositoryInterface;
+use App\Repositories\Eloquent\ProfileRepository;
+use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\Eloquent\UserRepository;
+use App\Repositories\Interfaces\BagdeRepositoryInterface;
+use App\Repositories\Eloquent\BagdeRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,6 +41,21 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(DocumentRepositoryInterface::class, DocumentRepository::class);
+        $this->app->bind(EvaluationRepositoryInterface::class, EvaluationRepository::class);
+        $this->app->bind(TaskHourRepositoryInterface::class, TaskHourRepository::class);
+        $this->app->bind(TaskRepositoryInterface::class, TaskRepository::class);
+        $this->app->bind(ApplicationRepositoryInterface::class, ApplicationRepository::class);
+        $this->app->bind(LocationRepositoryInterface::class, LocationRepository::class);
+        $this->app->bind(OpportunityRepositoryInterface::class, OpportunityRepository::class);
+        $this->app->bind(BadgeRepositoryInterface::class, BadgeRepository::class);
+        $this->app->bind(CertificateRepositoryInterface::class, CertificateRepository::class);
+        $this->app->bind(VolunteerRepositoryInterface::class, VolunteerRepository::class);
+        $this->app->bind(SkillRepositoryInterface::class, SkillRepository::class);
+        $this->app->bind(OrganizationProfileRepositoryInterface::class, OrganizationProfileRepository::class);
+        $this->app->bind(ProfileRepositoryInterface::class, ProfileRepository::class);
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(BagdeRepositoryInterface::class, BagdeRepository::class);
         //
     }
 
