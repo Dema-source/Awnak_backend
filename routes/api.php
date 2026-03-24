@@ -43,23 +43,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('taskHours', TaskHourController::class);
     Route::apiResource('taskHours', EvaluationController::class);
     Route::apiResource('taskHours', DocumentController::class);
-});
-
-
-
-
 
 
 
 // Roles & Permissions
-// isAdmin middleware
-Route::post('assign-permission-to-user', [RolePermissionController::class, 'assign_permission_to_user']);
-Route::post('revoke-permission-to-user', [RolePermissionController::class, 'revoke_permission_to_user']);
+// if($user>hasRole('super_admin'))
+Route::post('assign-permission-to-role/{permission}/{role}', [RolePermissionController::class, 'assignPermissionToRole']);
+Route::post('remove-permission-from-role/{permission}/{role}', [RolePermissionController::class, 'removePermissionFromRole']);
 
-Route::post('assign-permission-to-role', [RolePermissionController::class, 'assign_permission_to_role']);
-// Route::post('revoke-permission-to-role', [RolePermissionController::class, 'revoke_permission_to_role']);
+Route::post('assign-role-to-user/{role}/{user}', [RolePermissionController::class, 'assignRoleToUser']);
+Route::post('remove-role-from-user/{user}/{role}', [RolePermissionController::class, 'revokeRoleFromUser']);
+// (Granting/ٌRevoking) permissions to the user individually.
+Route::post('assign-permission-to-user/{user}/{permission}', [RolePermissionController::class, 'assignPermissionToUser']);
+Route::post('remove-permission-from-user/{user}/{permission}', [RolePermissionController::class, 'revokePermissionFromUser']);
 
-Route::post('assign-role-to-user', [RolePermissionController::class, 'assign_role_to_user']);
-// Route::post('revoke-role-to-user', [RolePermissionController::class, 'revoke_role_to_user']);
+Route::get('check-permission/{user}/{permission}', [RolePermissionController::class, 'checkPermission']);
+Route::get('get-user-permissions/{user}', [RolePermissionController::class, 'getUserPermissions']);
 
-Route::get('get-user-permissions', [RolePermissionController::class, 'get_user_permissions']);
+});

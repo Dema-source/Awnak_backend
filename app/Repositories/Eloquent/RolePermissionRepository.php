@@ -1,23 +1,15 @@
 <?php
 
-declare(strict_types=1);
-
-namespace App\Services;
+namespace App\Repositories\Eloquent;
 
 use App\Repositories\Interfaces\RolePermissionRepositoryInterface;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-/**
- * Service layer for handling business logic related to the "RolePermissionRepositoryInterface" repository.
- */
-class RolePermissionService
+class RolePermissionRepository implements RolePermissionRepositoryInterface
 {
-    public function __construct(
-        protected RolePermissionRepositoryInterface $repository
-    ) {}
-
     /**
      * Assign permission to role.
      * 
@@ -27,7 +19,7 @@ class RolePermissionService
      */
     public function assignPermissionToRole(Permission $permission, Role $role)
     {
-        return $this->repository->assignPermissionToRole($permission, $role);
+        return (bool) $role->givePermissionTo($permission);
     }
 
     /**
@@ -39,7 +31,7 @@ class RolePermissionService
      */
     public function removePermissionFromRole(Permission $permission, Role $role)
     {
-        return $this->repository->removePermissionFromRole($permission, $role);
+        return (bool) $role->revokePermissionTo($permission);
     }
 
     /**
@@ -51,7 +43,7 @@ class RolePermissionService
      */
     public function assignRoleToUser(Role $role, User $user)
     {
-        return $this->repository->assignRoleToUser($role, $user);
+        return (bool) $user->assignRole($role);
     }
 
     /**
@@ -63,7 +55,7 @@ class RolePermissionService
      */
     public function revokeRoleFromUser(User $user, Role $role)
     {
-        return $this->repository->revokeRoleFromUser($user, $role);
+        return (bool) $user->removeRole($role);
     }
 
     /**
@@ -75,7 +67,7 @@ class RolePermissionService
      */
     public function assignPermissionToUser(User $user, Permission $permission)
     {
-        return $this->repository->assignPermissionToUser($user, $permission);
+        return (bool) $user->givePermissionTo($permission);
     }
 
     /**
@@ -87,7 +79,7 @@ class RolePermissionService
      */
     public function revokePermissionFromUser(User $user, Permission $permission)
     {
-        return $this->repository->revokePermissionFromUser($user, $permission);
+        return (bool)  $user->revokePermissionTo($permission);
     }
 
     /**
@@ -99,17 +91,17 @@ class RolePermissionService
      */
     public function checkPermission(User $user, Permission $permission)
     {
-        return $this->repository->checkPermission($user, $permission);
+        return (bool)  $user->hasPermissionTo($permission);
     }
 
     /**
      * Get all permissions for user.
-     * 
+     *  
      * @param User $user
-     * @return \Illuminate\Support\Collection
+     * @return collection
      */
-    public function getUserPermissions(User $user)
+    public function getUserPermissions(User $user): Collection
     {
-        return $this->repository->getUserPermissions($user);
+        return $user->getAllPermissions();
     }
 }
