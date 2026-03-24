@@ -14,6 +14,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Support\Carbon;
+use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Translatable\HasTranslations;
 
 
@@ -62,8 +63,6 @@ class User extends Authenticatable
      */
     public array $translatable = [
         'name',
-        'email',
-        'password',
         'phone',
         'address',
     ];

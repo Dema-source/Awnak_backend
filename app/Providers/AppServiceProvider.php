@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\Interfaces\RolePermissionRepositoryInterface;
+use App\Repositories\Eloquent\RolePermissionRepository;
 use App\Repositories\Interfaces\DocumentRepositoryInterface;
 use App\Repositories\Eloquent\DocumentRepository;
 use App\Repositories\Interfaces\EvaluationRepositoryInterface;
@@ -41,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(RolePermissionRepositoryInterface::class, RolePermissionRepository::class);
         $this->app->bind(DocumentRepositoryInterface::class, DocumentRepository::class);
         $this->app->bind(EvaluationRepositoryInterface::class, EvaluationRepository::class);
         $this->app->bind(TaskHourRepositoryInterface::class, TaskHourRepository::class);
@@ -55,7 +58,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(OrganizationProfileRepositoryInterface::class, OrganizationProfileRepository::class);
         $this->app->bind(ProfileRepositoryInterface::class, ProfileRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
-        $this->app->bind(BagdeRepositoryInterface::class, BagdeRepository::class);
         //
     }
 
