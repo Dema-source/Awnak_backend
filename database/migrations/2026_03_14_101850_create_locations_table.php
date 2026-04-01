@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('opportunity_id')->constrained()->cascadeOnDelete();
             $table->decimal('latitude');
             $table->decimal('longtude');
             $table->string('address');

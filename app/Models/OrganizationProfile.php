@@ -23,7 +23,7 @@ use Spatie\Translatable\HasTranslations;
  *
  */
 
-class OrgaizationProfile extends Model
+class OrganizationProfile extends Model
 {
 
     use HasTranslations;
@@ -34,17 +34,9 @@ class OrgaizationProfile extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'user_id',
         'type',
     ];
 
-    /**
-     * Fields to be translated.
-     * @var array
-     */
-    public array $translatable = [
-        'type'
-    ];
 
     /**
      * Get the user that owns this Organization Profile

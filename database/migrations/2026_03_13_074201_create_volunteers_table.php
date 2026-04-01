@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('volunteers', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('profile_id')->constrained()->cascadeOnDelete();
-            $table->enum('experience_years', ["one year", "two years", "three years", "four years", "five years", "More than five years"]);
-            $table->enum('status', ["active", "In_active", "pending", "blocked"]);
-            $table->json('availability');
-            $table->string('languages');
+            $table->json('languages')->nullable();
+            $table->json('availability')->nullable();
+            $table->enum('experience_years', ['1', '2', '3', '4', '5']);
+            $table->enum('status', ["active", "In_active", "pending", "blocked"])->default('pending');
             $table->timestamps();
         });
     }

@@ -17,8 +17,7 @@ use Spatie\Translatable\HasTranslations;
  * (like an Volunteer or a Task) using the same database table.
  * 
  * @property int $id
- * @property int $user_id
- * @property enum $rating (1, 2, 3, 4, 5)
+ * @property integer $rating 
  * @property text $comment
  * @property Carbon|null $created_at	
  * @property Carbon|null $updated_at	
@@ -39,6 +38,8 @@ class Evaluation extends Model
         'user_id',
         'rating',
         'comment',
+        'evaluable_id',
+        'evaluable_type',
     ];
 
     /**
@@ -46,7 +47,6 @@ class Evaluation extends Model
      * @var array
      */
     public array $translatable = [
-        'rating',
         'comment',
     ];
 

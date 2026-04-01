@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Badge\StoreBadgeRequest;
 use App\Http\Requests\Api\Badge\UpdateBadgeRequest;
+use App\Models\Volunteer;
 use App\Services\BadgeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

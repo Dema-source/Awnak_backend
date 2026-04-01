@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\TaskHour;
+namespace App\Http\Requests\Api\Task;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTaskHourRequest extends FormRequest
+class UpdateTaskStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,7 @@ class StoreTaskHourRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'status' => ['sometimes', 'string', 'in:in progress,active,completed,cancelled'],
         ];
     }
 }

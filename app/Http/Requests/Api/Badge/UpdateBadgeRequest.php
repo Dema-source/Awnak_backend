@@ -23,7 +23,8 @@ class UpdateBadgeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'type' => ['sometimes', 'string', 'max:25','unique:badges,type'],
+            'description' => ['sometimes', 'string', 'max:50'],
         ];
     }
 }

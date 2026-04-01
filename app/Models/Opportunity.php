@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use Spatie\Translatable\HasTranslations;
 
@@ -20,7 +21,6 @@ use Spatie\Translatable\HasTranslations;
  * @property int $id
  * @property string $title
  * @property int $organization_profile_id
- * @property int $location_id
  * @property string $expected_duration
  * @property date $start_date
  * @property date $end_date
@@ -44,7 +44,6 @@ class Opportunity extends Model
     protected $fillable = [
         'title',
         'organization_profile_id',
-        'location_id',
         'expected_duration',
         'start_date',
         'end_date',
@@ -59,10 +58,7 @@ class Opportunity extends Model
     public array $translatable = [
         'title',
         'expected_duration',
-        'start_date',
-        'end_date',
         'required_volunteer',
-        'status',
     ];
 
     /**
@@ -73,18 +69,18 @@ class Opportunity extends Model
      */
     public function organization(): BelongsTo
     {
-        return $this->belongsTo(OrgaizationProfile::class);
+        return $this->belongsTo(OrganizationProfile::class);
     }
 
     /**
      * Get the location that the Opportunity available in
      *
      * Relationship: One-to-One.
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function location(): BelongsTo
+    public function location(): HasOne
     {
-        return $this->belongsTo(Location::class);
+        return $this->hasOne(Location::class);
     }
 
     /**

@@ -23,7 +23,11 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'volunteer_id' => ['somrtimes', 'integer', 'exists:volunteers,id'],
+            // Supervisor
+            'profile_id' => ['sometimes', 'integer', 'exists:profiles,id'],
+            'opportunity_id' => ['sometimes', 'integer', 'exists:opportunities,id'],
+            'hours' => ['sometimes', 'integer', 'min:1'],
         ];
     }
 }

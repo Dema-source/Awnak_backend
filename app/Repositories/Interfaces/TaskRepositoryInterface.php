@@ -4,6 +4,7 @@ namespace App\Repositories\Interfaces;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Models\Task;
+use App\Models\Volunteer;
 
 /**
  * Interface TaskRepositoryInterface
@@ -53,4 +54,20 @@ interface TaskRepositoryInterface
      * @return bool
      */
     public function delete(int|string $id): bool;
+
+    /**
+     * Calcualte volunteer hours.
+     * 
+     * @param Volunteer $volunteer
+     * @return int
+     */
+    // public function totalVolunteerHours(Volunteer $volunteer): int;
+
+    /**
+     * Add evaluation for task.
+     * 
+     * @param array $data
+     * @return mixed
+     */
+    public function addEvaluation(array $data): mixed;
 }

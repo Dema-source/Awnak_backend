@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Volunteer\StoreVolunteerRequest;
 use App\Http\Requests\Api\Volunteer\UpdateVolunteerRequest;
+use App\Http\Requests\Api\Volunteer\UpdateVolunteerStatusRequest;
 use App\Services\VolunteerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VolunteerController extends Controller
 {
@@ -44,7 +46,9 @@ class VolunteerController extends Controller
      */
     public function store(StoreVolunteerRequest $request): JsonResponse
     {
-        $item = $this->service->create($request->validated());
+        $data = $request->validated() + ['profile_id' => Auth::user()->profile->id];
+
+        $item = $this->service->create($data);
 
         return $this->success($item, 'Volunteer created successfully');
     }
@@ -74,6 +78,20 @@ class VolunteerController extends Controller
         $item = $this->service->update($id, $request->validated());
 
         return $this->success($item, 'Volunteer updated successfully');
+    }
+
+    /**
+     * Update the STATUS for specified Volunteer in storage.
+     * 
+     * @param UpdateVolunteerStatusRequest $request
+     * @param int|string $id
+     * @return JsonResponse
+     */
+    public function updateStatus(UpdateVolunteerStatusRequest $request, int|string $id): JsonResponse
+    {
+        $item = $this->service->update($id, $request->validated());
+
+        return $this->success($item, 'Volunteer status updated successfully');
     }
 
     /**

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('badges', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->enum('type', ["bronze", "silver", "gold"]);
-            $table->string('value');
+            $table->string('type')->unique();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

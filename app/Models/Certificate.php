@@ -15,8 +15,8 @@ use Spatie\Translatable\HasTranslations;
  * achieving a certain number of volunteer hours.
  * 
  * @property int $id
- * @property enum $type ("internal", "external")
- * @property string $value
+ * @property string $type 
+ * @property string $description
  * @property Carbon|null $created_at	
  * @property Carbon|null $updated_at	
  * 
@@ -24,7 +24,6 @@ use Spatie\Translatable\HasTranslations;
 
 class Certificate extends Model
 {
-
     use HasTranslations;
 
     /**
@@ -34,7 +33,7 @@ class Certificate extends Model
      */
     protected $fillable = [
         'type',
-        'value',
+        'description',
     ];
 
     /**
@@ -43,7 +42,7 @@ class Certificate extends Model
      */
     public array $translatable = [
         'type',
-        'value',
+        'description',
     ];
 
     /**

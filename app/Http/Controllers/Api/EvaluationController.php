@@ -8,6 +8,7 @@ use App\Http\Requests\Api\Evaluation\UpdateEvaluationRequest;
 use App\Services\EvaluationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EvaluationController extends Controller
 {
@@ -44,7 +45,9 @@ class EvaluationController extends Controller
      */
     public function store(StoreEvaluationRequest $request): JsonResponse
     {
-        $item = $this->service->create($request->validated());
+        $data = $request->validated() + ['user_id' => Auth::user()->id];
+
+        $item = $this->service->create($data);
 
         return $this->success($item, 'Evaluation created successfully');
     }

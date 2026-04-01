@@ -52,11 +52,11 @@ class EvaluationRepository implements EvaluationRepositoryInterface
      * Create a new record in the database.  
      *  
      * @param array $data Mass-Assignment Attributes for creating the model.
-     * @return Evaluation  
+     * @return mixed  
      */
-    public function create(array $data): Evaluation
+    public function create(array $data): mixed
     {
-        return $this->model->create($data);
+        return $this->model->evaluable()->create($data);
     }
 
     /**

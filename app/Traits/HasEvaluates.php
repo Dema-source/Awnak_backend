@@ -16,7 +16,7 @@ trait HasEvaluates
      * Get all of the entity's evaluates.
      * @return MorphMany
      */
-    public function evaluates(): MorphMany
+    public function evaluation(): MorphMany
     {
         return $this->morphMany(Evaluation::class, 'evaluable');
     }

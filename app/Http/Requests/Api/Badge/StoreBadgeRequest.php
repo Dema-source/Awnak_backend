@@ -23,7 +23,8 @@ class StoreBadgeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'type'=>['required','string','max:25','unique:badges,type'],
+            'description'=>['nullable','string','max:50'],
         ];
     }
 }

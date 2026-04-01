@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Application\StoreApplicationRequest;
 use App\Http\Requests\Api\Application\UpdateApplicationRequest;
+use App\Models\Opportunity;
 use App\Services\ApplicationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ApplicationController extends Controller
 {
@@ -39,12 +41,14 @@ class ApplicationController extends Controller
     /**
      * Store a newly created Application in storage.
      *
-     * @param StoreApplicationRequest $request The validated form request.
+     * @param Opportunity $opportunity The Opportunity model injected by Laravel..
      * @return JsonResponse
      */
-    public function store(StoreApplicationRequest $request): JsonResponse
+    public function store(Opportunity $opportunity): JsonResponse
     {
-        $item = $this->service->create($request->validated());
+        $data = ['opportunity_id' => $opportunity->id] + ['volunteer_id' => Auth::user()->profile->volunteer->id];
+
+        $item = $this->service->create($data);
 
         return $this->success($item, 'Application created successfully');
     }
@@ -63,7 +67,7 @@ class ApplicationController extends Controller
     }
 
     /**
-     * Update the specified Application in storage.
+     * Update STATUS for specified Application in storage.
      * 
      * @param UpdateApplicationRequest $request Validated input data.
      * @param int|string $id The primary key value.

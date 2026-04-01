@@ -35,7 +35,7 @@ interface EvaluationRepositoryInterface
      * @param array $data.
      * @return Evaluation
      */
-    public function create(array $data): Evaluation;
+    public function create(array $data): mixed;
 
     /**
      * Update an existing record by ID with a given data.

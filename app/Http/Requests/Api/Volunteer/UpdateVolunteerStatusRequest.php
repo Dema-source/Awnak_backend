@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\Application;
+namespace App\Http\Requests\Api\Volunteer;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreApplicationRequest extends FormRequest
+class UpdateVolunteerStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,7 @@ class StoreApplicationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'status' => ['sometimes', 'string', 'in:active, In_active, pending, blocked'],
         ];
     }
 }

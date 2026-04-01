@@ -23,7 +23,7 @@ use Spatie\Translatable\HasTranslations;
  * @property enum $experience_years ("one year", "two years", "three years", "four years", "five years", "More than five years")
  * @property enum $status ("active", "In_active", "pending", "blocked")
  * @property json $availability
- * @property string $languages
+ * @property json $languages
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  *
@@ -47,12 +47,19 @@ class Volunteer extends Model
     ];
 
     /**
+     * Ensures automatic JSON encoding/decoding
+     * @var array
+     */
+    protected $casts = [
+        'languages' => 'array',
+        'availability' => 'array',
+    ];
+
+    /**
      * Fields to be translated.
      * @var array
      */
     public array $translatable = [
-        'experience_years',
-        'status',
         'availability',
         'languages',
     ];

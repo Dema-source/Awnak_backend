@@ -23,7 +23,8 @@ class StoreCertificateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'type' => ['required', 'string', 'max:25','unique:certificates,type'],
+            'description' => ['required', 'string', 'max:50'],
         ];
     }
 }

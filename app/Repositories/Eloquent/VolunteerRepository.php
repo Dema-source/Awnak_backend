@@ -12,7 +12,7 @@ class VolunteerRepository implements VolunteerRepositoryInterface
      * Dependency injection of the Eloquent model.  
      *  
      * @param Volunteer $model  
-     */ 
+     */
     public function __construct(
         protected Volunteer $model
     ) {}
@@ -23,10 +23,10 @@ class VolunteerRepository implements VolunteerRepositoryInterface
      * @param array $filters Key/value filters to apply to the query.  
      * @param int $perPage Number of items per page.  
      * @return LengthAwarePaginator  
-     */  
+     */
     public function getAll(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
-        $query = $this->model->query();
+        $query = $this->model->with('evaluation');
 
         foreach ($filters as $field => $value) {
             if ($value !== null && $value !== '') {
@@ -42,10 +42,10 @@ class VolunteerRepository implements VolunteerRepositoryInterface
      *  
      * @param int|string $id  
      * @return Volunteer  
-     */ 
+     */
     public function findById(int|string $id): Volunteer
     {
-        return $this->model->findOrFail($id);
+        return $this->model->with('evaluation')->findOrFail($id);
     }
 
     /**  

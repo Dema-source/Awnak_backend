@@ -23,7 +23,11 @@ class UpdateProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'bio'       => ['nullable', 'string', 'max:500'],
+            'age'       => ['nullable', 'integer', 'min:1', 'max:120'],
+            'gender'    => ['sometimes', 'string', 'in:male,female'],
+            'interests' => ['nullable', 'array'],
+            'interests.*' => ['string', 'max:40'],
         ];
     }
 }

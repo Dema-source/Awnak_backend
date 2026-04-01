@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\TaskHour;
+namespace App\Http\Requests\Api\VolunteerCertificate;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateTaskHourRequest extends FormRequest
+class StoreVolunteerCertificateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,7 @@ class UpdateTaskHourRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'certificate_id' => ['required', 'integer', 'exists:certificates,id'],
         ];
     }
 }

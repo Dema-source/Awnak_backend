@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Location\StoreLocationRequest;
 use App\Http\Requests\Api\Location\UpdateLocationRequest;
+use App\Models\Opportunity;
 use App\Services\LocationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -42,9 +43,11 @@ class LocationController extends Controller
      * @param StoreLocationRequest $request The validated form request.
      * @return JsonResponse
      */
-    public function store(StoreLocationRequest $request): JsonResponse
+    public function store(StoreLocationRequest $request, Opportunity $opportunity): JsonResponse
     {
-        $item = $this->service->create($request->validated());
+        $data = $request->validated() + ['opportunity_id' =>$opportunity->id];
+
+        $item = $this->service->create($data);
 
         return $this->success($item, 'Location created successfully');
     }

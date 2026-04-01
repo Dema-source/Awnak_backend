@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('evaluations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->constrained()->cascadeOnDelete();
-            $table->enum('rating', [1, 2, 3, 4, 5]);
-            $table->text('comment');
+            $table->integer('rating');
+            $table->text('comment')->nullable();
             $table->morphs('evaluable');
             $table->timestamps();
         });

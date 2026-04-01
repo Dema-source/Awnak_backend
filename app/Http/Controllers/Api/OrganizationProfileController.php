@@ -8,6 +8,7 @@ use App\Http\Requests\Api\OrganizationProfile\UpdateOrganizationProfileRequest;
 use App\Services\OrganizationProfileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrganizationProfileController extends Controller
 {
@@ -44,7 +45,9 @@ class OrganizationProfileController extends Controller
      */
     public function store(StoreOrganizationProfileRequest $request): JsonResponse
     {
-        $item = $this->service->create($request->validated());
+        $data = $request->validated() + ['user_id' => Auth::user()->id];
+
+        $item = $this->service->create($data);
 
         return $this->success($item, 'OrganizationProfile created successfully');
     }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('bio')->nullable();
             $table->integer('age')->nullable();
             $table->enum('gender', ["male", "female"]);
-            $table->json('interests');
+            $table->json('interests')->nullable();
             $table->timestamps();
         });
     }
