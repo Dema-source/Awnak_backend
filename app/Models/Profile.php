@@ -42,6 +42,7 @@ class Profile extends Model
         'bio',
         'age',
         'gender',
+        'interests',
     ];
 
     /**
@@ -50,10 +51,16 @@ class Profile extends Model
      */
     public array $translatable = [
         'bio',
-        'age',
-        'gender',
+        'interests',
     ];
 
+    /**
+     * Ensures automatic JSON encoding/decoding
+     * @var array
+     */
+    protected $casts = [
+        'interests' => 'array', 
+    ];
     /**
      * Get the user that owns the Profile
      *

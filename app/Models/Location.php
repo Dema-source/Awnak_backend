@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Spatie\Translatable\HasTranslations;
 
@@ -27,7 +27,6 @@ use Spatie\Translatable\HasTranslations;
 
 class Location extends Model
 {
-
     use HasTranslations;
 
     /**
@@ -36,6 +35,7 @@ class Location extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'opportunity_id',
         'latitude',
         'longtude',
         'address',
@@ -48,8 +48,6 @@ class Location extends Model
      * @var array
      */
     public array $translatable = [
-        'latitude',
-        'longtude',
         'address',
         'city',
         'country',
@@ -61,8 +59,8 @@ class Location extends Model
      * Relationship: One-to-One.
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function opportunity(): HasOne
+    public function opportunity(): BelongsTo
     {
-        return $this->hasOne(Opportunity::class);
+        return $this->belongsTo(Opportunity::class);
     }
 }

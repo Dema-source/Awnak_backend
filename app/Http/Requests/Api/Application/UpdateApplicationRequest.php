@@ -23,7 +23,7 @@ class UpdateApplicationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'status' => ['sometimes', 'in:accepted,rejected,pending'],
         ];
     }
 }

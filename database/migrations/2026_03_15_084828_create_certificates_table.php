@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('task_hours', function (Blueprint $table) {
+        Schema::create('certificates', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('task_id')->constrained()->cascadeOnDelete();
-            $table->integer('hours');
+            $table->string('type')->unique();
+            $table->text('description');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('task_hours');
+        Schema::dropIfExists('certificates');
     }
 };

@@ -8,6 +8,7 @@ use App\Http\Requests\Api\Opportunity\UpdateOpportunityRequest;
 use App\Services\OpportunityService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OpportunityController extends Controller
 {
@@ -44,7 +45,9 @@ class OpportunityController extends Controller
      */
     public function store(StoreOpportunityRequest $request): JsonResponse
     {
-        $item = $this->service->create($request->validated());
+        $data = $request->validated() + ['organization_profile_id' => Auth::user()->organization_profile->id];
+
+        $item = $this->service->create($data);
 
         return $this->success($item, 'Opportunity created successfully');
     }

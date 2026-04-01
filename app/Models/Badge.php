@@ -16,8 +16,8 @@ use Spatie\Translatable\HasTranslations;
  * have obtained a certain number of certificates.
  * 
  * @property int $id
- * @property enum $type ("bronze", "silver", "gold")
- * @property string $value	
+ * @property string $type 
+ * @property string $description	
  * @property Carbon|null $created_at	
  * @property Carbon|null $updated_at	
  * 
@@ -25,7 +25,6 @@ use Spatie\Translatable\HasTranslations;
 
 class Badge extends Model
 {
-
     use HasTranslations;
 
     /**
@@ -35,7 +34,7 @@ class Badge extends Model
      */
     protected $fillable = [
         'type',
-        'value',
+        'description',
     ];
 
     /**
@@ -44,7 +43,7 @@ class Badge extends Model
      */
     public array $translatable = [
         'type',
-        'value',
+        'description',
     ];
 
     /**

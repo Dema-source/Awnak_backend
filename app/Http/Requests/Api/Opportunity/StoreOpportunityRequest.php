@@ -23,7 +23,11 @@ class StoreOpportunityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:100'],
+            'expected_duration' => ['required', 'string', 'max:50'],
+            'start_date' => ['required', 'date_format:Y-m-d', 'date', 'before_or_equal:end_date', 'after_or_equal:today'],
+            'end_date' => ['required', 'date_format:Y-m-d', 'date', 'after_or_equal:start_date'],
+            'required_volunteers' => ['required', 'integer', 'min:1'],
         ];
     }
 }

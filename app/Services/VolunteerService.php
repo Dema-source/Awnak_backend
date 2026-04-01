@@ -75,4 +75,15 @@ class VolunteerService
     {
         return $this->repository->delete($id);
     }
+
+    /**
+     * Add evaluation for volunteer.
+     * 
+     * @param array $data
+     * @return mixed
+     */
+    public function addEvaluation(array $data): mixed
+    {
+        return $this->repository->addEvaluation($data);
+    }
 }

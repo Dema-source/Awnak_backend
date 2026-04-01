@@ -8,6 +8,7 @@ use App\Http\Requests\Api\Profile\UpdateProfileRequest;
 use App\Services\ProfileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -44,7 +45,9 @@ class ProfileController extends Controller
      */
     public function store(StoreProfileRequest $request): JsonResponse
     {
-        $item = $this->service->create($request->validated());
+        $data = $request->validated() + ['user_id' => Auth::user()->id];
+
+        $item = $this->service->create($data);
 
         return $this->success($item, 'Profile created successfully');
     }

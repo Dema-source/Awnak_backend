@@ -23,7 +23,7 @@ class StoreOrganizationProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'type'    => ['required', 'string', 'in:Charitable organization,Civil society organization,Voluntary educational/university institution,Hospital,Religious organization,Company with a Corporate Social Responsibility (CSR) program,Student club/association,Environmental organization'],
         ];
     }
 }

@@ -41,14 +41,6 @@ class Application extends Model
     ];
 
     /**
-     * Fields to be translated.
-     * @var array
-     */
-    public array $translatable = [
-        'status'
-    ];
-
-    /**
      * Get the volunteer that add the Application
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

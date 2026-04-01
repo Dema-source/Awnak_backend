@@ -23,7 +23,11 @@ class UpdateOpportunityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['sometimes', 'string', 'max:100'],
+            'expected_duration' => ['sometimes', 'string', 'max:50'],
+            'start_date' => ['sometimes', 'date_format:Y-m-d', 'date', 'before_or_equal:end_date', 'after_or_equal:today'],
+            'end_date' => ['sometimes', 'date_format:Y-m-d', 'date', 'after_or_equal:start_date'],
+            'required_volunteers' => ['sometimes', 'integer', 'min:1'],
         ];
     }
 }

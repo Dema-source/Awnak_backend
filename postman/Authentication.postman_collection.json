@@ -1,0 +1,153 @@
+{
+  "info": {
+    "_postman_id": "1afa5205-a2cb-4004-acc3-ffe102aaea65",
+    "name": "Authentication",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "43244374",
+    "_collection_link": "https://go.postman.co/collection/43244374-1afa5205-a2cb-4004-acc3-ffe102aaea65?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "register",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/register?name=vol1&email=vol1@gmail.com&password=12345678&password_confirmation=12345678&phone=05154&address=test address",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "register"
+          ],
+          "query": [
+            {
+              "key": "name",
+              "value": "vol1"
+            },
+            {
+              "key": "email",
+              "value": "vol1@gmail.com"
+            },
+            {
+              "key": "password",
+              "value": "12345678"
+            },
+            {
+              "key": "password_confirmation",
+              "value": "12345678"
+            },
+            {
+              "key": "phone",
+              "value": "05154"
+            },
+            {
+              "key": "address",
+              "value": "test address"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/login?email=vol1@gmail.com&password=12345678",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "login"
+          ],
+          "query": [
+            {
+              "key": "email",
+              "value": "vol1@gmail.com"
+            },
+            {
+              "key": "password",
+              "value": "12345678"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "logout",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{vault:authorization-secret}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/logout",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "logout"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

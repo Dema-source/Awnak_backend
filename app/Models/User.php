@@ -109,7 +109,7 @@ class User extends Authenticatable
      */
     public function organization_profile(): HasOne
     {
-        return $this->hasOne(OrgaizationProfile::class);
+        return $this->hasOne(OrganizationProfile::class);
     }
 
     /**

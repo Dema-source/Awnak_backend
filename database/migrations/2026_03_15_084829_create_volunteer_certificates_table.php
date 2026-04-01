@@ -16,9 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('volunteer_id')->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('certificate_id')->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('task_id')->constrained()->cascadeOnDelete();
+            $table->unique(['volunteer_id', 'certificate_id', 'task_id'],'vol_cert_task_uniq');
             $table->timestamps();
         });
-   }
+    }
 
     /**
      * Reverse the migrations.

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Volunteer;
 use App\Repositories\Interfaces\TaskRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
@@ -74,5 +75,20 @@ class TaskService
     public function delete(int|string $id): bool
     {
         return $this->repository->delete($id);
+    }
+
+    // public function totalVolunteerHours(Volunteer $volunteer){
+    //     return $this->repository->
+    // }
+
+    /**
+     * Add evaluation for task.
+     * 
+     * @param array $data
+     * @return mixed
+     */
+    public function addEvaluation(array $data): mixed
+    {
+        return $this->repository->addEvaluation($data);
     }
 }

@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Task\StoreTaskRequest;
 use App\Http\Requests\Api\Task\UpdateTaskRequest;
+use App\Http\Requests\Api\Task\UpdateTaskStatusRequest;
+use App\Models\Opportunity;
+use App\Models\Volunteer;
 use App\Services\TaskService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -42,9 +45,11 @@ class TaskController extends Controller
      * @param StoreTaskRequest $request The validated form request.
      * @return JsonResponse
      */
-    public function store(StoreTaskRequest $request): JsonResponse
+    public function store(StoreTaskRequest $request, Opportunity $opportunity): JsonResponse
     {
-        $item = $this->service->create($request->validated());
+        $data = $request->validated() + ['opportunity_id' => $opportunity->id];
+
+        $item = $this->service->create($data);
 
         return $this->success($item, 'Task created successfully');
     }
@@ -74,6 +79,20 @@ class TaskController extends Controller
         $item = $this->service->update($id, $request->validated());
 
         return $this->success($item, 'Task updated successfully');
+    }
+
+    /**
+     * Update Status for specified Task in storage.
+     * 
+     * @param UpdateTaskStatusRequest $request Validated input data.
+     * @param int|string $id The primary key value.
+     * @return JsonResponse
+     */
+    public function updateStatus(UpdateTaskStatusRequest $request, int|string $id): JsonResponse
+    {
+        $item = $this->service->update($id, $request->validated());
+
+        return $this->success($item, 'Task status updated successfully');
     }
 
     /**

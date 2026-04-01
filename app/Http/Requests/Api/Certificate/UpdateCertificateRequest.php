@@ -23,7 +23,8 @@ class UpdateCertificateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'type' => ['sometimes', 'string', 'max:25','unique:certificates,type'],
+            'description' => ['sometimes', 'string', 'max:50'],
         ];
     }
 }

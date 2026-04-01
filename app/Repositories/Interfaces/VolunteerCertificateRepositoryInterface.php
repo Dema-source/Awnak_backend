@@ -3,14 +3,14 @@
 namespace App\Repositories\Interfaces;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use App\Models\TaskHour;
+use App\Models\VolunteerCertificate;
 
 /**
- * Interface TaskHourRepositoryInterface
+ * Interface VolunteerCertificateRepositoryInterface
  *
  * Defines the contract for CRUD operations.
  */
-interface TaskHourRepositoryInterface
+interface VolunteerCertificateRepositoryInterface
 {
     /**
      * Retrieve a paginated list of records with optional provided conditions.
@@ -25,26 +25,26 @@ interface TaskHourRepositoryInterface
      * Find a record by its ID.
      *
      * @param int|string $id The primary key value.
-     * @return TaskHour 
+     * @return VolunteerCertificate 
      */
-    public function findById(int|string $id): TaskHour;
+    public function findById(int|string $id): VolunteerCertificate;
 
     /**
      * Create a new record using the given data array.
      *
      * @param array $data.
-     * @return TaskHour
+     * @return VolunteerCertificate
      */
-    public function create(array $data): TaskHour;
+    public function create(array $data): VolunteerCertificate;
 
     /**
      * Update an existing record by ID with a given data.
      *
      * @param int|string $id The primary key value.
      * @param array $data.
-     * @return TaskHour
+     * @return VolunteerCertificate
      */
-    public function update(int|string $id, array $data): TaskHour;
+    public function update(int|string $id, array $data): VolunteerCertificate;
 
     /**
      * Delete a record by ID.

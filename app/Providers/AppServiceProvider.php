@@ -2,14 +2,14 @@
 
 namespace App\Providers;
 
+use App\Repositories\Interfaces\VolunteerCertificateRepositoryInterface;
+use App\Repositories\Eloquent\VolunteerCertificateRepository;
 use App\Repositories\Interfaces\RolePermissionRepositoryInterface;
 use App\Repositories\Eloquent\RolePermissionRepository;
 use App\Repositories\Interfaces\DocumentRepositoryInterface;
 use App\Repositories\Eloquent\DocumentRepository;
 use App\Repositories\Interfaces\EvaluationRepositoryInterface;
 use App\Repositories\Eloquent\EvaluationRepository;
-use App\Repositories\Interfaces\TaskHourRepositoryInterface;
-use App\Repositories\Eloquent\TaskHourRepository;
 use App\Repositories\Interfaces\TaskRepositoryInterface;
 use App\Repositories\Eloquent\TaskRepository;
 use App\Repositories\Interfaces\ApplicationRepositoryInterface;
@@ -32,8 +32,6 @@ use App\Repositories\Interfaces\ProfileRepositoryInterface;
 use App\Repositories\Eloquent\ProfileRepository;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\Eloquent\UserRepository;
-use App\Repositories\Interfaces\BagdeRepositoryInterface;
-use App\Repositories\Eloquent\BagdeRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -43,10 +41,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(VolunteerCertificateRepositoryInterface::class, VolunteerCertificateRepository::class);
         $this->app->bind(RolePermissionRepositoryInterface::class, RolePermissionRepository::class);
         $this->app->bind(DocumentRepositoryInterface::class, DocumentRepository::class);
         $this->app->bind(EvaluationRepositoryInterface::class, EvaluationRepository::class);
-        $this->app->bind(TaskHourRepositoryInterface::class, TaskHourRepository::class);
         $this->app->bind(TaskRepositoryInterface::class, TaskRepository::class);
         $this->app->bind(ApplicationRepositoryInterface::class, ApplicationRepository::class);
         $this->app->bind(LocationRepositoryInterface::class, LocationRepository::class);

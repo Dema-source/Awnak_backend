@@ -2,19 +2,19 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Models\TaskHour;
-use App\Repositories\Interfaces\TaskHourRepositoryInterface;
+use App\Models\VolunteerCertificate;
+use App\Repositories\Interfaces\VolunteerCertificateRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
-class TaskHourRepository implements TaskHourRepositoryInterface
+class VolunteerCertificateRepository implements VolunteerCertificateRepositoryInterface
 {
     /**  
      * Dependency injection of the Eloquent model.  
      *  
-     * @param TaskHour $model  
+     * @param VolunteerCertificate $model  
      */ 
     public function __construct(
-        protected TaskHour $model
+        protected VolunteerCertificate $model
     ) {}
 
     /**  
@@ -41,9 +41,9 @@ class TaskHourRepository implements TaskHourRepositoryInterface
      * Retrieve a single record by ID or throw an exception if not found.  
      *  
      * @param int|string $id  
-     * @return TaskHour  
+     * @return VolunteerCertificate  
      */ 
-    public function findById(int|string $id): TaskHour
+    public function findById(int|string $id): VolunteerCertificate
     {
         return $this->model->findOrFail($id);
     }
@@ -52,9 +52,9 @@ class TaskHourRepository implements TaskHourRepositoryInterface
      * Create a new record in the database.  
      *  
      * @param array $data Mass-Assignment Attributes for creating the model.
-     * @return TaskHour  
+     * @return VolunteerCertificate  
      */
-    public function create(array $data): TaskHour
+    public function create(array $data): VolunteerCertificate
     {
         return $this->model->create($data);
     }
@@ -64,9 +64,9 @@ class TaskHourRepository implements TaskHourRepositoryInterface
      *
      * @param int|string $id The primary key value.
      * @param array $data.
-     * @return TaskHour
+     * @return VolunteerCertificate
      */
-    public function update(int|string $id, array $data): TaskHour
+    public function update(int|string $id, array $data): VolunteerCertificate
     {
         $item = $this->findById($id);
         $item->update($data);

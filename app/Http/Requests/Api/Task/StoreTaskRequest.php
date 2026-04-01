@@ -23,7 +23,11 @@ class StoreTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:100'],
+            'volunteer_id' => ['required', 'integer', 'exists:volunteers,id'],
+            // Supervisor
+            'profile_id' => ['required', 'integer', 'exists:profiles,id'],
+            'hours' => ['required', 'integer', 'min:1'],
         ];
     }
 }

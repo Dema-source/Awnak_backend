@@ -21,6 +21,7 @@ use Spatie\Translatable\HasTranslations;
  * @property int $volunteer_id
  * @property int $opportunity_id
  * @property int $profile_id
+ * @property int $hours
  * @property enum $status ("in progress", "active", "completed", "cancelled")
  * @property Carbon|null $created_at	
  * @property Carbon|null $updated_at	
@@ -42,6 +43,7 @@ class Task extends Model
         'volunteer_id',
         'opportunity_id',
         'profile_id',
+        'hours',
         'status',
     ];
 
@@ -51,7 +53,6 @@ class Task extends Model
      */
     public array $translatable = [
         'title',
-        'status',
     ];
 
     /**
@@ -85,17 +86,6 @@ class Task extends Model
     public function opportinity(): BelongsTo
     {
         return $this->belongsTo(Opportunity::class);
-    }
-
-    /**
-     * Get Task hours
-     *
-     * Relationship: One-to-One.
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function hours(): HasOne
-    {
-        return $this->hasOne(TaskHour::class);
     }
 
     /**
