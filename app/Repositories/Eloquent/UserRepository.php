@@ -5,6 +5,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -12,7 +13,7 @@ class UserRepository implements UserRepositoryInterface
      * Dependency injection of the Eloquent model.  
      *  
      * @param User $model  
-     */ 
+     */
     public function __construct(
         protected User $model
     ) {}
@@ -23,7 +24,7 @@ class UserRepository implements UserRepositoryInterface
      * @param array $filters Key/value filters to apply to the query.  
      * @param int $perPage Number of items per page.  
      * @return LengthAwarePaginator  
-     */  
+     */
     public function getAll(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         $query = $this->model->query();
@@ -42,10 +43,21 @@ class UserRepository implements UserRepositoryInterface
      *  
      * @param int|string $id  
      * @return User  
-     */ 
+     */
     public function findById(int|string $id): User
     {
         return $this->model->findOrFail($id);
+    }
+
+    /**
+     * Find user by email.
+     *
+     * @param string $email
+     * @return User|null
+     */
+    public function findByEmail(string $email): User
+    {
+        return User::where('email', $email)->first();
     }
 
     /**  
@@ -56,6 +68,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function create(array $data): User
     {
+        $data['password'] = $this->hashPassword($data['password']);
         return $this->model->create($data);
     }
 
@@ -85,5 +98,16 @@ class UserRepository implements UserRepositoryInterface
         $item = $this->findById($id);
 
         return (bool) $item->delete();
+    }
+
+    /**
+     * Hash the given plain password.
+     *
+     * @param string $plainPassword
+     * @return string
+     */
+    public function hashPassword(string $plainPassword): string
+    {
+        return Hash::make($plainPassword);
     }
 }

@@ -23,11 +23,14 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
+// Auth
+Route::post('register', [AuthController::class, 'register'])->name('register');
+Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('me', [AuthController::class, 'me'])->name('me');
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
+    
     // Roles & Permissions
     // if($user>hasRole('super_admin'))
     Route::post('assign-permission-to-role/{permission}/{role}', [RolePermissionController::class, 'assignPermissionToRole']);

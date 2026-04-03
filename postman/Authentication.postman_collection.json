@@ -19,7 +19,7 @@
           }
         ],
         "url": {
-          "raw": "http://127.0.0.1:8000/api/register?name=vol1&email=vol1@gmail.com&password=12345678&password_confirmation=12345678&phone=05154&address=test address",
+          "raw": "http://127.0.0.1:8000/api/register?name=user&email=user2@gmail.com&password=12345678&password_confirmation=12345678&phone=05154&address=test address",
           "protocol": "http",
           "host": [
             "127",
@@ -35,11 +35,11 @@
           "query": [
             {
               "key": "name",
-              "value": "vol1"
+              "value": "user"
             },
             {
               "key": "email",
-              "value": "vol1@gmail.com"
+              "value": "user2@gmail.com"
             },
             {
               "key": "password",
@@ -74,7 +74,7 @@
           }
         ],
         "url": {
-          "raw": "http://127.0.0.1:8000/api/login?email=vol1@gmail.com&password=12345678",
+          "raw": "http://127.0.0.1:8000/api/login?email=user2@gmail.com&password=12345678",
           "protocol": "http",
           "host": [
             "127",
@@ -90,12 +90,51 @@
           "query": [
             {
               "key": "email",
-              "value": "vol1@gmail.com"
+              "value": "user2@gmail.com"
             },
             {
               "key": "password",
               "value": "12345678"
             }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get authenticated user",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "2CQsZLoJmoeREx8wZxEXiplmuih0GQ1fPX1G4gC8b8ec9b45",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/me",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "me"
           ]
         }
       },
@@ -109,7 +148,7 @@
           "bearer": [
             {
               "key": "token",
-              "value": "{{vault:authorization-secret}}",
+              "value": "2CQsZLoJmoeREx8wZxEXiplmuih0GQ1fPX1G4gC8b8ec9b45",
               "type": "string"
             }
           ]

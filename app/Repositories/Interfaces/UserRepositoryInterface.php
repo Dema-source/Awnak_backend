@@ -30,6 +30,14 @@ interface UserRepositoryInterface
     public function findById(int|string $id): User;
 
     /**
+     * Find user by email.
+     *
+     * @param string $email
+     * @return User|null
+     */
+    public function findByEmail(string $email): User;
+
+    /**
      * Create a new record using the given data array.
      *
      * @param array $data.
@@ -53,4 +61,12 @@ interface UserRepositoryInterface
      * @return bool
      */
     public function delete(int|string $id): bool;
+
+    /**
+     * Hash the given plain password.
+     *
+     * @param string $plainPassword
+     * @return string
+     */
+    public function hashPassword(string $plainPassword): string;
 }

@@ -53,6 +53,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'status',
         'phone',
         'address',
     ];
@@ -63,6 +64,7 @@ class User extends Authenticatable
      */
     public array $translatable = [
         'name',
+        'status',
         'phone',
         'address',
     ];

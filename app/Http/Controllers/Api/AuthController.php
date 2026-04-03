@@ -5,58 +5,68 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\LoginRequest;
 use App\Http\Requests\Api\Auth\RegisterRequest;
-use App\Models\User;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
     /**
+     * AuthController Constructor.
+     *
+     * @param AuthService $service.
+     */
+    public function __construct(
+        protected AuthService $service
+    ) {}
+
+    /**
      * Register user in system.
-     * @param Request $request
+     * 
+     * @param RegisterRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function register(RegisterRequest $request): JsonResponse
     {
-        $data = $request->validated();
-        $data['password'] = Hash::make($data['password']);
-        $user = User::create($data);
-        return self::success($user, 'Registered successfully', 201);
+        $user = $this->service->register($request->validated());
+
+        return $this->success($user, 'Auth.Registered successfully');
     }
 
     /**
      * User login.
-     * @param Request $request
+     * 
+     * @param LoginRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-        $credentials = [
-            'email' => $validated['email'],
-            'password' => $validated['password'],
-        ];
-        if (!Auth::attempt($credentials)) {
-            return self::error('invalid email or password', 401);
-        }
-        $user = Auth::user();
-        $token = $user->createToken('auth_Token')->plainTextToken;
-        return self::success([
-            'user' => $user,
-            'token' => $token,
-        ], 'Login successfully', 200);
+        $user = $this->service->login($request->validated());
+
+        return $this->success($user, 'Auth.Login successfully');
+    }
+
+    /**
+     * Get currently authenticated user.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function me(Request $request)
+    {
+        return $this->success($request->user(), 'Auth.me');
     }
 
     /**
      * User logout.
+     * 
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
-        return self::success(null, 'Logout successfully');
+        $this->service->logoutCurrent($request->user());
+        
+        return $this->success(null, 'Auth.Logout successfully');
     }
 }
