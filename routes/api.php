@@ -3,11 +3,9 @@
 use App\Http\Controllers\Api\ApplicationController;
 use App\Http\Controllers\Api\BadgeController;
 use App\Http\Controllers\Api\CertificateController;
-use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\EvaluationController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\OpportunityController;
-use App\Http\Controllers\Api\OrganizationProfileController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SkillController;
 use App\Http\Controllers\Api\TaskController;
