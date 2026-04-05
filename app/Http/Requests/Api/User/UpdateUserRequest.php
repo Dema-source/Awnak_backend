@@ -12,7 +12,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('users.update');
     }
 
     /**
@@ -25,6 +25,7 @@ class UpdateUserRequest extends FormRequest
         return [
             'name' => ['sometimes', 'string', 'max:255'],
             'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users,email,except,id'],
+            'status' => ['sometimes', 'in:active,notActive'],
             'password' => ['sometimes', 'string', 'min:8', 'confirmed'],
             'phone' => ['sometimes', 'integer'],
             'address' => ['sometimes', 'string'],

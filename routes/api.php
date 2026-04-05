@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\OpportunityController;
 use App\Http\Controllers\Api\OrganizationProfileController;
 use App\Http\Controllers\Api\ProfileController;
-use App\Http\Controllers\Api\RolePermissionController;
+use App\Http\Controllers\Api\RolesPermissions\RolePermissionController;
 use App\Http\Controllers\Api\SkillController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\UserController;
@@ -24,27 +24,21 @@ Route::get('/user', function (Request $request) {
 });
 
 // Auth
-Route::post('register', [AuthController::class, 'register'])->name('register');
-Route::post('login', [AuthController::class, 'login'])->name('login');
+require __DIR__ . '/api/auth.php';
+
+// User Management
+require __DIR__ . '/api/users.php';
+
+// Roles & Permissions
+require __DIR__ . '/api/rolesandpermissions.php';
+
+
+
+
+
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('me', [AuthController::class, 'me'])->name('me');
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-
-    
-    // Roles & Permissions
-    // if($user>hasRole('super_admin'))
-    Route::post('assign-permission-to-role/{permission}/{role}', [RolePermissionController::class, 'assignPermissionToRole']);
-    Route::post('remove-permission-from-role/{permission}/{role}', [RolePermissionController::class, 'removePermissionFromRole']);
-    Route::post('assign-role-to-user/{role}/{user}', [RolePermissionController::class, 'assignRoleToUser']);
-    Route::post('remove-role-from-user/{user}/{role}', [RolePermissionController::class, 'revokeRoleFromUser']);
-    // (Granting/ٌRevoking) permissions to the user individually.
-    Route::post('assign-permission-to-user/{user}/{permission}', [RolePermissionController::class, 'assignPermissionToUser']);
-    Route::post('remove-permission-from-user/{user}/{permission}', [RolePermissionController::class, 'revokePermissionFromUser']);
-    Route::get('check-permission/{user}/{permission}', [RolePermissionController::class, 'checkPermission']);
-    Route::get('get-user-permissions/{user}', [RolePermissionController::class, 'getUserPermissions']);
 
 
-    Route::apiResource('users', UserController::class);
 
     Route::apiResource('profiles', ProfileController::class);
 

@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Repositories\Interfaces\RolesPermissions\RoleRepositoryInterface;
+use App\Repositories\Eloquent\RolesPermissions\RoleRepository;
 use App\Repositories\Interfaces\VolunteerCertificateRepositoryInterface;
 use App\Repositories\Eloquent\VolunteerCertificateRepository;
-use App\Repositories\Interfaces\RolePermissionRepositoryInterface;
-use App\Repositories\Eloquent\RolePermissionRepository;
+use App\Repositories\Interfaces\RolesPermissions\RolePermissionRepositoryInterface;
+use App\Repositories\Eloquent\RolesPermissions\RolePermissionRepository;
 use App\Repositories\Interfaces\DocumentRepositoryInterface;
 use App\Repositories\Eloquent\DocumentRepository;
 use App\Repositories\Interfaces\EvaluationRepositoryInterface;
@@ -41,9 +43,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
         $this->app->bind(VolunteerCertificateRepositoryInterface::class, VolunteerCertificateRepository::class);
         $this->app->bind(RolePermissionRepositoryInterface::class, RolePermissionRepository::class);
-        $this->app->bind(DocumentRepositoryInterface::class, DocumentRepository::class);
+        // $this->app->bind(DocumentRepositoryInterface::class, DocumentRepository::class);
         $this->app->bind(EvaluationRepositoryInterface::class, EvaluationRepository::class);
         $this->app->bind(TaskRepositoryInterface::class, TaskRepository::class);
         $this->app->bind(ApplicationRepositoryInterface::class, ApplicationRepository::class);
