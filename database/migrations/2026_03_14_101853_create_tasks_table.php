@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tasks', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('title');
             $table->unsignedBigInteger('volunteer_id')->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('opportunity_id')->constrained()->cascadeOnDelete();

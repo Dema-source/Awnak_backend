@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('organization_profiles', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             // Foreign key relationship: each organization belongs to one user
             $table->unsignedBigInteger('user_id')->constrained()->cascadeOnDelete();
             // Status default notactive and System admin can change it later 

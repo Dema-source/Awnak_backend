@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('locations', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->unsignedBigInteger('opportunity_id')->constrained()->cascadeOnDelete();
             $table->decimal('latitude');
             $table->decimal('longtude');

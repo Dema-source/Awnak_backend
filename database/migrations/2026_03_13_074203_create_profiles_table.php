@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('profiles', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->unsignedBigInteger('user_id')->constrained()->cascadeOnDelete();
             $table->text('bio')->nullable();
             $table->integer('age')->nullable();
