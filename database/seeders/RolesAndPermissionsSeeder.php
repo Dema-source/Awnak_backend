@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -16,162 +15,390 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        $guard = 'sanctum';
+
+        // Definition of basic Permissions
+
+        $permissions = [
+            /*
+            |--------------------------------------------------------------------------
+            | Super_Admin & Admin
+            |--------------------------------------------------------------------------
+            */
+            // Roles 
+            'roles.read',
+            'roles.create',
+            'roles.update',
+            'roles.delete',
+            // Permissions
+            'permissions.read',
+            'permissions.create',
+            'permissions.update',
+            'permissions.delete',
+            'permissions.check',
+            'permissions.read',
+            // 'roles.assign',
+            // 'roles.remove',
+            // 'roles.read',
+            // 'roles.create',
+            // 'roles.update',
+            // 'roles.delete',
+            // // Permissions
+            // 'permissions.assign',
+            // 'permissions.remove',
+            // 'permissions.check',
+            // 'permissions.read',
+            // Users  
+            'users.read',
+            'users.create',
+            'users.update',
+            'users.delete',
+            'users.status.update',
+
+            //Profile
+            'profile.create',
+            'profile.read',
+            'profile.update',
+            'profile.delete',
+            'organization.profile.delete',
+
+            // Badges
+            'badges.create',
+            'badges.update',
+            'badges.delete',
+
+            // Certificates
+            'certificates.create',
+            'certificates.update',
+            'certificates.delete',
+            'certificates.view',
+            'certificates.viewAny',
+
+            // Skills
+            'skills.read',
+            'skills.create',
+            'skills.update',
+            'skills.delete',
+
+            /*
+            |--------------------------------------------------------------------------
+            | Volunteer
+            |--------------------------------------------------------------------------
+            */
+            // Profiles
+            'profile.create.own',
+            'profile.read.own',
+            'profile.update.own',
+            // Opportunity
+            'opportunity.search',
+            'opportunity.apply',
+            // Tasks
+            'tasks.read.assigned',
+            'tasks.update.assigned',
+            // Evaluations
+            'evaluations.read.own',
+            'evaluations.create.assigned.tasks',
+
+            /*
+            |--------------------------------------------------------------------------
+            | Opportunity_Manager
+            |--------------------------------------------------------------------------
+            */
+            // Opportunities
+            'opportunity.create',
+            'opportunity.read.own',
+            'opportunity.update.own',
+            'opportunity.delete.own',
+
+            // Applications
+            'applications.read',
+            'volunteers.read.applicants',
+            'volunteers.assign',
+
+            /*
+            |--------------------------------------------------------------------------
+            | Organization
+            |--------------------------------------------------------------------------
+            */
+            // Organization Profile
+            'organization.profile.create.own',
+            'organization.profile.read.own',
+            'organization.profile.update.own',
+
+            'organization.volunteers.read',
+            'organization.volunteers.evaluate',
+
+            // Opportunities
+            'organizations.opportunities.create',
+            'organizations.opportunities.update',
+            'organizations.opportunities.delete',
+            'organizations.opportunities.publish',
+
+            // Evaluations
+            'evaluations.create',
+            'evaluations.update',
+            'evaluations.delete',
+            'evaluations.view',
+            'evaluations.viewAny',
+
+            // Badges
+            'volunteersBadge.create',
+            'volunteersBadge.update',
+            'volunteersBadge.delete',
+            'volunteersBadge.view',
+            'volunteersBadge.viewAny',
+
+            /*
+            |--------------------------------------------------------------------------
+            | Volunteer_Coordinator 
+            |--------------------------------------------------------------------------
+            */
+            'volunteers.read.managed',
+            'tasks.read.managed',
+
+            /*
+            |--------------------------------------------------------------------------
+            | Performance_Evaluator 
+            |--------------------------------------------------------------------------
+            */
+            'reports.performance.read',
+        ];
+
+        foreach ($permissions as $name) {
+            Permission::firstOrCreate([
+                'name' => $name,
+                'guard_name' => $guard,
+            ]);
+        }
 
         // Definition of basic roles
         $roles = [
-            'super_administrator',
-            'volunteer',
-            'opportunity_manager',
-            'volunteer_coordinator',
-            'evaluator',
-        ];
-        foreach ($roles as $roleName) {
-            // We use firstOrCreate to avoid duplication upon restart.
-            $role = Role::firstOrCreate(['name' => $roleName]);
-        }
+            'super_administrator' => [
+                'roles.read',
+                'roles.create',
+                'roles.update',
+                'roles.delete',
+                // ===============
+                'permissions.read',
+                'permissions.create',
+                'permissions.update',
+                'permissions.delete',
 
-        // Definition of basic Permissions
-        $defaultPermissions = [
-            // Profile & Organization Profile
-            'get profiles',
-            'get profile',
-            'create profile',
-            'update profile',
-            'remove profile',
-            'delete profile',
+                // 'roles.assign',
+                // 'roles.remove',
+                // 'roles.read',
+                // 'roles.create',
+                // 'roles.update',
+                // 'roles.delete',
 
-            // Volunteer
-            'get volunteers',
-            'get volunteer',
-            'create volunteer',
-            'update volunteer',
-            'delete volunteer',
+                // 'permissions.assign',
+                // 'permissions.remove',
+                'permissions.check',
+                'permissions.read',
 
-            // Skill
-            'get skills',
-            'get skill',
-            'create skill',
-            'update skill',
-            'delete skill',
+                'users.read',
+                'users.create',
+                'users.update',
+                'users.delete',
+                'users.status.update',
 
-            // Interest
-            'get interests',
-            'get interest',
-            'create interest',
-            'update interest',
-            'delete interest',
+                'roles.read',
+                'roles.create',
+                'roles.update',
+                'roles.delete',
 
-            // Opportunity
-            'get opportunities',
-            'get opportunity',
-            'create opportunity',
-            'update opportunity',
-            'remove opportunity',
-            'delete opportunity',
+                'profile.create',
+                'profile.read',
+                'profile.update',
+                'profile.delete',
 
-            // Task
-            'get tasks',
-            'get task',
-            'create task',
-            'update task',
-            'delete task',
+                'profile.read.own',
+                'profile.update.own',
 
-            // Application
-            'get applications',
-            'get application',
-            'create application',
-            'update application',
-            'cancel application',
-            'delete application',
-            'accept application',
+                'badges.create',
+                'badges.update',
+                'badges.delete',
 
-            // Evaluation
-            'get evaluations',
-            'get evaluation',
-            'create evaluation',
-            'update evaluation',
-            'remove evaluation',
-            'delete evaluation',
+                'certificates.create',
+                'certificates.update',
+                'certificates.delete',
+                'certificates.view',
+                'certificates.viewAny',
 
-            // Notification
-            'send notifications',
+                'skills.read',
+                'skills.create',
+                'skills.update',
+                'skills.delete',
 
-            // Certificate
-            'get certificates',
-            'get certificate',
-        ];
-        foreach ($defaultPermissions as $permName) {
-            Permission::firstOrCreate(['name' => $permName]);
-        }
+                'evaluations.create',
+                'evaluations.update',
+                'evaluations.delete',
+                'evaluations.view',
+                'evaluations.viewAny',
 
-        // Role's Permissions
-        $permissionsForRoles = [
-            'super_administrator' => $defaultPermissions,
+                'volunteersBadge.create',
+                'volunteersBadge.update',
+                'volunteersBadge.delete',
+                'volunteersBadge.view',
+                'volunteersBadge.viewAny',
+            ],
+
+            'system_admin' => [
+                'users.read',
+                'users.create',
+                'users.update',
+                'users.delete',
+                'users.status.update',
+
+                'profile.create',
+                'profile.read',
+                'profile.update',
+                'profile.delete',
+
+                'profile.read.own',
+                'profile.update.own',
+
+                'badges.create',
+                'badges.update',
+                'badges.delete',
+
+                'certificates.create',
+                'certificates.update',
+                'certificates.delete',
+                'certificates.view',
+                'certificates.viewAny',
+
+                'skills.read',
+                'skills.create',
+                'skills.update',
+                'skills.delete',
+
+                'evaluations.create',
+                'evaluations.update',
+                'evaluations.delete',
+                'evaluations.view',
+                'evaluations.viewAny',
+
+                'volunteersBadge.create',
+                'volunteersBadge.update',
+                'volunteersBadge.delete',
+                'volunteersBadge.view',
+                'volunteersBadge.viewAny',
+            ],
             'volunteer' => [
-                'get profile',
-                'create profile',
-                'update profile',
-                'remove profile',
-                'get opportunities',
-                'get opportunity',
-                'get tasks',
-                'get task',
-                'get applications',
-                'get application',
-                'create application',
-                'cancel application',
-                'get evaluations',
-                'get evaluation',
-                'create evaluation',
-                'update evaluation',
-                'remove evaluation',
-                'get certificates',
-                'get certificate',
+                'profile.create.own',
+                'profile.read.own',
+                'profile.update.own',
+
+                'opportunity.search',
+                'opportunity.apply',
+
+                'tasks.read.assigned',
+                'tasks.update.assigned',
+
+                'evaluations.read.own',
+                'evaluations.create.assigned.tasks',
+
+                'skills.read',
+
+                'certificates.view',
+                'certificates.viewAny',
+
+                'volunteersBadge.view',
+                'volunteersBadge.viewAny',
             ],
             'opportunity_manager' => [
-                'get opportunities',
-                'get opportunity',
-                'create opportunity',
-                'updated opportunity',
-                'remove opportunity',
-                'get applications',
-                'get application',
-                'accept application',
-                'get profile',
-                'get tasks',
-                'get task',
+                'profile.create.own',
+                'profile.read.own',
+                'profile.update.own',
+
+                'opportunity.create',
+                'opportunity.read.own',
+                'opportunity.update.own',
+                'opportunity.delete.own',
+
+                'applications.read',
+                'volunteers.read.applicants',
+                'volunteers.assign',
+
+                'skills.read',
+            ],
+            'organization_admin' => [
+                'organization.profile.create.own',
+                'organization.profile.read.own',
+                'organization.profile.update.own',
+
+                'organization.volunteers.read',
+                'organization.volunteers.evaluate',
+
+                'organizations.opportunities.create',
+                'organizations.opportunities.update',
+                'organizations.opportunities.delete',
+                'organizations.opportunities.publish',
+
+                'evaluations.create',
+                'evaluations.update',
+                'evaluations.delete',
+                'evaluations.view',
+                'evaluations.viewAny',
+
+                'skills.read',
+
+                'volunteersBadge.create',
+                'volunteersBadge.update',
+                'volunteersBadge.delete',
+                'volunteersBadge.view',
+                'volunteersBadge.viewAny',
             ],
             'volunteer_coordinator' => [
-                'get profiles',
-                'get profile',
-                'get tasks',
-                'get task',
-                'get evaluations',
-                'get evaluation',
-                'create evaluation',
-                'send notifications',
+                'profile.create.own',
+                'profile.read.own',
+                'profile.update.own',
+
+                'volunteers.read.managed',
+
+                'tasks.read.managed',
+
+                'evaluations.create',
+                'evaluations.update',
+                'evaluations.delete',
+                'evaluations.view',
+                'evaluations.viewAny',
+
+                'skills.read',
+
+                'volunteersBadge.create',
+                'volunteersBadge.update',
+                'volunteersBadge.delete',
+                'volunteersBadge.view',
+                'volunteersBadge.viewAny',
             ],
-            'evaluator' => [
-                'get evaluations',
-                'get evaluation',
+            'performance_evaluator' => [
+                'profile.create.own',
+                'profile.read.own',
+                'profile.update.own',
+
+                'reports.performance.read',
+
+                'certificates.create',
+                'certificates.update',
+                'certificates.delete',
+                'certificates.view',
+                'certificates.viewAny',
+
+                'skills.read',
             ],
         ];
 
-        // Link permissions to roles
-        foreach ($permissionsForRoles as $roleName => $perms) {
-            $role = Role::firstWhere('name', $roleName);
-            if ($role) {
-                foreach ($perms as $permName) {
-                    $permission = Permission::firstWhere('name', $permName);
-                    if ($permission) {
-                        if (!$role->hasPermissionTo($permission)) {
-                            // Direct Permission
-                            $role->givePermissionTo($permission);
-                        }
-                    }
-                }
-            }
+        foreach ($roles as $roleName => $perms) {
+            $role = Role::firstOrCreate([
+                'name' => $roleName,
+                'guard_name' => $guard,
+            ]);
+
+            $role->syncPermissions($perms);
         }
+
 
         // update cache to know about the newly created permissions (required if using WithoutModelEvents in seeders)
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();

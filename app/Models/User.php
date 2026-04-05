@@ -64,7 +64,6 @@ class User extends Authenticatable
      */
     public array $translatable = [
         'name',
-        'status',
         'phone',
         'address',
     ];

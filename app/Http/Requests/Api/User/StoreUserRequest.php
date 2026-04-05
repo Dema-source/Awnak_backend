@@ -12,7 +12,7 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('users.create');
     }
 
     /**
@@ -25,6 +25,7 @@ class StoreUserRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,except,id'],
+            'status' => ['sometimes', 'in:active,notActive'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'phone' => ['sometimes', 'integer'],
             'address' => ['sometimes', 'string'],

@@ -71,21 +71,21 @@ class MakeLayers extends Command
             ])
         );
 
-        // $this->writeFile(
-        //     $storeRequestPath,
-        //     $this->buildStub('storerequest.stub', [
-        //         'storeRequestName' => $storeRequestName,
-        //         'modelName' => $modelName,
-        //     ])
-        // );
+        $this->writeFile(
+            $storeRequestPath,
+            $this->buildStub('storerequest.stub', [
+                'storeRequestName' => $storeRequestName,
+                'modelName' => $modelName,
+            ])
+        );
 
-        // $this->writeFile(
-        //     $updateRequestPath,
-        //     $this->buildStub('updaterequest.stub', [
-        //         'updateRequestName' => $updateRequestName,
-        //         'modelName' => $modelName,
-        //     ])
-        // );
+        $this->writeFile(
+            $updateRequestPath,
+            $this->buildStub('updaterequest.stub', [
+                'updateRequestName' => $updateRequestName,
+                'modelName' => $modelName,
+            ])
+        );
         $this->writeFile(
             $controllerPath,
             $this->buildStub('controllerrepositoryapi.stub', [
