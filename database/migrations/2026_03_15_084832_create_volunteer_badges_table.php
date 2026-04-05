@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('volunteer_badges', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->unsignedBigInteger('volunteer_id')->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('badge_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
