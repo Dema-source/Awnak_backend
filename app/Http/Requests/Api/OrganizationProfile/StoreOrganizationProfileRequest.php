@@ -22,8 +22,16 @@ class StoreOrganizationProfileRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'type'    => ['required', 'string', 'in:Charitable organization,Civil society organization,Voluntary educational/university institution,Hospital,Religious organization,Company with a Corporate Social Responsibility (CSR) program,Student club/association,Environmental organization'],
+        $rules =  [
+            'license_number' => ['required', 'string', 'max:255', 'unique:organization_profiles,license_number'],
+            'type' => ['required', 'string', 'in:Charitable organization,Civil society organization,Voluntary educational/university institution,Hospital,Religious organization,Company with a Corporate Social Responsibility (CSR) program,Student club/association,Environmental organization'],
+            'bio' => ['nullable', 'text'],
+            'website' => ['nullable', 'url', 'max:255'],
+            'user_id' => ['required', 'exists:users,id'],
         ];
+        if ($this->user()->hasRole('system_admin')) {
+            $rules['status'] = 'required|in:active,notactive';
+        }
+        return $rules;
     }
 }

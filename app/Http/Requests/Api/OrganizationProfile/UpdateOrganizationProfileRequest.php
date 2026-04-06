@@ -22,8 +22,15 @@ class UpdateOrganizationProfileRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'type'    => ['sometimes', 'string', 'in:Charitable organization,Civil society organization,Voluntary educational/university institution,Hospital,Religious organization,Company with a Corporate Social Responsibility (CSR) program,Student club/association,Environmental organization'],
+        $rules = [
+            'license_number' => ['sometimes', 'string', 'max:255', 'unique:organization_profiles,license_number'],
+            'type' => ['sometimes', 'string', 'in:Charitable organization,Civil society organization,Voluntary educational/university institution,Hospital,Religious organization,Company with a Corporate Social Responsibility (CSR) program,Student club/association,Environmental organization'],
+            'bio' => ['sometimes', 'nullable', 'text'],
+            'website' => ['sometimes', 'nullable', 'url', 'max:255'],
         ];
+        if ($this->user()->hasRole('system-admin')) {
+            $rules['status'] = 'nullable|in:active,notactive';
+        }
+        return $rules;
     }
 }

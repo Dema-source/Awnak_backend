@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Api\ApplicationController;
-use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BadgeController;
 use App\Http\Controllers\Api\CertificateController;
 use App\Http\Controllers\Api\DocumentController;
@@ -10,10 +9,8 @@ use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\OpportunityController;
 use App\Http\Controllers\Api\OrganizationProfileController;
 use App\Http\Controllers\Api\ProfileController;
-use App\Http\Controllers\Api\RolesPermissions\RolePermissionController;
 use App\Http\Controllers\Api\SkillController;
 use App\Http\Controllers\Api\TaskController;
-use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\VolunteerCertificateController;
 use App\Http\Controllers\Api\VolunteerController;
 use Illuminate\Http\Request;
@@ -32,6 +29,9 @@ require __DIR__ . '/api/users.php';
 // Roles & Permissions
 require __DIR__ . '/api/rolesandpermissions.php';
 
+// Organizations & Opportunities
+require __DIR__ . '/api/organizationsandopportunities.php';
+
 
 
 
@@ -42,7 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('profiles', ProfileController::class);
 
-    Route::apiResource('organizationProfiles', OrganizationProfileController::class);
+    // Route::apiResource('organizationProfiles', OrganizationProfileController::class);
 
     Route::apiResource('volunteers', VolunteerController::class);
     Route::put('volunteer/{volunteer}/status', [VolunteerController::class, 'updateStatus']);

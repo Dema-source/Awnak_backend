@@ -53,4 +53,6 @@ interface OrganizationProfileRepositoryInterface
      * @return bool
      */
     public function delete(int|string $id): bool;
+
+
 }
