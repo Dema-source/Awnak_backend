@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'array', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'status' => ['sometimes', 'string', 'in:active,notActive'],
@@ -44,7 +45,7 @@ class RegisteredUserController extends Controller
 
         // Auth::login($user);
         $token = $user->createToken('api_token')->plainTextToken;
-        return $this->success(['access_token' => $token,'user'=>$user],'Registered successfully');
+        return $this->success(['access_token' => $token,'user'=> new UserResource($user)],'Registered successfully');
 
         // return response()->noContent();
     }
