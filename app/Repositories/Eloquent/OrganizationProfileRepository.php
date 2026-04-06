@@ -12,7 +12,7 @@ class OrganizationProfileRepository implements OrganizationProfileRepositoryInte
      * Dependency injection of the Eloquent model.  
      *  
      * @param OrganizationProfile $model  
-     */ 
+     */
     public function __construct(
         protected OrganizationProfile $model
     ) {}
@@ -20,13 +20,14 @@ class OrganizationProfileRepository implements OrganizationProfileRepositoryInte
     /**  
      * Get a paginated list of records applying optional filters.  
      *  
+     * 
      * @param array $filters Key/value filters to apply to the query.  
      * @param int $perPage Number of items per page.  
      * @return LengthAwarePaginator  
-     */  
+     */
     public function getAll(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
-        $query = $this->model->query();
+        $query = $this->model->query()->where('status', 'active');
 
         foreach ($filters as $field => $value) {
             if ($value !== null && $value !== '') {
@@ -42,7 +43,7 @@ class OrganizationProfileRepository implements OrganizationProfileRepositoryInte
      *  
      * @param int|string $id  
      * @return OrganizationProfile  
-     */ 
+     */
     public function findById(int|string $id): OrganizationProfile
     {
         return $this->model->findOrFail($id);
@@ -86,4 +87,5 @@ class OrganizationProfileRepository implements OrganizationProfileRepositoryInte
 
         return (bool) $item->delete();
     }
+
 }

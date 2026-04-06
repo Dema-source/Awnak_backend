@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Roles API Routes
+| Roles & Permissions API Routes
 |--------------------------------------------------------------------------
 | API: {{baseURL}}/api/roles
 | API: {{baseURL}}/api/assign-permission-to-role

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\OrganizationProfile\StoreOrganizationProfileRequest;
 use App\Http\Requests\Api\OrganizationProfile\UpdateOrganizationProfileRequest;
+use App\Models\OrganizationProfile;
 use App\Services\OrganizationProfileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,8 +23,11 @@ class OrganizationProfileController extends Controller
     ) {}
 
     /**
-     * Display a paginated listing of OrganizationProfiles.
+     * Display a paginated listing of ACTIVE Organization Profiles.
      *
+     * Note:
+     * - Only organizations with status = "active" are returned.
+     * 
      * @param Request $request The HTTP request containing query filters.
      * @return JsonResponse
      */
@@ -39,13 +43,20 @@ class OrganizationProfileController extends Controller
 
     /**
      * Store a newly created OrganizationProfile in storage.
-     *
+     * 
+     * 
      * @param StoreOrganizationProfileRequest $request The validated form request.
      * @return JsonResponse
      */
     public function store(StoreOrganizationProfileRequest $request): JsonResponse
     {
-        $data = $request->validated() + ['user_id' => Auth::user()->id];
+        $data = $request->validated();
+
+        if ($request->user()->hasRole('system_admin') && $request->has('status')) {
+            $data['status'] = $request->input('status');
+        } else {
+            $data['status'] = 'notactive';
+        }
 
         $item = $this->service->create($data);
 
@@ -74,7 +85,9 @@ class OrganizationProfileController extends Controller
      */
     public function update(UpdateOrganizationProfileRequest $request, int|string $id): JsonResponse
     {
-        $item = $this->service->update($id, $request->validated());
+        if (Auth::user()->hasRole('system_admin') || Auth::user()->id === OrganizationProfile::findOrFail($id)->user_id)
+
+            $item = $this->service->update($id, $request->validated());
 
         return $this->success($item, 'OrganizationProfile updated successfully');
     }
@@ -91,4 +104,5 @@ class OrganizationProfileController extends Controller
 
         return $this->success(null, 'OrganizationProfile deleted successfully');
     }
+
 }

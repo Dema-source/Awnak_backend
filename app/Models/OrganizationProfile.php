@@ -17,7 +17,11 @@ use Spatie\Translatable\HasTranslations;
  *
  * @property int $id
  * @property int $user_id
+ * @property enum $status ("active" , "notactive")
+ * @property string $license_number
  * @property enum $type ("Charitable organization", "Civil society organization", "Voluntary educational/university institution", "Hospital", "Religious organization", "Company with a Corporate Social Responsibility (CSR) program", "Student club/association", "Environmental organization")
+ * @property text $bio
+ * @property string $website
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  *
@@ -34,9 +38,23 @@ class OrganizationProfile extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'status',
+        'license_number',
         'type',
+        'bio',
+        'website',
+        'user_id',
     ];
 
+    /**
+     * Fields to be translated.
+     * @var array
+     */
+    public array $translatable = [
+        'license_number',
+        'bio',
+        'website',
+    ];
 
     /**
      * Get the user that owns this Organization Profile

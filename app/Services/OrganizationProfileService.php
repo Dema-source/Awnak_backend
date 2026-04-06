@@ -50,6 +50,12 @@ class OrganizationProfileService
      */
     public function create(array $data): mixed
     {
+        if (!empty($data['license_number'])) {
+            $data['license_number'] = 'ORG-' . strtoupper(trim($data['license_number']));
+        }
+        if (!empty($data['website']) && !preg_match('/^https?:\/\//', $data['website'])) {
+            $data['website'] = 'https://' . $data['website'];
+        }
         return $this->repository->create($data);
     }
 
@@ -75,4 +81,6 @@ class OrganizationProfileService
     {
         return $this->repository->delete($id);
     }
+
+
 }
