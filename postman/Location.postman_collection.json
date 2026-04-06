@@ -1,0 +1,239 @@
+{
+  "info": {
+    "_postman_id": "20703a36-3dcc-4a17-b6c5-cbd23e852c08",
+    "name": "Location",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "43244374",
+    "_collection_link": "https://go.postman.co/collection/43244374-20703a36-3dcc-4a17-b6c5-cbd23e852c08?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "get all locations",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{vault:authorization-secret}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/locations",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "locations"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "find location",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{vault:authorization-secret}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/locations/1",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "locations",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "store location",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{vault:authorization-secret}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/opportunities/2/locations?latitude=90&longtude=90&address=test address&city=test city&country=test country",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "opportunities",
+            "2",
+            "locations"
+          ],
+          "query": [
+            {
+              "key": "latitude",
+              "value": "90"
+            },
+            {
+              "key": "longtude",
+              "value": "90"
+            },
+            {
+              "key": "address",
+              "value": "test address"
+            },
+            {
+              "key": "city",
+              "value": "test city"
+            },
+            {
+              "key": "country",
+              "value": "test country"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update location",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{vault:authorization-secret}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/locations/1?longtude=50",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "locations",
+            "1"
+          ],
+          "query": [
+            {
+              "key": "longtude",
+              "value": "50"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete location",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{vault:authorization-secret}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/locations/1",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "locations",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
