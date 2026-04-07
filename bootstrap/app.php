@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\SetLocaleFromHeader;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,17 +15,22 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->api(prepend: [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            SetLocaleFromHeader::class
         ]);
 
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-        ]);
-
-        $middleware->alias([
+            'translate' => \App\Http\Middleware\SetLocaleFromHeader::class,
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_has_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
+
+        // $middleware->alias([
+        //     'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+        //     'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+        //     'role_has_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
