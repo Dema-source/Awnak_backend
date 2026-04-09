@@ -257,16 +257,71 @@
         {
           "name": "register",
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [
               {
                 "key": "Accept",
                 "value": "application/json",
                 "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "ar",
+                "type": "text"
               }
             ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "dema.jafar33@gmail.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "12345678",
+                  "type": "text"
+                },
+                {
+                  "key": "password_confirmation",
+                  "value": "12345678",
+                  "type": "text"
+                },
+                {
+                  "key": "phone",
+                  "value": "05154",
+                  "type": "text"
+                },
+                {
+                  "key": "name[ar]",
+                  "value": "دبما",
+                  "type": "text",
+                  "uuid": "4021f151-2b4b-4b6a-9dcc-7d50c4be9404"
+                },
+                {
+                  "key": "name[en]",
+                  "value": "dema",
+                  "type": "text"
+                },
+                {
+                  "key": "address[en]",
+                  "value": "test address",
+                  "type": "text"
+                },
+                {
+                  "key": "address[ar]",
+                  "value": "عنوان اختباري",
+                  "type": "text",
+                  "uuid": "789f2b59-3df6-4810-af5f-81e8b25caa3c"
+                }
+              ]
+            },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/register?name=user&email=org2@gmail.com&password=12345678&password_confirmation=12345678&phone=05154&address=test address",
+              "raw": "http://127.0.0.1:8000/api/register",
               "protocol": "http",
               "host": [
                 "127",
@@ -278,32 +333,6 @@
               "path": [
                 "api",
                 "register"
-              ],
-              "query": [
-                {
-                  "key": "name",
-                  "value": "user"
-                },
-                {
-                  "key": "email",
-                  "value": "org2@gmail.com"
-                },
-                {
-                  "key": "password",
-                  "value": "12345678"
-                },
-                {
-                  "key": "password_confirmation",
-                  "value": "12345678"
-                },
-                {
-                  "key": "phone",
-                  "value": "05154"
-                },
-                {
-                  "key": "address",
-                  "value": "test address"
-                }
               ]
             }
           },
@@ -320,8 +349,23 @@
                 "type": "text"
               }
             ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "dema.jafar33@gmail.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "testtest1234",
+                  "type": "text"
+                }
+              ]
+            },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/login?email=org2@gmail.com&password=12345678",
+              "raw": "http://127.0.0.1:8000/api/login",
               "protocol": "http",
               "host": [
                 "127",
@@ -333,16 +377,6 @@
               "path": [
                 "api",
                 "login"
-              ],
-              "query": [
-                {
-                  "key": "email",
-                  "value": "org2@gmail.com"
-                },
-                {
-                  "key": "password",
-                  "value": "12345678"
-                }
               ]
             }
           },
@@ -397,7 +431,148 @@
           "response": []
         },
         {
-          "name": "get authenticated user",
+          "name": "forget password",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "ar",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "dema.jafar33@gmail.com",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/forgot-password",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reset password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Accept-Language",
+                "value": "ar",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"dema.jafar33@gmail.com\",\r\n    \"password\": \"testtest1234\",\r\n    \"password_confirmation\": \"testtest1234\",\r\n    \"token\": \"d857c1cc8838d0c78c51b49e6233dc74d069915efd2063e210955f754820a4aa\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/reset-password",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "verification notification",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/email/verification-notification",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "email",
+                "verification-notification"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "verify email",
           "request": {
             "auth": {
               "type": "bearer",
@@ -418,7 +593,7 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/me",
+              "raw": "http://127.0.0.1:8000/api/verify-email/15/682a9ebd8bd2f6d15589c7da8f6ba2802217f1c5?expires=1775756744&signature=8708dfdd29ad4408f9064316129f8805f02c90767e04af3322ecb3b61170e4a2\n",
               "protocol": "http",
               "host": [
                 "127",
@@ -429,7 +604,19 @@
               "port": "8000",
               "path": [
                 "api",
-                "me"
+                "verify-email",
+                "15",
+                "682a9ebd8bd2f6d15589c7da8f6ba2802217f1c5"
+              ],
+              "query": [
+                {
+                  "key": "expires",
+                  "value": "1775756744"
+                },
+                {
+                  "key": "signature",
+                  "value": "8708dfdd29ad4408f9064316129f8805f02c90767e04af3322ecb3b61170e4a2\n"
+                }
               ]
             }
           },
