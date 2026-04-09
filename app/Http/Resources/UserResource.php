@@ -19,7 +19,7 @@ class UserResource extends JsonResource
             'name' => $this->getTranslation('name', app()->getLocale()),
             'email' => $this->email,
             'status' => $this->status,
-            'phone' => $this->getTranslation('phone', app()->getLocale()),
+            'phone' => $this->phone,
             'address' => $this->getTranslation('address', app()->getLocale()),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

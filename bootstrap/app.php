@@ -26,11 +26,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_has_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
 
-        // $middleware->alias([
-        //     'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
-        //     'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
-        //     'role_has_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
-        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
