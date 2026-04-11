@@ -12,7 +12,7 @@ class UserPermissionsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('permissions.update');
+        return true;
     }
 
     /**

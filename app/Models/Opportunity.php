@@ -47,7 +47,7 @@ class Opportunity extends Model
         'expected_duration',
         'start_date',
         'end_date',
-        'required_volunteer',
+        'required_volunteers',
         'status',
     ];
 

@@ -52,7 +52,10 @@ class OrganizationProfileController extends Controller
     {
         $data = $request->validated();
 
-        if ($request->user()->hasRole('system_admin') && $request->has('status')) {
+        if (($request->user()->hasRole('super_administrator') ||
+                $request->user()->hasRole('system_admin')) &&
+            $request->has('status')
+        ) {
             $data['status'] = $request->input('status');
         } else {
             $data['status'] = 'notactive';
@@ -85,7 +88,11 @@ class OrganizationProfileController extends Controller
      */
     public function update(UpdateOrganizationProfileRequest $request, int|string $id): JsonResponse
     {
-        if (Auth::user()->hasRole('system_admin') || Auth::user()->id === OrganizationProfile::findOrFail($id)->user_id)
+        if (
+            $request->user()->hasRole('super_administrator') ||
+            $request->user()->hasRole('system_admin') ||
+            Auth::user()->id === $this->service->findById($id)->user_id
+        )
 
             $item = $this->service->update($id, $request->validated());
 
@@ -105,4 +112,46 @@ class OrganizationProfileController extends Controller
         return $this->success(null, 'OrganizationProfile deleted successfully');
     }
 
+    /**
+     * List all not-active organizations.
+     * 
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function listNotActive(Request $request): JsonResponse
+    {
+        $filters = $request->except(['page', 'per_page']);
+        $perPage = (int) $request->input('per_page', 15);
+
+        $data = $this->service->listNotActive($filters, $perPage);
+
+        return $this->paginate($data, 'Organization not active Profile list fetched successfully');
+    }
+
+    /**
+     * Activate an organization.
+     * 
+     * @param int|string $id
+     * @return JsonResponse
+     */
+    public function activateOrganization(int|string $id): JsonResponse
+    {
+        $this->service->activate($id);
+
+        return $this->success(null, 'OrganizationProfile activated successfully');
+    }
+
+    /**
+     * Get all opportunities for the organization.
+     * 
+     * @return JsonResponse
+     */
+    public function getOrganizationOpportunities(): JsonResponse
+    {
+        $userId = Auth::id();
+
+        $opportunities = $this->service->getOrganizationOpportunities($userId);
+
+        return $this->success($opportunities, 'Organization opportunities fetched successfully');
+    }
 }

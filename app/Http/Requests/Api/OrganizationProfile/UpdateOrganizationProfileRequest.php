@@ -28,8 +28,8 @@ class UpdateOrganizationProfileRequest extends FormRequest
             'bio' => ['sometimes', 'nullable', 'text'],
             'website' => ['sometimes', 'nullable', 'url', 'max:255'],
         ];
-        if ($this->user()->hasRole('system-admin')) {
-            $rules['status'] = 'nullable|in:active,notactive';
+        if (($this->user()->hasRole('super_administrator') || $this->user()->hasRole('system_admin'))) {
+            $rules['status'] = 'sometimes|nullable|in:active,notactive';
         }
         return $rules;
     }

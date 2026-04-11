@@ -8,11 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Role\RolePermissionRequest;
 use App\Http\Requests\Api\Role\UserPermissionsRequest;
 use App\Http\Requests\Api\Role\UserRolesRequest;
-use App\Models\User;
 use App\Services\RolesPermissions\RolePermissionService;
 use Illuminate\Http\JsonResponse;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class RolePermissionController extends Controller
 {
