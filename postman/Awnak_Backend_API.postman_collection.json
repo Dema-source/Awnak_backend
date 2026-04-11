@@ -32,7 +32,7 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/opportunities",
+              "raw": "http://127.0.0.1:8000/api/admin/opportunities",
               "protocol": "http",
               "host": [
                 "127",
@@ -43,6 +43,7 @@
               "port": "8000",
               "path": [
                 "api",
+                "admin",
                 "opportunities"
               ]
             }
@@ -71,7 +72,7 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/opportunities/2",
+              "raw": "http://127.0.0.1:8000/api/admin/opportunities/2",
               "protocol": "http",
               "host": [
                 "127",
@@ -82,8 +83,296 @@
               "port": "8000",
               "path": [
                 "api",
+                "admin",
                 "opportunities",
                 "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get organization opportunities",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/organization/get_opportunities",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "organization",
+                "get_opportunities"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "store opportunity",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Volunteers in SCHOOL field",
+                  "type": "text"
+                },
+                {
+                  "key": "expected_duration",
+                  "value": "55months",
+                  "type": "text"
+                },
+                {
+                  "key": "required_volunteers",
+                  "value": "5",
+                  "type": "text"
+                },
+                {
+                  "key": "start_date",
+                  "value": "2026-04-10",
+                  "type": "text"
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-04-30",
+                  "type": "text"
+                },
+                {
+                  "key": "organization_profile_id",
+                  "value": "4",
+                  "type": "text",
+                  "uuid": "de2f88e7-9308-413a-b55e-07a424e613a6"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/admin/opportunities",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "admin",
+                "opportunities"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Organization store opportunity",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Volunteers in SCHOOL field",
+                  "type": "text"
+                },
+                {
+                  "key": "expected_duration",
+                  "value": "takes 3-4 months",
+                  "type": "text"
+                },
+                {
+                  "key": "required_volunteers",
+                  "value": "5",
+                  "type": "text"
+                },
+                {
+                  "key": "start_date",
+                  "value": "2026-04-10",
+                  "type": "text"
+                },
+                {
+                  "key": "end_date",
+                  "value": "2026-04-30",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/organization/add_opportunity",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "organization",
+                "add_opportunity"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update opportunity",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Volunteers in Education/Virtual field",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/admin/opportunities/6",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "admin",
+                "opportunities",
+                "6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Organization update opportunity",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"Test Tiiitle\",\r\n    \"required_volunteer\": 10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/organization/opportunities/5",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "organization",
+                "opportunities",
+                "5"
               ]
             }
           },
@@ -115,7 +404,7 @@
               "raw": ""
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/opportunities/3",
+              "raw": "http://127.0.0.1:8000/api/organization/opportunities/5",
               "protocol": "http",
               "host": [
                 "127",
@@ -126,15 +415,21 @@
               "port": "8000",
               "path": [
                 "api",
+                "organization",
                 "opportunities",
-                "3"
+                "5"
               ]
             }
           },
           "response": []
-        },
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
         {
-          "name": "update opportunity",
+          "name": "get all users",
           "request": {
             "auth": {
               "type": "bearer",
@@ -146,7 +441,7 @@
                 }
               ]
             },
-            "method": "PUT",
+            "method": "GET",
             "header": [
               {
                 "key": "Accept",
@@ -155,7 +450,7 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/opportunities/1?title=Volunteers in Education/Virtual field",
+              "raw": "http://127.0.0.1:8000/api/admin/users",
               "protocol": "http",
               "host": [
                 "127",
@@ -166,21 +461,56 @@
               "port": "8000",
               "path": [
                 "api",
-                "opportunities",
-                "1"
-              ],
-              "query": [
-                {
-                  "key": "title",
-                  "value": "Volunteers in Education/Virtual field"
-                }
+                "admin",
+                "users"
               ]
             }
           },
           "response": []
         },
         {
-          "name": "store opportunity",
+          "name": "find user",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/admin/users/2",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "store user",
           "request": {
             "auth": {
               "type": "bearer",
@@ -201,16 +531,42 @@
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "test1",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "test111@gmail.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "12345678",
+                  "type": "text"
+                },
+                {
+                  "key": "phone",
+                  "value": "5454354",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "test",
+                  "type": "text"
+                },
+                {
+                  "key": "password_confirmation",
+                  "value": "12345678",
+                  "type": "text"
                 }
-              }
+              ]
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/opportunities?title=Volunteers in SCHOOL field&expected_duration=takes 3-4 months&required_volunteers=5&start_date=2026-04-01&end_date=2026-04-30",
+              "raw": "http://127.0.0.1:8000/api/admin/users",
               "protocol": "http",
               "host": [
                 "127",
@@ -221,29 +577,105 @@
               "port": "8000",
               "path": [
                 "api",
-                "opportunities"
-              ],
-              "query": [
+                "admin",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update user",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
                 {
-                  "key": "title",
-                  "value": "Volunteers in SCHOOL field"
-                },
-                {
-                  "key": "expected_duration",
-                  "value": "takes 3-4 months"
-                },
-                {
-                  "key": "required_volunteers",
-                  "value": "5"
-                },
-                {
-                  "key": "start_date",
-                  "value": "2026-04-01"
-                },
-                {
-                  "key": "end_date",
-                  "value": "2026-04-30"
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
                 }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "password",
+                  "value": "123456788",
+                  "type": "text"
+                },
+                {
+                  "key": "password_confirmation",
+                  "value": "123456788",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/admin/users/17",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "17"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete user",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/admin/users/18",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "18"
               ]
             }
           },
@@ -278,7 +710,7 @@
               "formdata": [
                 {
                   "key": "email",
-                  "value": "dema.jafar33@gmail.com",
+                  "value": "org4@gmail.com",
                   "type": "text"
                 },
                 {
@@ -298,13 +730,13 @@
                 },
                 {
                   "key": "name[ar]",
-                  "value": "دبما",
+                  "value": "المنظمة 4",
                   "type": "text",
                   "uuid": "4021f151-2b4b-4b6a-9dcc-7d50c4be9404"
                 },
                 {
                   "key": "name[en]",
-                  "value": "dema",
+                  "value": "organization4",
                   "type": "text"
                 },
                 {
@@ -354,12 +786,12 @@
               "formdata": [
                 {
                   "key": "email",
-                  "value": "dema.jafar33@gmail.com",
+                  "value": "org3@gmail.com",
                   "type": "text"
                 },
                 {
                   "key": "password",
-                  "value": "testtest1234",
+                  "value": "12345678",
                   "type": "text"
                 }
               ]
@@ -649,7 +1081,7 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/get-user-permissions/3",
+              "raw": "http://127.0.0.1:8000/api/admin/get-user-permissions/3",
               "protocol": "http",
               "host": [
                 "127",
@@ -660,6 +1092,7 @@
               "port": "8000",
               "path": [
                 "api",
+                "admin",
                 "get-user-permissions",
                 "3"
               ]
@@ -703,7 +1136,7 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/remove-role-from-user",
+              "raw": "http://127.0.0.1:8000/api/admin/remove-role-from-user",
               "protocol": "http",
               "host": [
                 "127",
@@ -714,6 +1147,7 @@
               "port": "8000",
               "path": [
                 "api",
+                "admin",
                 "remove-role-from-user"
               ]
             }
@@ -748,7 +1182,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"roles\":[\"volunteer\"],\r\n    \"user_id\":13\r\n}",
+              "raw": "{\r\n    \"roles\":[\"organization_admin\"],\r\n    \"user_id\":19\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -756,7 +1190,7 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/assign-role-to-user",
+              "raw": "http://127.0.0.1:8000/api/admin/assign-role-to-user",
               "protocol": "http",
               "host": [
                 "127",
@@ -767,6 +1201,7 @@
               "port": "8000",
               "path": [
                 "api",
+                "admin",
                 "assign-role-to-user"
               ]
             }
@@ -812,7 +1247,7 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/check-permission",
+              "raw": "http://127.0.0.1:8000/api/admin/check-permission",
               "protocol": "http",
               "host": [
                 "127",
@@ -823,6 +1258,7 @@
               "port": "8000",
               "path": [
                 "api",
+                "admin",
                 "check-permission"
               ]
             }
@@ -865,7 +1301,7 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/assign-permission-to-user",
+              "raw": "http://127.0.0.1:8000/api/admin/assign-permission-to-user",
               "protocol": "http",
               "host": [
                 "127",
@@ -876,6 +1312,7 @@
               "port": "8000",
               "path": [
                 "api",
+                "admin",
                 "assign-permission-to-user"
               ]
             }
@@ -913,7 +1350,7 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/assign-permission-to-role",
+              "raw": "http://127.0.0.1:8000/api/admin/assign-permission-to-role",
               "protocol": "http",
               "host": [
                 "127",
@@ -924,6 +1361,7 @@
               "port": "8000",
               "path": [
                 "api",
+                "admin",
                 "assign-permission-to-role"
               ]
             }
@@ -966,7 +1404,7 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/remove-permission-from-user",
+              "raw": "http://127.0.0.1:8000/api/admin/remove-permission-from-user",
               "protocol": "http",
               "host": [
                 "127",
@@ -977,6 +1415,7 @@
               "port": "8000",
               "path": [
                 "api",
+                "admin",
                 "remove-permission-from-user"
               ]
             }
@@ -1014,7 +1453,7 @@
               }
             },
             "url": {
-              "raw": "http://127.0.0.1:8000/api/remove-permission-from-role",
+              "raw": "http://127.0.0.1:8000/api/admin/remove-permission-from-role",
               "protocol": "http",
               "host": [
                 "127",
@@ -1025,6 +1464,7 @@
               "port": "8000",
               "path": [
                 "api",
+                "admin",
                 "remove-permission-from-role"
               ]
             }
@@ -1036,138 +1476,6 @@
     {
       "name": "Organization",
       "item": [
-        {
-          "name": "delete profile",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{vault:authorization-secret}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "http://127.0.0.1:8000/api/organizationProfiles/1",
-              "protocol": "http",
-              "host": [
-                "127",
-                "0",
-                "0",
-                "1"
-              ],
-              "port": "8000",
-              "path": [
-                "api",
-                "organizationProfiles",
-                "1"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "update profile",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{vault:authorization-secret}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "http://127.0.0.1:8000/api/organizationProfiles/1?type=Civil society organization",
-              "protocol": "http",
-              "host": [
-                "127",
-                "0",
-                "0",
-                "1"
-              ],
-              "port": "8000",
-              "path": [
-                "api",
-                "organizationProfiles",
-                "1"
-              ],
-              "query": [
-                {
-                  "key": "type",
-                  "value": "Civil society organization"
-                },
-                {
-                  "key": "",
-                  "value": "",
-                  "type": "text",
-                  "disabled": true
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "find profile",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{vault:authorization-secret}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "http://127.0.0.1:8000/api/organizationProfiles/1",
-              "protocol": "http",
-              "host": [
-                "127",
-                "0",
-                "0",
-                "1"
-              ],
-              "port": "8000",
-              "path": [
-                "api",
-                "organizationProfiles",
-                "1"
-              ]
-            }
-          },
-          "response": []
-        },
         {
           "name": "Get All Active Organizations",
           "request": {
@@ -1190,7 +1498,7 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/organizationProfiles",
+              "raw": "http://127.0.0.1:8000/api/admin/organizationProfiles",
               "protocol": "http",
               "host": [
                 "127",
@@ -1201,6 +1509,7 @@
               "port": "8000",
               "path": [
                 "api",
+                "admin",
                 "organizationProfiles"
               ],
               "query": [
@@ -1209,67 +1518,6 @@
                   "value": "",
                   "type": "text",
                   "disabled": true
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Create a new Organization",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{vault:authorization-secret}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "http://127.0.0.1:8000/api/organizationProfiles?type=Charitable organization&user_id=15&status=active&website=http://soos.com&license_number=vdsvsdvdfvsdv",
-              "protocol": "http",
-              "host": [
-                "127",
-                "0",
-                "0",
-                "1"
-              ],
-              "port": "8000",
-              "path": [
-                "api",
-                "organizationProfiles"
-              ],
-              "query": [
-                {
-                  "key": "type",
-                  "value": "Charitable organization"
-                },
-                {
-                  "key": "user_id",
-                  "value": "15"
-                },
-                {
-                  "key": "status",
-                  "value": "active"
-                },
-                {
-                  "key": "website",
-                  "value": "http://soos.com"
-                },
-                {
-                  "key": "license_number",
-                  "value": "vdsvsdvdfvsdv"
                 }
               ]
             }
@@ -1298,7 +1546,7 @@
               }
             ],
             "url": {
-              "raw": "http://127.0.0.1:8000/api/organizationProfiles/notactive",
+              "raw": "http://127.0.0.1:8000/api/admin/notactive/organizationProfiles",
               "protocol": "http",
               "host": [
                 "127",
@@ -1309,9 +1557,260 @@
               "port": "8000",
               "path": [
                 "api",
-                "organizationProfiles",
-                "notactive"
+                "admin",
+                "notactive",
+                "organizationProfiles"
               ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "find Organization profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/admin/organizationProfiles/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "admin",
+                "organizationProfiles",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create a new Organization",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/admin/organizationProfiles?type=Charitable organization&user_id=22&status=notactive&website=http://soos.com&license_number=esgegwegffwe",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "admin",
+                "organizationProfiles"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "Charitable organization"
+                },
+                {
+                  "key": "user_id",
+                  "value": "22"
+                },
+                {
+                  "key": "status",
+                  "value": "notactive"
+                },
+                {
+                  "key": "website",
+                  "value": "http://soos.com"
+                },
+                {
+                  "key": "license_number",
+                  "value": "esgegwegffwe"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update Organization profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/admin/organizationProfiles/4?type=Civil society organization",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "admin",
+                "organizationProfiles",
+                "4"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "Civil society organization"
+                },
+                {
+                  "key": "",
+                  "value": "",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete Organization profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/admin/organizationProfiles/1",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "admin",
+                "organizationProfiles",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "activate profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{vault:authorization-secret}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/admin/activate/organizationProfile/8",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "admin",
+                "activate",
+                "organizationProfile",
+                "8"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
             }
           },
           "response": []

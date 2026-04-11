@@ -5,6 +5,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\OrganizationProfile;
 use App\Repositories\Interfaces\OrganizationProfileRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class OrganizationProfileRepository implements OrganizationProfileRepositoryInterface
 {
@@ -88,4 +89,53 @@ class OrganizationProfileRepository implements OrganizationProfileRepositoryInte
         return (bool) $item->delete();
     }
 
+    /**
+     * List all not-active organizations.
+     * 
+     * @param array $filters
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function listNotActive(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        $query = $this->model->query()->where('status', 'notactive');
+
+        foreach ($filters as $field => $value) {
+            if ($value !== null && $value !== '') {
+                $query->where($field, $value);
+            }
+        }
+
+        return $query->latest()->paginate($perPage);
+    }
+
+    /**
+     * Activate an organization.
+     * 
+     * @param OrganizationProfile $organization
+     * @return bool
+     */
+    public function activate(OrganizationProfile $organization): bool
+    {
+        $organization->status = 'active';
+        $organization->save();
+        return true;
+    }
+
+    /**
+     * Get all opportunities for a specific organization.
+     * 
+     * @param int $userId
+     * @return Collection
+     */
+    public function getOrganizationOpportunities(int $id): Collection
+    {
+        $profile = $this->model->where('user_id', $id)->first();
+        
+        if (!$profile) {
+            return collect([]);
+        }
+
+        return $profile->opportunities()->get();
+    }
 }

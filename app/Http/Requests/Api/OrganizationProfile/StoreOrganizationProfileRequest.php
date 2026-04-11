@@ -29,7 +29,7 @@ class StoreOrganizationProfileRequest extends FormRequest
             'website' => ['nullable', 'url', 'max:255'],
             'user_id' => ['required', 'exists:users,id'],
         ];
-        if ($this->user()->hasRole('system_admin')) {
+        if (($this->user()->hasRole('super_administrator') || $this->user()->hasRole('system_admin'))) {
             $rules['status'] = 'required|in:active,notactive';
         }
         return $rules;

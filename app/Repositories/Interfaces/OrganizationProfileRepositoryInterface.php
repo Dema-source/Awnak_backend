@@ -54,5 +54,28 @@ interface OrganizationProfileRepositoryInterface
      */
     public function delete(int|string $id): bool;
 
+    /**
+     * List all not-active organizations.
+     * 
+     * @param array $filters
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function listNotActive(array $filters = [], int $perPage = 15): LengthAwarePaginator;
 
+    /**
+     * Activate an organization.
+     * 
+     * @param OrganizationProfile $organization
+     * @return bool
+     */
+    public function activate(OrganizationProfile $organization):bool;
+
+    /**
+     * Get all opportunities for a specific organization.
+     * 
+     * @param int $userId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getOrganizationOpportunities(int $userId): \Illuminate\Database\Eloquent\Collection;
 }

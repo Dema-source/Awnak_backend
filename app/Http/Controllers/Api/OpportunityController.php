@@ -45,7 +45,7 @@ class OpportunityController extends Controller
      */
     public function store(StoreOpportunityRequest $request): JsonResponse
     {
-        $data = $request->validated() + ['organization_profile_id' => Auth::user()->organization_profile->id];
+        $data = $request->validated();
 
         $item = $this->service->create($data);
 
@@ -74,6 +74,18 @@ class OpportunityController extends Controller
      */
     public function update(UpdateOpportunityRequest $request, int|string $id): JsonResponse
     {
+        $opportunity = $this->service->findById($id);
+
+        $user = Auth::user();
+
+        // Check if user is super_administrator or system_admin or the owner of the opportunity
+        if (
+            !$user->hasRole('super_administrator') && !$user->hasRole('system_admin') &&
+            (!$user->organization_profile || $user->organization_profile->id !== $opportunity->organization_profile_id)
+        ) {
+            return $this->error('Unauthorized to update this opportunity', 403);
+        }
+
         $item = $this->service->update($id, $request->validated());
 
         return $this->success($item, 'Opportunity updated successfully');
@@ -87,8 +99,34 @@ class OpportunityController extends Controller
      */
     public function destroy(int|string $id): JsonResponse
     {
+        $opportunity = $this->service->findById($id);
+
+        $user = Auth::user();
+
+        // Check if user is super_administrator or system_admin or the owner of the opportunity
+        if (
+            !$user->hasRole('super_administrator') && !$user->hasRole('system_admin') &&
+            (!$user->organization_profile || $user->organization_profile->id !== $opportunity->organization_profile_id)
+        ) {
+            return $this->error('Unauthorized to delete this opportunity', 403);
+        }
         $this->service->delete($id);
 
         return $this->success(null, 'Opportunity deleted successfully');
+    }
+
+    /**
+     * Store a newly created Opportunity in storage by specific Organization.
+     * 
+     * @param StoreOpportunityRequest $request
+     * @return JsonResponse
+     */
+    public function storeOpportunity(StoreOpportunityRequest $request): JsonResponse
+    {
+        $data = $request->validated() + ['organization_profile_id' => Auth::user()->organization_profile->id];
+
+        $item = $this->service->create($data);
+
+        return $this->success($item, 'Opportunity created successfully');
     }
 }

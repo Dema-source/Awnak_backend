@@ -82,5 +82,37 @@ class OrganizationProfileService
         return $this->repository->delete($id);
     }
 
+    /**
+     * List all not-active organizations.
+     * 
+     * @param array $filters
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function listNotActive(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->repository->listNotActive($filters, $perPage);
+    }
 
+    /**
+     * Activate an organization.
+     * 
+     * @param int|string $id
+     * @return bool
+     */
+    public function activate(int|string $id): bool
+    {
+        return $this->repository->activate($this->findById($id));
+    }
+
+    /**
+     * Get all opportunities for a specific organization.
+     * 
+     * @param int $userId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getOrganizationOpportunities(int $id): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->repository->getOrganizationOpportunities($id);
+    }
 }
