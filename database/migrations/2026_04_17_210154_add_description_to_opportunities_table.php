@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('opportunity_skills', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('opportunity_id')->constrained()->cascadeOnDelete();
-            $table->unsignedBigInteger('skill_id')->constrained()->cascadeOnDelete();
-            $table->timestamps();
+        Schema::table('opportunities', function (Blueprint $table) {
+            //
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('opportunity_skills');
+        Schema::table('opportunities', function (Blueprint $table) {
+            //
+        });
     }
 };

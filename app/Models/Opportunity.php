@@ -57,8 +57,6 @@ class Opportunity extends Model
      */
     public array $translatable = [
         'title',
-        'expected_duration',
-        'required_volunteer',
     ];
 
     /**
@@ -73,14 +71,32 @@ class Opportunity extends Model
     }
 
     /**
-     * Get the location that the Opportunity available in
+     * The locations of the Opportunity 
      *
-     * Relationship: One-to-One.
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * Relationship: Many-to-Many.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function location(): HasOne
+    public function locations(): BelongsToMany
     {
-        return $this->hasOne(Location::class);
+        return $this->belongsToMany(Location::class, 'location_opportunity')
+            ->withPivot([
+                'building_name',
+                'floor_number',
+                'apartment_number',
+                'landmark',
+            ])
+            ->withTimestamps();
+    }
+
+    /**
+     * Locations available for the Opportunity
+     *
+     * Relationship: One-to-Many.
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function opportunityLocations(): HasMany
+    {
+        return $this->hasMany(LocationOpportunity::class);
     }
 
     /**

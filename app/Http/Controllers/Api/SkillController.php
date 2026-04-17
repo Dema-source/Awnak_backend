@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Skill\StoreSkillRequest;
 use App\Http\Requests\Api\Skill\UpdateSkillRequest;
 use App\Services\SkillService;
+use App\Http\Resources\SkillResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -46,7 +47,7 @@ class SkillController extends Controller
     {
         $item = $this->service->create($request->validated());
 
-        return $this->success($item, 'Skill created successfully');
+        return $this->success(['skill' => new SkillResource($item)], 'Skill created successfully');
     }
 
     /**
@@ -73,7 +74,7 @@ class SkillController extends Controller
     {
         $item = $this->service->update($id, $request->validated());
 
-        return $this->success($item, 'Skill updated successfully');
+        return $this->success(['skill' => new SkillResource($item)], 'Skill updated successfully');
     }
 
     /**

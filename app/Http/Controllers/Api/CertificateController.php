@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Certificate\StoreCertificateRequest;
 use App\Http\Requests\Api\Certificate\UpdateCertificateRequest;
+use App\Http\Resources\CertificateResource;
 use App\Services\CertificateService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -46,7 +47,7 @@ class CertificateController extends Controller
     {
         $item = $this->service->create($request->validated());
 
-        return $this->success($item, 'Certificate created successfully');
+        return $this->success(new CertificateResource($item), 'Certificate created successfully');
     }
 
     /**
@@ -59,7 +60,7 @@ class CertificateController extends Controller
     {
         $item = $this->service->findById($id);
 
-        return $this->success($item, 'Certificate fetched successfully');
+        return $this->success(new CertificateResource($item), 'Certificate fetched successfully');
     }
 
     /**
@@ -73,7 +74,7 @@ class CertificateController extends Controller
     {
         $item = $this->service->update($id, $request->validated());
 
-        return $this->success($item, 'Certificate updated successfully');
+        return $this->success(new CertificateResource($item), 'Certificate updated successfully');
     }
 
     /**

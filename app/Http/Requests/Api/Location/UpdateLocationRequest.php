@@ -23,11 +23,9 @@ class UpdateLocationRequest extends FormRequest
     public function rules(): array
     {
         return [
-        'latitude'  => ['sometimes', 'numeric', 'between:-90,90'],
-        'longtude' =>  ['sometimes', 'numeric', 'between:-180,180'],
-        'address'   => ['sometimes', 'string', 'max:255'],
-        'city'      => ['sometimes', 'string', 'max:100'],
-        'country'   => ['sometimes', 'string', 'max:100'],
+            'city_id' => ['sometimes', 'exists:cities,id'],
+            'latitude' => ['sometimes', 'numeric', 'between:-90,90'],
+            'longitude' => ['sometimes', 'numeric', 'between:-180,180'],
         ];
     }
 }

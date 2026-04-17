@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('opportunity_id')->constrained()->cascadeOnDelete();
-            $table->decimal('latitude');
-            $table->decimal('longtude');
-            $table->string('address');
-            $table->string('city');
-            $table->string('country');
+            $table->foreignId('city_id')->constrained('cities')->cascadeOnDelete();
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
             $table->timestamps();
+
+            $table->index(['city_id']);
+            $table->index(['latitude', 'longitude']);
         });
     }
 

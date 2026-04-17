@@ -2,13 +2,14 @@
 
 namespace App\Repositories\Interfaces;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Models\Location;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Interface LocationRepositoryInterface
  *
- * Defines the contract for CRUD operations.
+ * Defines the contract for CRUD operations and location-specific queries.
  */
 interface LocationRepositoryInterface
 {
@@ -17,7 +18,7 @@ interface LocationRepositoryInterface
      *
      * @param array $filters [Key => value] filters.
      * @param int $perPage size of items in each page.
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @return LengthAwarePaginator
      */
     public function getAll(array $filters = [], int $perPage = 15): LengthAwarePaginator;
 
@@ -25,7 +26,7 @@ interface LocationRepositoryInterface
      * Find a record by its ID.
      *
      * @param int|string $id The primary key value.
-     * @return Location 
+     * @return Location
      */
     public function findById(int|string $id): Location;
 
@@ -53,4 +54,55 @@ interface LocationRepositoryInterface
      * @return bool
      */
     public function delete(int|string $id): bool;
+
+    /**
+     * Get locations by city.
+     *
+     * @param int|string $cityId
+     * @return Collection
+     */
+    public function getByCity(int|string $cityId): Collection;
+
+    /**
+     * Get locations by country.
+     *
+     * @param int|string $countryId
+     * @return Collection
+     */
+    public function getByCountry(int|string $countryId): Collection;
+
+    /**
+     * Get location with city and country relationships.
+     *
+     * @param int|string $id
+     * @return Location|null
+     */
+    public function getWithRelations(int|string $id): ?Location;
+
+    /**
+     * Get locations within radius of given coordinates.
+     *
+     * @param float $latitude
+     * @param float $longitude
+     * @param int $radiusKm
+     * @return Collection
+     */
+    public function getLocationsWithinRadius(float $latitude, float $longitude, int $radiusKm): Collection;
+
+    /**
+     * Search locations by city name, country name, or coordinates.
+     *
+     * @param string $data
+     * @param int $limit
+     * @return Collection
+     */
+    public function searchByAddress(string $data, int $limit = 10): Collection;
+
+    /**
+     * Get locations with opportunity relationship.
+     *
+     * @param array $filters
+     * @return Collection
+     */
+    public function getWithOpportunity(array $filters = []): Collection;
 }

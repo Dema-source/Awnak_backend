@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api\Location;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreLocationRequest extends FormRequest
 {
@@ -23,11 +24,9 @@ class StoreLocationRequest extends FormRequest
     public function rules(): array
     {
         return [
-        'latitude'  => ['required', 'numeric', 'between:-90,90'],
-        'longtude' =>  ['required', 'numeric', 'between:-180,180'],
-        'address'   => ['required', 'string', 'max:255'],
-        'city'      => ['required', 'string', 'max:100'],
-        'country'   => ['required', 'string', 'max:100'],
+            'city_id' => ['required', 'exists:cities,id'],
+            'latitude' => ['required',  'numeric',  'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
         ];
     }
 }

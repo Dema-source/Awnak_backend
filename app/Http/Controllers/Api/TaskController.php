@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Task\StoreTaskRequest;
 use App\Http\Requests\Api\Task\UpdateTaskRequest;
 use App\Http\Requests\Api\Task\UpdateTaskStatusRequest;
+use App\Http\Resources\TaskResource;
 use App\Models\Opportunity;
 use App\Models\Volunteer;
 use App\Services\TaskService;
@@ -51,7 +52,7 @@ class TaskController extends Controller
 
         $item = $this->service->create($data);
 
-        return $this->success($item, 'Task created successfully');
+        return $this->success(new TaskResource($item), 'Task created successfully');
     }
 
     /**
@@ -64,7 +65,7 @@ class TaskController extends Controller
     {
         $item = $this->service->findById($id);
 
-        return $this->success($item, 'Task fetched successfully');
+        return $this->success(new TaskResource($item), 'Task fetched successfully');
     }
 
     /**
@@ -78,7 +79,7 @@ class TaskController extends Controller
     {
         $item = $this->service->update($id, $request->validated());
 
-        return $this->success($item, 'Task updated successfully');
+        return $this->success(new TaskResource($item), 'Task updated successfully');
     }
 
     /**
@@ -92,7 +93,7 @@ class TaskController extends Controller
     {
         $item = $this->service->update($id, $request->validated());
 
-        return $this->success($item, 'Task status updated successfully');
+        return $this->success(new TaskResource($item), 'Task status updated successfully');
     }
 
     /**

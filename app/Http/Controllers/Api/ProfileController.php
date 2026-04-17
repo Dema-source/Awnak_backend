@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Profile\StoreProfileRequest;
 use App\Http\Requests\Api\Profile\UpdateProfileRequest;
+use App\Http\Resources\ProfileResource;
 use App\Services\ProfileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -49,7 +50,7 @@ class ProfileController extends Controller
 
         $item = $this->service->create($data);
 
-        return $this->success($item, 'Profile created successfully');
+        return $this->success(new ProfileResource($item), 'Profile created successfully');
     }
 
     /**
@@ -62,7 +63,7 @@ class ProfileController extends Controller
     {
         $item = $this->service->findById($id);
 
-        return $this->success($item, 'Profile fetched successfully');
+        return $this->success(new ProfileResource($item), 'Profile fetched successfully');
     }
 
     /**
@@ -76,7 +77,7 @@ class ProfileController extends Controller
     {
         $item = $this->service->update($id, $request->validated());
 
-        return $this->success($item, 'Profile updated successfully');
+        return $this->success(new ProfileResource($item), 'Profile updated successfully');
     }
 
     /**

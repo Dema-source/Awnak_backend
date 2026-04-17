@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Volunteer\StoreVolunteerRequest;
 use App\Http\Requests\Api\Volunteer\UpdateVolunteerRequest;
 use App\Http\Requests\Api\Volunteer\UpdateVolunteerStatusRequest;
+use App\Http\Resources\VolunteerResource;
 use App\Services\VolunteerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -50,7 +51,7 @@ class VolunteerController extends Controller
 
         $item = $this->service->create($data);
 
-        return $this->success($item, 'Volunteer created successfully');
+        return $this->success(new VolunteerResource($item), 'Volunteer created successfully');
     }
 
     /**
@@ -63,7 +64,7 @@ class VolunteerController extends Controller
     {
         $item = $this->service->findById($id);
 
-        return $this->success($item, 'Volunteer fetched successfully');
+        return $this->success(new VolunteerResource($item), 'Volunteer fetched successfully');
     }
 
     /**
@@ -77,7 +78,7 @@ class VolunteerController extends Controller
     {
         $item = $this->service->update($id, $request->validated());
 
-        return $this->success($item, 'Volunteer updated successfully');
+        return $this->success(new VolunteerResource($item), 'Volunteer updated successfully');
     }
 
     /**
@@ -91,7 +92,7 @@ class VolunteerController extends Controller
     {
         $item = $this->service->update($id, $request->validated());
 
-        return $this->success($item, 'Volunteer status updated successfully');
+        return $this->success(new VolunteerResource($item), 'Volunteer status updated successfully');
     }
 
     /**

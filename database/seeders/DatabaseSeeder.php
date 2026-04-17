@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             BadgeSeeder::class,
             CertificateSeeder::class,
-            
+            LocationSeeder::class,
         ]);
     }
 }
