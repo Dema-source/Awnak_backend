@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\VolunteerCertificate\StoreVolunteerCertificateRequest;
 use App\Http\Requests\Api\VolunteerCertificate\UpdateVolunteerCertificateRequest;
+use App\Http\Resources\VolunteerCertificateResource;
 use App\Models\Task;
 use App\Services\VolunteerCertificateService;
 use Illuminate\Http\JsonResponse;
@@ -50,7 +51,7 @@ class VolunteerCertificateController extends Controller
 
         $item = $this->service->create($data);
 
-        return $this->success($item, 'Volunteer Certificate created successfully');
+        return $this->success(new VolunteerCertificateResource($item), 'Volunteer Certificate created successfully');
     }
 
     /**
@@ -63,7 +64,7 @@ class VolunteerCertificateController extends Controller
     {
         $item = $this->service->findById($id);
 
-        return $this->success($item, 'Volunteer Certificate fetched successfully');
+        return $this->success(new VolunteerCertificateResource($item), 'Volunteer Certificate fetched successfully');
     }
 
     /**
@@ -77,7 +78,7 @@ class VolunteerCertificateController extends Controller
     {
         $item = $this->service->update($id, $request->validated());
 
-        return $this->success($item, 'Volunteer Certificate updated successfully');
+        return $this->success(new VolunteerCertificateResource($item), 'Volunteer Certificate updated successfully');
     }
 
     /**

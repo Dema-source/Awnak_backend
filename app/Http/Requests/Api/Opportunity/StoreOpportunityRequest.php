@@ -27,7 +27,7 @@ class StoreOpportunityRequest extends FormRequest
             'expected_duration' => ['required', 'string', 'max:50'],
             'start_date' => ['required', 'date_format:Y-m-d', 'date', 'before_or_equal:end_date', 'after_or_equal:today'],
             'end_date' => ['required', 'date_format:Y-m-d', 'date', 'after_or_equal:start_date'],
-            'required_volunteer' => ['required', 'integer', 'min:1'],
+            'required_volunteers' => ['required', 'integer', 'min:1'],
         ];
         if($this->user()->hasRole('super_administrator')||$this->user()->hasRole('system_admin')){
          $rules['organization_profile_id'] = 'required|int|exists:organization_profiles,id';

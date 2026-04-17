@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Evaluation\StoreEvaluationRequest;
 use App\Http\Requests\Api\Evaluation\UpdateEvaluationRequest;
+use App\Http\Resources\EvaluationResource;
 use App\Services\EvaluationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -49,7 +50,7 @@ class EvaluationController extends Controller
 
         $item = $this->service->create($data);
 
-        return $this->success($item, 'Evaluation created successfully');
+        return $this->success(new EvaluationResource($item), 'Evaluation created successfully');
     }
 
     /**
@@ -62,7 +63,7 @@ class EvaluationController extends Controller
     {
         $item = $this->service->findById($id);
 
-        return $this->success($item, 'Evaluation fetched successfully');
+        return $this->success(new EvaluationResource($item), 'Evaluation fetched successfully');
     }
 
     /**
@@ -76,7 +77,7 @@ class EvaluationController extends Controller
     {
         $item = $this->service->update($id, $request->validated());
 
-        return $this->success($item, 'Evaluation updated successfully');
+        return $this->success(new EvaluationResource($item), 'Evaluation updated successfully');
     }
 
     /**

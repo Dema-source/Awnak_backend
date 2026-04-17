@@ -125,7 +125,7 @@ class OrganizationProfileRepository implements OrganizationProfileRepositoryInte
     /**
      * Get all opportunities for a specific organization.
      * 
-     * @param int $userId
+     * @param int $id
      * @return Collection
      */
     public function getOrganizationOpportunities(int $id): Collection

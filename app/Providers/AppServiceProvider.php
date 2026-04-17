@@ -38,6 +38,14 @@ use App\Repositories\Eloquent\ProfileRepository;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\Eloquent\UserRepository;
 use App\Repositories\Interfaces\Auth\AuthRepositoryInterface;
+use App\Repositories\Eloquent\OpportunitySkillRepository;
+use App\Repositories\Interfaces\OpportunitySkillRepositoryInterface;
+use App\Repositories\Eloquent\CountryRepository;
+use App\Repositories\Interfaces\CountryRepositoryInterface;
+use App\Repositories\Eloquent\CityRepository;
+use App\Repositories\Eloquent\LocationOpportunityRepository;
+use App\Repositories\Interfaces\CityRepositoryInterface;
+use App\Repositories\Interfaces\LocationOpportunityRepositoryInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -48,13 +56,17 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(AuthRepositoryInterface::class, AuthRepository::class);
         $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
+        $this->app->bind(CountryRepositoryInterface::class, CountryRepository::class);
+        $this->app->bind(CityRepositoryInterface::class, CityRepository::class);
+        $this->app->bind(LocationRepositoryInterface::class, LocationRepository::class);
+        $this->app->bind(LocationOpportunityRepositoryInterface::class, LocationOpportunityRepository::class);
         $this->app->bind(VolunteerCertificateRepositoryInterface::class, VolunteerCertificateRepository::class);
         $this->app->bind(RolePermissionRepositoryInterface::class, RolePermissionRepository::class);
+        $this->app->bind(OpportunitySkillRepositoryInterface::class, OpportunitySkillRepository::class);
         // $this->app->bind(DocumentRepositoryInterface::class, DocumentRepository::class);
         $this->app->bind(EvaluationRepositoryInterface::class, EvaluationRepository::class);
         $this->app->bind(TaskRepositoryInterface::class, TaskRepository::class);
         $this->app->bind(ApplicationRepositoryInterface::class, ApplicationRepository::class);
-        $this->app->bind(LocationRepositoryInterface::class, LocationRepository::class);
         $this->app->bind(OpportunityRepositoryInterface::class, OpportunityRepository::class);
         $this->app->bind(BadgeRepositoryInterface::class, BadgeRepository::class);
         $this->app->bind(CertificateRepositoryInterface::class, CertificateRepository::class);

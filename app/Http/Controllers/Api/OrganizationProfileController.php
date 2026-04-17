@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\OrganizationProfile\StoreOrganizationProfileRequest;
 use App\Http\Requests\Api\OrganizationProfile\UpdateOrganizationProfileRequest;
-use App\Models\OrganizationProfile;
 use App\Services\OrganizationProfileService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\OrganizationProfileResource;
 
 class OrganizationProfileController extends Controller
 {
@@ -63,7 +63,7 @@ class OrganizationProfileController extends Controller
 
         $item = $this->service->create($data);
 
-        return $this->success($item, 'OrganizationProfile created successfully');
+        return $this->success(new OrganizationProfileResource($item), 'OrganizationProfile created successfully');
     }
 
     /**
@@ -76,7 +76,7 @@ class OrganizationProfileController extends Controller
     {
         $item = $this->service->findById($id);
 
-        return $this->success($item, 'OrganizationProfile fetched successfully');
+        return $this->success(new OrganizationProfileResource($item), 'OrganizationProfile fetched successfully');
     }
 
     /**
@@ -96,7 +96,7 @@ class OrganizationProfileController extends Controller
 
             $item = $this->service->update($id, $request->validated());
 
-        return $this->success($item, 'OrganizationProfile updated successfully');
+        return $this->success(new OrganizationProfileResource($item), 'OrganizationProfile updated successfully');
     }
 
     /**

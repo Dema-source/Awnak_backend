@@ -4,20 +4,19 @@ namespace App\Services;
 
 use App\Repositories\Interfaces\LocationRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
- * Service layer for handling business logic related to the "LocationRepositoryInterface" repository.
+ * Service layer for handling business logic related to location management.
  */
 class LocationService
 {
-    /**
-     * LocationService Constructor.
-     *
-     * @param \App\Repositories\Interfaces\LocationRepositoryInterface $repository
-     */
-    public function __construct(
-        protected LocationRepositoryInterface $repository
-    ) {}
+    protected LocationRepositoryInterface $repository;
+
+    public function __construct(LocationRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
 
     /**
      * Retrieve a paginated list of records applying optional dynamic filters.
@@ -35,9 +34,9 @@ class LocationService
      * Find a record by its ID.
      *
      * @param int|string $id
-     * @return mixed
+     * @return \App\Models\Location|null
      */
-    public function findById(int|string $id): mixed
+    public function findById(int|string $id): ?\App\Models\Location
     {
         return $this->repository->findById($id);
     }
@@ -46,9 +45,9 @@ class LocationService
      * Create a new record using the provided data.
      *
      * @param array $data
-     * @return mixed
+     * @return \App\Models\Location
      */
-    public function create(array $data): mixed
+    public function create(array $data): \App\Models\Location
     {
         return $this->repository->create($data);
     }
@@ -58,9 +57,9 @@ class LocationService
      *
      * @param int|string $id
      * @param array $data
-     * @return mixed
+     * @return \App\Models\Location
      */
-    public function update(int|string $id, array $data): mixed
+    public function update(int|string $id, array $data): \App\Models\Location
     {
         return $this->repository->update($id, $data);
     }
@@ -74,5 +73,74 @@ class LocationService
     public function delete(int|string $id): bool
     {
         return $this->repository->delete($id);
+    }
+  
+    /**
+     * Get locations by city.
+     *
+     * @param int|string $cityId
+     * @return Collection
+     */
+    public function getByCity(int|string $cityId): Collection
+    {
+        return $this->repository->getByCity($cityId);
+    }
+
+    /**
+     * Get locations by country.
+     *
+     * @param int|string $countryId
+     * @return Collection
+     */
+    public function getByCountry(int|string $countryId): Collection
+    {
+        return $this->repository->getByCountry($countryId);
+    }
+
+    /**
+     * Get location with city, country and opportunity relationships.
+     *
+     * @param int|string $id
+     * @return \App\Models\Location|null
+     */
+    public function getWithRelations(int|string $id): ?\App\Models\Location
+    {
+        return $this->repository->getWithRelations($id);
+    }
+
+    /**
+     * Get locations within radius of given coordinates.
+     *
+     * @param float $latitude
+     * @param float $longitude
+     * @param int $radiusKm
+     * @return Collection
+     */
+    public function getLocationsWithinRadius(float $latitude, float $longitude, int $radiusKm): Collection
+    {
+        return $this->repository->getLocationsWithinRadius($latitude, $longitude, $radiusKm);
+    }
+
+    /**
+     * Search locations by city name, country name, or coordinates.
+     *
+     * @param string $data
+     * @param int $limit
+     * @return Collection
+     */
+    public function searchByAddress(string $data, int $limit = 10): Collection
+    {
+        return $this->repository->searchByAddress($data, $limit);
+    }
+
+    /**
+     * Get locations with opportunity relationship.
+     *
+     * @param array $filters
+     * @return Collection
+     */
+    public function getWithOpportunity(array $filters = []): Collection
+    {
+        return $this->repository->getWithOpportunity($filters);
     }
 }

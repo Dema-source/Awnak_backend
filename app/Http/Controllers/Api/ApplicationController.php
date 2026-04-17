@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Application\StoreApplicationRequest;
 use App\Http\Requests\Api\Application\UpdateApplicationRequest;
+use App\Http\Resources\ApplicationResource;
 use App\Models\Opportunity;
 use App\Services\ApplicationService;
 use Illuminate\Http\JsonResponse;
@@ -50,7 +51,7 @@ class ApplicationController extends Controller
 
         $item = $this->service->create($data);
 
-        return $this->success($item, 'Application created successfully');
+        return $this->success(new ApplicationResource($item), 'Application created successfully');
     }
 
     /**
@@ -63,7 +64,7 @@ class ApplicationController extends Controller
     {
         $item = $this->service->findById($id);
 
-        return $this->success($item, 'Application fetched successfully');
+        return $this->success(new ApplicationResource($item), 'Application fetched successfully');
     }
 
     /**
@@ -77,7 +78,7 @@ class ApplicationController extends Controller
     {
         $item = $this->service->update($id, $request->validated());
 
-        return $this->success($item, 'Application updated successfully');
+        return $this->success(new ApplicationResource($item), 'Application updated successfully');
     }
 
     /**
