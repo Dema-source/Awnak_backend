@@ -104,4 +104,184 @@ class Profile extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    /**
+     * Scope a query to only include profiles of a given gender.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $gender
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfGender($query, string $gender)
+    {
+        return $query->where('gender', $gender);
+    }
+
+    /**
+     * Scope a query to only include profiles within age range.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $minAge
+     * @param int $maxAge
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOfAgeRange($query, int $minAge, int $maxAge)
+    {
+        return $query->whereBetween('age', [$minAge, $maxAge]);
+    }
+
+    /**
+     * Scope a query to search profiles by bio or interests.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $searchTerm
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSearchInBioOrInterests($query, string $searchTerm)
+    {
+        return $query->where(function ($q) use ($searchTerm) {
+            $q->where('bio', 'like', "%{$searchTerm}%")
+              ->orWhereJsonContains('interests', $searchTerm);
+        });
+    }
+
+    /**
+     * Scope a query to only include profiles with specific skills.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $skillIds
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithSkills($query, array $skillIds)
+    {
+        return $query->whereHas('skills', function ($q) use ($skillIds) {
+            $q->whereIn('skills.id', $skillIds);
+        });
+    }
+
+    /**
+     * Scope a query to include profile relationships.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $relations
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithRelations($query, array $relations)
+    {
+        return $query->with($relations);
+    }
+
+    /**
+     * Scope a query to filter by multiple criteria.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $filters
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilter($query, array $filters)
+    {
+        foreach ($filters as $field => $value) {
+            if ($value !== null && $value !== '') {
+                switch ($field) {
+                    case 'gender':
+                        $query->ofGender($value);
+                        break;
+                    case 'min_age':
+                        if (isset($filters['max_age'])) {
+                            $query->ofAgeRange($value, $filters['max_age']);
+                        }
+                        break;
+                    case 'max_age':
+                        if (isset($filters['min_age'])) {
+                            $query->ofAgeRange($filters['min_age'], $value);
+                        }
+                        break;
+                    case 'skill_ids':
+                        if (is_array($value)) {
+                            $query->withSkills($value);
+                        }
+                        break;
+                    case 'search':
+                        $query->searchInBioOrInterests($value);
+                        break;
+                    default:
+                        $query->where($field, $value);
+                        break;
+                }
+            }
+        }
+
+        return $query;
+    }
+
+    /**
+     * Scope a query to get profiles with skills count.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $count
+     * @param string $operator
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithSkillsCount($query, int $count, string $operator = '>=')
+    {
+        return $query->withCount('skills')->having('skills_count', $operator, $count);
+    }
+
+    /**
+     * Scope a query to get profiles by user ID.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int|string $userId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    /**
+     * Scope a query to get profiles with bio.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithBio($query)
+    {
+        return $query->whereNotNull('bio')->where('bio', '!=', '');
+    }
+
+    /**
+     * Scope a query to get profiles with interests.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithInterests($query)
+    {
+        return $query->whereNotNull('interests')->whereJsonLength('interests', '>', 0);
+    }
+
+    /**
+     * Scope a query to get profiles created recently.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $days
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeRecent($query, int $days = 30)
+    {
+        return $query->where('created_at', '>=', now()->subDays($days));
+    }
+
+    /**
+     * Scope a query to get profiles updated recently.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $days
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeRecentlyUpdated($query, int $days = 30)
+    {
+        return $query->where('updated_at', '>=', now()->subDays($days));
+    }
 }

@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\OpportunityController;
 use App\Http\Controllers\Api\LocationOpportunityController;
 use App\Http\Controllers\Api\OpportunitySkillController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\ProfileSkillController;
 use App\Http\Controllers\Api\SkillController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\UserController;
@@ -99,7 +100,68 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('location-opportunities/{opportunity}/show', [LocationOpportunityController::class, 'showOpportunity']);
         Route::put('location-opportunities/{opportunity}/location/{location}/pivot', [LocationOpportunityController::class, 'updatePivot']);
         Route::get('location-opportunities/{opportunity}/location/{location}/pivot', [LocationOpportunityController::class, 'getPivot']);
-    });
+
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Profile
+        |--------------------------------------------------------------------------
+        */
+        // API: {{baseURL}}/api/admin/profile
+        // API: {{baseURL}}/api/admin/profile/update
+        // Route::get('profile', [ProfileController::class, 'getMyProfile']);
+        // Route::put('profile/update', [ProfileController::class, 'updateMyProfile']);
+        // Profile viewing (full access to other profiles)
+        // API: {{baseURL}}/api/admin/profiles
+        Route::apiResource('profiles', ProfileController::class);
+        // Profile filtering and search
+        // API: {{baseURL}}/api/admin/profiles/by-gender
+        // API: {{baseURL}}/api/admin/profiles/by-age-range
+        // API: {{baseURL}}/api/admin/profiles/search
+        // API: {{baseURL}}/api/admin/profiles/by-skills
+        Route::get('profiles/by-gender', [ProfileController::class, 'getByGender']);
+        Route::get('profiles/by-age-range', [ProfileController::class, 'getByAgeRange']);
+        Route::get('profiles/search', [ProfileController::class, 'search']);
+        Route::get('profiles/by-skills', [ProfileController::class, 'getBySkills']);
+        // Profile relationships
+        // API: {{baseURL}}/api/admin/profiles/{id}/with-relations
+        // API: {{baseURL}}/api/admin/profiles/with-relations
+        Route::get('profiles/{id}/with-relations', [ProfileController::class, 'showWithRelations']);
+        Route::get('profiles/with-relations', [ProfileController::class, 'indexWithRelations']);
+        // Profile statistics
+        // API: {{baseURL}}/api/admin/profiles/statistics
+        Route::get('profiles/statistics', [ProfileController::class, 'getStatistics']);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Skill
+        |--------------------------------------------------------------------------
+        */
+        // API: {{baseURL}}/api/admin/skills
+        // API: {{baseURL}}/api/admin/skills/statistics
+        // API: {{baseURL}}/api/admin/skills/search
+        // API: {{baseURL}}/api/admin/skills/with-relations
+        // API: {{baseURL}}/api/admin/skills/with-profiles-count
+        // API: {{baseURL}}/api/admin/skills/with-opportunities-count
+        // API: {{baseURL}}/api/admin/skills/popular
+        // API: {{baseURL}}/api/admin/skills/by-ids
+        // API: {{baseURL}}/api/admin/skills/not-in-profile/{profileId}
+        // API: {{baseURL}}/api/admin/skills/not-in-opportunity/{opportunityId}
+        // API: {{baseURL}}/api/admin/skills/recent
+        Route::apiResource('skills', SkillController::class);
+        Route::get('skills/statistics', [SkillController::class, 'getStatistics']);
+        Route::get('skills/search', [SkillController::class, 'search']);
+        Route::get('skills/with-relations', [SkillController::class, 'indexWithRelations']);
+        Route::get('skills/{id}/with-relations', [SkillController::class, 'showWithRelations']);
+        Route::get('skills/with-profiles-count', [SkillController::class, 'getWithProfilesCount']);
+        Route::get('skills/with-opportunities-count', [SkillController::class, 'getWithOpportunitiesCount']);
+        Route::get('skills/popular', [SkillController::class, 'getPopular']);
+        Route::get('skills/by-ids', [SkillController::class, 'getByIds']);
+        Route::get('skills/not-in-profile/{profileId}', [SkillController::class, 'getNotInProfile']);
+        Route::get('skills/not-in-opportunity/{opportunityId}', [SkillController::class, 'getNotInOpportunity']);
+        Route::get('skills/recent', [SkillController::class, 'getRecent']);
+  });
 
     // System Admin routes - administrative access
     Route::prefix('system')->middleware('role:system_admin')->group(function () {
@@ -119,8 +181,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('skills-count/opportunity-skills', [OpportunitySkillController::class, 'getSkillsCount']);
         Route::get('popular-skills/opportunity-skills', [OpportunitySkillController::class, 'getPopularSkills']);
 
-        // Skill
-        Route::apiResource('skills', SkillController::class);
 
         // Certificate
         Route::apiResource('certificates', CertificateController::class)->except(['store', 'update', 'delete']);
@@ -165,6 +225,62 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('location-opportunities/{opportunity}/show', [LocationOpportunityController::class, 'showOpportunity']);
         Route::put('location-opportunities/{opportunity}/location/{location}/pivot', [LocationOpportunityController::class, 'updatePivot']);
         Route::get('location-opportunities/{opportunity}/location/{location}/pivot', [LocationOpportunityController::class, 'getPivot']);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Profile
+        |--------------------------------------------------------------------------
+        */
+        // API: {{baseURL}}/api/volunteer/profile
+        // API: {{baseURL}}/api/volunteer/profile/update
+        Route::get('profile', [ProfileController::class, 'getMyProfile']);
+        Route::put('profile/update', [ProfileController::class, 'updateMyProfile']);
+        // Profile viewing (read-only access to other profiles)
+        // API: {{baseURL}}/api/system/profiles
+        Route::apiResource('profiles', ProfileController::class)->only(['index', 'show']);
+        // Profile filtering and search
+        // API: {{baseURL}}/api/system/profiles/by-gender
+        // API: {{baseURL}}/api/system/profiles/by-age-range
+        // API: {{baseURL}}/api/system/profiles/search
+        // API: {{baseURL}}/api/system/profiles/by-skills
+        Route::get('profiles/by-gender', [ProfileController::class, 'getByGender']);
+        Route::get('profiles/by-age-range', [ProfileController::class, 'getByAgeRange']);
+        Route::get('profiles/search', [ProfileController::class, 'search']);
+        Route::get('profiles/by-skills', [ProfileController::class, 'getBySkills']);
+        // Profile relationships
+        // API: {{baseURL}}/api/system/profiles/{id}/with-relations
+        // API: {{baseURL}}/api/system/profiles/with-relations
+        Route::get('profiles/{id}/with-relations', [ProfileController::class, 'showWithRelations']);
+        Route::get('profiles/with-relations', [ProfileController::class, 'indexWithRelations']);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Skill
+        |--------------------------------------------------------------------------
+        */
+        // Skills - Read-only access
+        // API: {{baseURL}}/api/system/skills
+        // API: {{baseURL}}/api/system/skills/statistics
+        // API: {{baseURL}}/api/system/skills/with-relations
+        // API: {{baseURL}}/api/system/skills/with-profiles-count
+        // API: {{baseURL}}/api/system/skills/with-opportunities-count
+        // API: {{baseURL}}/api/system/skills/popular
+        // API: {{baseURL}}/api/system/skills/by-ids
+        // API: {{baseURL}}/api/system/skills/not-in-profile/{profileId}
+        // API: {{baseURL}}/api/system/skills/not-in-opportunity/{opportunityId}
+        // API: {{baseURL}}/api/system/skills/recent
+        Route::apiResource('skills', SkillController::class)->only(['index', 'show']);
+        Route::get('skills/statistics', [SkillController::class, 'getStatistics']);
+        Route::get('skills/with-relations', [SkillController::class, 'indexWithRelations']);
+        Route::get('skills/{id}/with-relations', [SkillController::class, 'showWithRelations']);
+        Route::get('skills/with-profiles-count', [SkillController::class, 'getWithProfilesCount']);
+        Route::get('skills/with-opportunities-count', [SkillController::class, 'getWithOpportunitiesCount']);
+        Route::get('skills/popular', [SkillController::class, 'getPopular']);
+        Route::get('skills/by-ids', [SkillController::class, 'getByIds']);
+        Route::get('skills/not-in-profile/{profileId}', [SkillController::class, 'getNotInProfile']);
+        Route::get('skills/not-in-opportunity/{opportunityId}', [SkillController::class, 'getNotInOpportunity']);
+        Route::get('skills/recent', [SkillController::class, 'getRecent']);
     });
 
     // Organization Admin routes - organization management
@@ -181,10 +297,33 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('add_opportunity', [OpportunityController::class, 'storeOpportunity']);
         Route::apiResource('opportunities', OpportunityController::class)->except(['store']);
 
-
-        // Skill
+        /*
+        |--------------------------------------------------------------------------
+        | Skill
+        |--------------------------------------------------------------------------
+        */
+        // Skills - Read-only access
         // API: {{baseURL}}/api/organization/skills
+        // API: {{baseURL}}/api/organization/skills/statistics
+        // API: {{baseURL}}/api/organization/skills/with-relations
+        // API: {{baseURL}}/api/organization/skills/with-profiles-count
+        // API: {{baseURL}}/api/organization/skills/with-opportunities-count
+        // API: {{baseURL}}/api/organization/skills/popular
+        // API: {{baseURL}}/api/organization/skills/by-ids
+        // API: {{baseURL}}/api/organization/skills/not-in-profile/{profileId}
+        // API: {{baseURL}}/api/organization/skills/not-in-opportunity/{opportunityId}
+        // API: {{baseURL}}/api/organization/skills/recent
         Route::apiResource('skills', SkillController::class)->only(['index', 'show']);
+        Route::get('skills/statistics', [SkillController::class, 'getStatistics']);
+        Route::get('skills/with-relations', [SkillController::class, 'indexWithRelations']);
+        Route::get('skills/{id}/with-relations', [SkillController::class, 'showWithRelations']);
+        Route::get('skills/with-profiles-count', [SkillController::class, 'getWithProfilesCount']);
+        Route::get('skills/with-opportunities-count', [SkillController::class, 'getWithOpportunitiesCount']);
+        Route::get('skills/popular', [SkillController::class, 'getPopular']);
+        Route::get('skills/by-ids', [SkillController::class, 'getByIds']);
+        Route::get('skills/not-in-profile/{profileId}', [SkillController::class, 'getNotInProfile']);
+        Route::get('skills/not-in-opportunity/{opportunityId}', [SkillController::class, 'getNotInOpportunity']);
+        Route::get('skills/recent', [SkillController::class, 'getRecent']);
 
         // Opportunity Skills
         // API: {{baseURL}}/api/organization/opportunity-skills
@@ -260,16 +399,195 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     // Opportunity Manager routes - opportunity management
-    Route::prefix('opportunity')->middleware('role:opportunity_manager')->group(function () {});
+    Route::prefix('opportunity')->middleware('role:opportunity_manager')->group(function () {
+        /*
+        |--------------------------------------------------------------------------
+        | Profile
+        |--------------------------------------------------------------------------
+        */
+        // API: {{baseURL}}/api/opportunity/profile
+        // API: {{baseURL}}/api/opportunity/profile/update
+        Route::get('profile', [ProfileController::class, 'getMyProfile']);
+        Route::put('profile/update', [ProfileController::class, 'updateMyProfile']);
+        // Profile viewing (read-only access to other profiles)
+        // API: {{baseURL}}/api/opportunity/profiles
+        Route::apiResource('profiles', ProfileController::class)->only(['index', 'show']);
+        // Profile filtering and search
+        // API: {{baseURL}}/api/opportunity/profiles/by-gender
+        // API: {{baseURL}}/api/opportunity/profiles/by-age-range
+        // API: {{baseURL}}/api/opportunity/profiles/search
+        // API: {{baseURL}}/api/opportunity/profiles/by-skills
+        Route::get('profiles/by-gender', [ProfileController::class, 'getByGender']);
+        Route::get('profiles/by-age-range', [ProfileController::class, 'getByAgeRange']);
+        Route::get('profiles/search', [ProfileController::class, 'search']);
+        Route::get('profiles/by-skills', [ProfileController::class, 'getBySkills']);
+        // Profile relationships
+        // API: {{baseURL}}/api/opportunity/profiles/{id}/with-relations
+        // API: {{baseURL}}/api/opportunity/profiles/with-relations
+        Route::get('profiles/{id}/with-relations', [ProfileController::class, 'showWithRelations']);
+        Route::get('profiles/with-relations', [ProfileController::class, 'indexWithRelations']);
+        /*
+        |--------------------------------------------------------------------------
+        | Skill
+        |--------------------------------------------------------------------------
+        */
+        // Skills - Limited access
+        // API: {{baseURL}}/api/opportunity/skills
+        // API: {{baseURL}}/api/opportunity/skills/with-relations
+        // API: {{baseURL}}/api/opportunity/skills/with-profiles-count
+        // API: {{baseURL}}/api/opportunity/skills/with-opportunities-count
+        // API: {{baseURL}}/api/opportunity/skills/popular
+        // API: {{baseURL}}/api/opportunity/skills/by-ids
+        // API: {{baseURL}}/api/opportunity/skills/not-in-profile/{profileId}
+        // API: {{baseURL}}/api/opportunity/skills/not-in-opportunity/{opportunityId}
+        // API: {{baseURL}}/api/opportunity/skills/recent
+        Route::apiResource('skills', SkillController::class)->only(['index', 'show']);
+        Route::get('skills/with-relations', [SkillController::class, 'indexWithRelations']);
+        Route::get('skills/{id}/with-relations', [SkillController::class, 'showWithRelations']);
+        Route::get('skills/with-profiles-count', [SkillController::class, 'getWithProfilesCount']);
+        Route::get('skills/with-opportunities-count', [SkillController::class, 'getWithOpportunitiesCount']);
+        Route::get('skills/popular', [SkillController::class, 'getPopular']);
+        Route::get('skills/by-ids', [SkillController::class, 'getByIds']);
+        Route::get('skills/not-in-profile/{profileId}', [SkillController::class, 'getNotInProfile']);
+        Route::get('skills/not-in-opportunity/{opportunityId}', [SkillController::class, 'getNotInOpportunity']);
+        Route::get('skills/recent', [SkillController::class, 'getRecent']);
+    });
 
     // Volunteer Coordinator routes - volunteer management
-    Route::prefix('coordinator')->middleware('role:volunteer_coordinator')->group(function () {});
+    Route::prefix('coordinator')->middleware('role:volunteer_coordinator')->group(function () {
+        /*
+        |--------------------------------------------------------------------------
+        | Profile
+        |--------------------------------------------------------------------------
+        */        // API: {{baseURL}}/api/coordinator/profile
+        // API: {{baseURL}}/api/coordinator/profile/update
+        Route::get('profile', [ProfileController::class, 'getMyProfile']);
+        Route::put('profile/update', [ProfileController::class, 'updateMyProfile']);
+        // Profile viewing (read-only access to other profiles)
+        // API: {{baseURL}}/api/coordinator/profiles
+        Route::apiResource('profiles', ProfileController::class)->only(['index', 'show']);
+        // Profile filtering and search
+        // API: {{baseURL}}/api/coordinator/profiles/by-gender
+        // API: {{baseURL}}/api/coordinator/profiles/by-age-range
+        // API: {{baseURL}}/api/coordinator/profiles/search
+        // API: {{baseURL}}/api/coordinator/profiles/by-skills
+        Route::get('profiles/by-gender', [ProfileController::class, 'getByGender']);
+        Route::get('profiles/by-age-range', [ProfileController::class, 'getByAgeRange']);
+        Route::get('profiles/search', [ProfileController::class, 'search']);
+        Route::get('profiles/by-skills', [ProfileController::class, 'getBySkills']);
+        // Profile relationships
+        // API: {{baseURL}}/api/coordinator/profiles/{id}/with-relations
+        // API: {{baseURL}}/api/coordinator/profiles/with-relations
+        Route::get('profiles/{id}/with-relations', [ProfileController::class, 'showWithRelations']);
+        Route::get('profiles/with-relations', [ProfileController::class, 'indexWithRelations']);
+    });
 
     // Performance Evaluator routes - evaluation management
-    Route::prefix('evaluator')->middleware('role:performance_evaluator')->group(function () {});
+    Route::prefix('evaluator')->middleware('role:performance_evaluator')->group(function () {
+        /*
+        |--------------------------------------------------------------------------
+        | Profile
+        |--------------------------------------------------------------------------
+        */
+        // API: {{baseURL}}/api/evaluator/profile
+        // API: {{baseURL}}/api/evaluator/profile/update
+        Route::get('profile', [ProfileController::class, 'getMyProfile']);
+        Route::put('profile/update', [ProfileController::class, 'updateMyProfile']);
+        // Profile viewing (read-only access to other profiles)
+        // API: {{baseURL}}/api/evaluator/profiles
+        Route::apiResource('profiles', ProfileController::class)->only(['index', 'show']);
+        // Profile filtering and search
+        // API: {{baseURL}}/api/evaluator/profiles/by-gender
+        // API: {{baseURL}}/api/evaluator/profiles/by-age-range
+        // API: {{baseURL}}/api/evaluator/profiles/search
+        // API: {{baseURL}}/api/evaluator/profiles/by-skills
+        Route::get('profiles/by-gender', [ProfileController::class, 'getByGender']);
+        Route::get('profiles/by-age-range', [ProfileController::class, 'getByAgeRange']);
+        Route::get('profiles/search', [ProfileController::class, 'search']);
+        Route::get('profiles/by-skills', [ProfileController::class, 'getBySkills']);
+        // Profile relationships
+        // API: {{baseURL}}/api/evaluator/profiles/{id}/with-relations
+        // API: {{baseURL}}/api/evaluator/profiles/with-relations
+        Route::get('profiles/{id}/with-relations', [ProfileController::class, 'showWithRelations']);
+        Route::get('profiles/with-relations', [ProfileController::class, 'indexWithRelations']);
+        /*
+        |--------------------------------------------------------------------------
+        | Skill
+        |--------------------------------------------------------------------------
+        */
+        // Skills - Limited access
+        // API: {{baseURL}}/api/evaluator/skills
+        // API: {{baseURL}}/api/evaluator/skills/with-relations
+        // API: {{baseURL}}/api/evaluator/skills/with-profiles-count
+        // API: {{baseURL}}/api/evaluator/skills/with-opportunities-count
+        // API: {{baseURL}}/api/evaluator/skills/popular
+        // API: {{baseURL}}/api/evaluator/skills/by-ids
+        // API: {{baseURL}}/api/evaluator/skills/not-in-profile/{profileId}
+        // API: {{baseURL}}/api/evaluator/skills/not-in-opportunity/{opportunityId}
+        // API: {{baseURL}}/api/evaluator/skills/recent
+        Route::apiResource('skills', SkillController::class)->only(['index', 'show']);
+        Route::get('skills/with-relations', [SkillController::class, 'indexWithRelations']);
+        Route::get('skills/{id}/with-relations', [SkillController::class, 'showWithRelations']);
+        Route::get('skills/with-profiles-count', [SkillController::class, 'getWithProfilesCount']);
+        Route::get('skills/with-opportunities-count', [SkillController::class, 'getWithOpportunitiesCount']);
+        Route::get('skills/popular', [SkillController::class, 'getPopular']);
+        Route::get('skills/by-ids', [SkillController::class, 'getByIds']);
+        Route::get('skills/recent', [SkillController::class, 'getRecent']);
+    });
 
     // Volunteer routes - basic volunteer access
-    Route::prefix('volunteer')->middleware('role:volunteer')->group(function () {});
+    Route::prefix('volunteer')->middleware('role:volunteer')->group(function () {
+        /*
+        |--------------------------------------------------------------------------
+        | Profile
+        |--------------------------------------------------------------------------
+        */
+        // API: {{baseURL}}/api/volunteer/profile
+        // API: {{baseURL}}/api/volunteer/profile/update
+        Route::get('profile', [ProfileController::class, 'getMyProfile']);
+        Route::put('profile/update', [ProfileController::class, 'updateMyProfile']);
+        // Profile viewing (read-only access to other profiles)
+        // API: {{baseURL}}/api/volunteer/profiles
+        Route::apiResource('profiles', ProfileController::class)->only(['index', 'show']);
+        // Profile filtering and search
+        // API: {{baseURL}}/api/volunteer/profiles/by-gender
+        // API: {{baseURL}}/api/volunteer/profiles/by-age-range
+        // API: {{baseURL}}/api/volunteer/profiles/search
+        // API: {{baseURL}}/api/volunteer/profiles/by-skills
+        Route::get('profiles/by-gender', [ProfileController::class, 'getByGender']);
+        Route::get('profiles/by-age-range', [ProfileController::class, 'getByAgeRange']);
+        Route::get('profiles/search', [ProfileController::class, 'search']);
+        Route::get('profiles/by-skills', [ProfileController::class, 'getBySkills']);
+        // Profile relationships
+        // API: {{baseURL}}/api/volunteer/profiles/{id}/with-relations
+        // API: {{baseURL}}/api/volunteer/profiles/with-relations
+        Route::get('profiles/{id}/with-relations', [ProfileController::class, 'showWithRelations']);
+        Route::get('profiles/with-relations', [ProfileController::class, 'indexWithRelations']);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Skill
+        |--------------------------------------------------------------------------
+        */
+        // Skills - Limited access
+        // API: {{baseURL}}/api/volunteer/skills
+        // API: {{baseURL}}/api/volunteer/skills/with-relations
+        // API: {{baseURL}}/api/volunteer/skills/with-profiles-count
+        // API: {{baseURL}}/api/volunteer/skills/with-opportunities-count
+        // API: {{baseURL}}/api/volunteer/skills/popular
+        // API: {{baseURL}}/api/volunteer/skills/by-ids
+        // API: {{baseURL}}/api/volunteer/skills/not-in-profile/{profileId}
+        // API: {{baseURL}}/api/volunteer/skills/not-in-opportunity/{opportunityId}
+        // API: {{baseURL}}/api/volunteer/skills/recent
+        Route::apiResource('skills', SkillController::class)->only(['index', 'show']);
+        Route::get('skills/with-relations', [SkillController::class, 'indexWithRelations']);
+        Route::get('skills/{id}/with-relations', [SkillController::class, 'showWithRelations']);
+        Route::get('skills/with-profiles-count', [SkillController::class, 'getWithProfilesCount']);
+        Route::get('skills/with-opportunities-count', [SkillController::class, 'getWithOpportunitiesCount']);
+        Route::get('skills/popular', [SkillController::class, 'getPopular']);
+        Route::get('skills/by-ids', [SkillController::class, 'getByIds']);
+        Route::get('skills/recent', [SkillController::class, 'getRecent']);
+    });
 });
 
 
