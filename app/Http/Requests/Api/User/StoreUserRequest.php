@@ -27,8 +27,8 @@ class StoreUserRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,except,id'],
             'status' => ['sometimes', 'in:active,notActive'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'phone' => ['sometimes', 'integer'],
-            'address' => ['sometimes', 'string'],
+            'phone' => ['nullable', 'integer'],
+            'address' => ['nullable', 'string'],
         ];
     }
 }

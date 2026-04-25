@@ -11,7 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('locations', function (Blueprint $table) {
+        Schema::create('locations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('city_id')->constrained('cities')->cascadeOnDelete();
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
+            $table->timestamps();
+
+            $table->index(['city_id']);
+            $table->index(['latitude', 'longitude']);
             // Add unique constraint on city_id, latitude, longitude
             $table->unique(['city_id', 'latitude', 'longitude'], 'locations_city_lat_long_unique');
         });
@@ -22,9 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('locations', function (Blueprint $table) {
-            // Drop the unique constraint
-            $table->dropUnique('locations_city_lat_long_unique');
-        });
+        Schema::dropIfExists('locations');
     }
 };

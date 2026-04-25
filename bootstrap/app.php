@@ -19,8 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
+            // 'auth' => \App\Http\Middleware\Authenticate::class,
+            // 'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-            // 'translate' => \App\Http\Middleware\SetLocaleFromHeader::class,
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_has_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,

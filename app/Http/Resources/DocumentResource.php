@@ -16,14 +16,16 @@ class DocumentResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'title' => $this->title,
+            'path' => $this->path,
+            'type' => $this->type,
+            'original_name' => $this->original_name,
             'documentable_type' => $this->documentable_type,
             'documentable_id' => $this->documentable_id,
-            'file_path' => $this->file_path,
-            'file_name' => $this->file_name,
-            'file_type' => $this->file_type,
-            'file_size' => $this->file_size,
+            'documentable' => $this->whenLoaded('documentable'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'file_url' => asset('storage/' . $this->path),
         ];
     }
 }

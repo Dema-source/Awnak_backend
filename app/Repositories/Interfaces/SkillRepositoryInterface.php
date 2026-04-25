@@ -150,4 +150,12 @@ interface SkillRepositoryInterface
      * @return LengthAwarePaginator
      */
     public function getRecentSkills(int $days = 30, int $perPage = 15): LengthAwarePaginator;
+
+    /**
+     * Get skills for authenticated volunteer.
+     *
+     * @param int $perPage Items per page.
+     * @return LengthAwarePaginator
+     */
+    public function getMySkills(int $perPage = 15): LengthAwarePaginator;
 }

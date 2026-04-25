@@ -29,7 +29,7 @@ class StoreVolunteerRequest extends FormRequest
             'availability.*.days' => ['required', 'string', 'regex:/^((sunday|monday|tuesday|wednesday|thursday|friday|saturday)(-(sunday|monday|tuesday|wednesday|thursday|friday|saturday))?)(,(sunday|monday|tuesday|wednesday|thursday|friday|saturday)(-(sunday|monday|tuesday|wednesday|thursday|friday|saturday))?)*/i'],
             'availability.*.from' => ['required', 'string', 'regex:/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/'],
             'availability.*.to' => ['required', 'string', 'regex:/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/'],
-            'experience_years' => ['required', 'string', 'in:1,2,3,4,5'],
+            'experience_years' => ['nullable', 'string', 'in:1,2,3,4,5'],
             // 'status' => ['required', 'string', 'in:active, In_active, pending, blocked'],
         ];
     }

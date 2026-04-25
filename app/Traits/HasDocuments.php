@@ -18,6 +18,6 @@ trait HasDocuments
      */
     public function documents(): MorphMany
     {
-        return $this->morphMany(Document::class, 'documentable');
-}
+        return $this->morphMany(\App\Models\Document::class, 'documentable');
+    }
 }
