@@ -46,6 +46,8 @@ use App\Repositories\Eloquent\CityRepository;
 use App\Repositories\Eloquent\LocationOpportunityRepository;
 use App\Repositories\Interfaces\CityRepositoryInterface;
 use App\Repositories\Interfaces\LocationOpportunityRepositoryInterface;
+use App\Repositories\Eloquent\ProfileSkillRepository;
+use App\Repositories\Interfaces\ProfileSkillRepositoryInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -74,6 +76,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(SkillRepositoryInterface::class, SkillRepository::class);
         $this->app->bind(OrganizationProfileRepositoryInterface::class, OrganizationProfileRepository::class);
         $this->app->bind(ProfileRepositoryInterface::class, ProfileRepository::class);
+        $this->app->bind(ProfileSkillRepositoryInterface::class, ProfileSkillRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
     }
 

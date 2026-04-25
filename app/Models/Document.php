@@ -25,9 +25,6 @@ use Spatie\Translatable\HasTranslations;
 
 class Document extends Model
 {
-
-    use HasTranslations;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -37,16 +34,8 @@ class Document extends Model
         'title',
         'path',
         'type',
-    ];
-
-    /**
-     * Fields to be translated.
-     * @var array
-     */
-    public array $translatable = [
-        'title',
-        'path',
-        'type',
+        'documentable_type',
+        'documentable_id',
     ];
 
     /**
@@ -64,5 +53,144 @@ class Document extends Model
     public function documentable(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    /**
+     * Scope to search documents by title.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $searchTerm
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSearchByTitle($query, string $searchTerm)
+    {
+        return $query->where('title', 'like', "%{$searchTerm}%");
+    }
+
+    /**
+     * Scope to filter documents by type.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByType($query, string $type)
+    {
+        return $query->where('type', $type);
+    }
+
+    /**
+     * Scope to filter documents by user ID (through Volunteer model).
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $userId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByVolunteer($query, int $userId)
+    {
+        return $query->where('documentable_type', 'App\Models\Volunteer')
+            ->whereHas('documentable', function ($q) use ($userId) {
+                $q->whereHas('profile', function ($profileQ) use ($userId) {
+                    $profileQ->where('user_id', $userId);
+                });
+            });
+    }
+
+    /**
+     * Scope to filter documents by organization ID.
+     * Handles both Opportunity and OrganizationProfile documentable types.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param int $organizationId
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByOrganization($query, int $organizationId)
+    {
+        return $query->where(function ($q) use ($organizationId) {
+            // Documents attached to Opportunity model (which has organization_profile_id)
+            $q->where('documentable_type', 'App\Models\Opportunity')
+                ->whereHas('documentable', function ($subQ) use ($organizationId) {
+                    $subQ->where('organization_profile_id', $organizationId);
+                });
+        });
+    }
+
+    /**
+     * Scope to filter documents created on a specific date.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $date
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCreatedOn($query, string $date)
+    {
+        return $query->whereDate('created_at', $date);
+    }
+
+    /**
+     * Scope to filter documents created from a specific date.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $date
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCreatedFrom($query, string $date)
+    {
+        return $query->whereDate('created_at', '>=', $date);
+    }
+
+    /**
+     * Scope to filter documents created to a specific date.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $date
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCreatedTo($query, string $date)
+    {
+        return $query->whereDate('created_at', '<=', $date);
+    }
+
+    /**
+     * Scope to apply multiple filters to documents.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array $filters
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilter($query, array $filters)
+    {
+        foreach ($filters as $field => $value) {
+            if ($value !== null && $value !== '') {
+                switch ($field) {
+                    case 'search':
+                        $query->searchByTitle($value);
+                        break;
+                    case 'type':
+                        $query->byType($value);
+                        break;
+                    case 'user_id':
+                        $query->byUser($value);
+                        break;
+                    case 'organization_id':
+                        $query->byOrganization($value);
+                        break;
+                    case 'created_on':
+                        $query->createdOn($value);
+                        break;
+                    case 'created_from':
+                        $query->createdFrom($value);
+                        break;
+                    case 'created_to':
+                        $query->createdTo($value);
+                        break;
+                    default:
+                        $query->where($field, $value);
+                        break;
+                }
+            }
+        }
+
+        return $query;
     }
 }

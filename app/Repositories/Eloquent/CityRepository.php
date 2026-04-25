@@ -26,15 +26,7 @@ class CityRepository implements CityRepositoryInterface
      */
     public function getAll(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
-        $query = $this->model->query();
-
-        foreach ($filters as $field => $value) {
-            if ($value !== null && $value !== '') {
-                $query->where($field, $value);
-            }
-        }
-
-        return $query->latest()->paginate($perPage);
+        return $this->model->filter($filters)->latest()->paginate($perPage);
     }
 
     /**

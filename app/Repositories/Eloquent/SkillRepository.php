@@ -18,7 +18,7 @@ class SkillRepository implements SkillRepositoryInterface
     ) {}
 
     /**  
-     * Get a paginated list of records applying optional filters.  
+     * Get a paginated list of records applying optional filters and search using local scopes.  
      *  
      * @param array $filters Key/value filters to apply to the query.  
      * @param int $perPage Number of items per page.  
@@ -26,15 +26,7 @@ class SkillRepository implements SkillRepositoryInterface
      */
     public function getAll(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
-        $query = $this->model->query();
-
-        foreach ($filters as $field => $value) {
-            if ($value !== null && $value !== '') {
-                $query->where($field, $value);
-            }
-        }
-
-        return $query->latest()->paginate($perPage);
+        return $this->model->filter($filters)->latest()->paginate($perPage);
     }
 
     /**  
@@ -225,11 +217,13 @@ class SkillRepository implements SkillRepositoryInterface
         // Calculate average number of profiles per skill
         // This counts all profiles associated with each skill and computes the average
         $avgProfilesPerSkill = $this->model->withCount('profiles')
+            ->get()
             ->avg('profiles_count');
 
         // Calculate average number of opportunities per skill
         // This counts all opportunities associated with each skill and computes the average
         $avgOpportunitiesPerSkill = $this->model->withCount('opportunities')
+            ->get()
             ->avg('opportunities_count');
 
         return [
@@ -255,5 +249,28 @@ class SkillRepository implements SkillRepositoryInterface
     public function getRecentSkills(int $days = 30, int $perPage = 15): LengthAwarePaginator
     {
         return $this->model->recent($days)->latest()->paginate($perPage);
+    }
+
+    /**
+     * Get skills for the authenticated volunteer.
+     *
+     * @param int $perPage Items per page.
+     * @return LengthAwarePaginator
+     */
+    public function getMySkills(int $perPage = 15): LengthAwarePaginator
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        
+        if (!$user) {
+            return new \Illuminate\Pagination\LengthAwarePaginator(
+                new \Illuminate\Support\Collection(),
+                0,
+                $perPage
+            );
+        }
+
+        return $this->model->whereHas('profiles', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->withCount('profiles')->latest()->paginate($perPage);
     }
 }

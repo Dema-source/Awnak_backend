@@ -23,7 +23,9 @@ class UpdateSkillRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'array', 'max:255'],
+            'name' => ['sometimes', 'array'],
+            'name.en' => ['sometimes', 'string', 'max:255'],
+            'name.ar' => ['sometimes', 'string', 'max:255'],
         ];
     }
 }

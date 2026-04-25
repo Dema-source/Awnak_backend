@@ -205,4 +205,15 @@ class SkillService
     {
         return $this->repository->getRecentSkills($days, $perPage);
     }
+
+    /**
+     * Get skills for the authenticated volunteer.
+     *
+     * @param int $perPage Items per page.
+     * @return LengthAwarePaginator
+     */
+    public function getMySkills(int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->repository->getMySkills($perPage);
+    }
 }

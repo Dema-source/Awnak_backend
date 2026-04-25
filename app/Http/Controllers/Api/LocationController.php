@@ -8,8 +8,10 @@ use App\Http\Requests\Api\Location\StoreLocationRequest;
 use App\Http\Requests\Api\Location\UpdateLocationRequest;
 use App\Http\Requests\Api\Location\WithinRadiusRequest;
 use App\Services\LocationService;
+use App\Models\Location;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LocationController extends Controller
 {
@@ -78,6 +80,13 @@ class LocationController extends Controller
      */
     public function update(UpdateLocationRequest $request, int $id): JsonResponse
     {
+        $location = $this->service->findById($id);
+        
+        // Check if user is organization admin and if location belongs to their organization
+        if (Auth::user()->hasRole('organization_admin')) {
+            $this->authorizeLocationAccess($location);
+        }
+
         $item = $this->service->update($id, $request->validated());
 
         return $this->success(new LocationResource($item), 'Location updated successfully');
@@ -91,9 +100,42 @@ class LocationController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-         $this->service->delete($id);
+        $location = $this->service->findById($id);
+        
+        // Check if user is organization admin and if location belongs to their organization
+        if (Auth::user()->hasRole('organization_admin')) {
+            $this->authorizeLocationAccess($location);
+        }
+
+        $this->service->delete($id);
 
         return $this->success(null, 'Location deleted successfully');
+    }
+
+    /**
+     * Authorize organization admin to access location.
+     *
+     * @param Location $location
+     * @return void
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    private function authorizeLocationAccess(Location $location): void
+    {
+        $user = Auth::user();
+        $organizationId = $user->organization_profile?->id;
+
+        if (!$organizationId) {
+            abort(403, 'You are not associated with an organization');
+        }
+
+        // Check if location is associated with any of the organization's opportunities
+        $hasAccess = $location->opportunities()
+            ->where('organization_profile_id', $organizationId)
+            ->exists();
+
+        if (!$hasAccess) {
+            abort(403, 'You can only manage locations associated with your organization\'s opportunities');
+        }
     }
 
     /**

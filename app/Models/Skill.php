@@ -51,7 +51,7 @@ class Skill extends Model
      */
     public function profiles(): BelongsToMany
     {
-        return $this->belongsToMany(Profile::class);
+        return $this->belongsToMany(Profile::class, 'profile_skill');
     }
 
 
@@ -129,6 +129,43 @@ class Skill extends Model
     }
 
     /**
+     * Scope a query to filter by creation date.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $date
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCreatedOn($query, string $date)
+    {
+        return $query->whereDate('created_at', $date);
+    }
+
+    /**
+     * Scope a query to filter by creation date from.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $date
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCreatedFrom($query, string $date)
+    {
+        return $query->whereDate('created_at', '>=', $date);
+    }
+
+    /**
+     * Scope a query to filter by creation date to.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $date
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCreatedTo($query, string $date)
+    {
+        return $query->whereDate('created_at', '<=', $date);
+    }
+
+    
+    /**
      * Scope a query to filter by multiple criteria.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
@@ -151,6 +188,15 @@ class Skill extends Model
                         break;
                     case 'recent_days':
                         $query->recent($value);
+                        break;
+                    case 'created_at':
+                        $query->createdOn($value);
+                        break;
+                    case 'created_from':
+                        $query->createdFrom($value);
+                        break;
+                    case 'created_to':
+                        $query->createdTo($value);
                         break;
                     default:
                         $query->where($field, $value);

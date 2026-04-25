@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('volunteers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('profile_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('profile_id');
+            
+            // Add foreign key with cascade delete
+            $table->foreign('profile_id')
+                  ->references('id')
+                  ->on('profiles')
+                  ->onDelete('cascade');
+                  
             $table->json('languages')->nullable();
             $table->json('availability')->nullable();
             $table->enum('experience_years', ['1', '2', '3', '4', '5']);

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Skill\SkillByIdsRequest;
+use App\Http\Requests\Api\Skill\SkillIndexRequest;
+use App\Http\Requests\Api\Skill\SkillWithRelationsRequest;
 use App\Http\Requests\Api\Skill\StoreSkillRequest;
 use App\Http\Requests\Api\Skill\UpdateSkillRequest;
 use App\Services\SkillService;
@@ -22,15 +25,15 @@ class SkillController extends Controller
     ) {}
 
     /**
-     * Display a paginated listing of Skills.
+     * Display a paginated listing of Skills with advanced search capabilities.
      *
-     * @param Request $request The HTTP request containing query filters.
+     * @param SkillIndexRequest $request The validated index request.
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(SkillIndexRequest $request): JsonResponse
     {
-        $filters = $request->except(['page', 'per_page']);
-        $perPage = (int) $request->input('per_page', 15);
+        $filters = $request->getFilters();
+        $perPage = $request->getPerPage();
 
         $data = $this->service->getAll($filters, $perPage);
 
@@ -93,19 +96,14 @@ class SkillController extends Controller
     /**
      * Get skills with relationships loaded.
      *
-     * @param Request $request The HTTP request.
+     * @param SkillWithRelationsRequest $request The validated request.
      * @return JsonResponse
      */
-    public function indexWithRelations(Request $request): JsonResponse
+    public function indexWithRelations(SkillWithRelationsRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'relations' => 'sometimes|array',
-            'relations.*' => 'string|in:profiles,opportunities'
-        ]);
-
-        $relations = $validated['relations'] ?? [];
-        $filters = $request->except(['page', 'per_page', 'relations']);
-        $perPage = (int) $request->input('per_page', 15);
+        $relations = $request->getRelations();
+        $filters = $request->getFilters();
+        $perPage = $request->getPerPage();
 
         $data = $this->service->getAllWithRelations($relations, $filters, $perPage);
 
@@ -115,39 +113,16 @@ class SkillController extends Controller
     /**
      * Display the specified Skill with relationships.
      *
-     * @param Request $request The HTTP request.
+     * @param SkillWithRelationsRequest $request The validated request.
      * @param int|string $id The primary key value.
      * @return JsonResponse
      */
-    public function showWithRelations(Request $request, int|string $id): JsonResponse
+    public function showWithRelations(SkillWithRelationsRequest $request, int|string $id): JsonResponse
     {
-        $validated = $request->validate([
-            'relations' => 'sometimes|array',
-            'relations.*' => 'string|in:profiles,opportunities'
-        ]);
-
-        $relations = $validated['relations'] ?? [];
+        $relations = $request->getRelations();
         $item = $this->service->findByIdWithRelations($id, $relations);
 
         return $this->success($item, 'Skill with relations fetched successfully');
-    }
-
-    /**
-     * Search skills by name.
-     *
-     * @param Request $request The HTTP request.
-     * @return JsonResponse
-     */
-    public function search(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'search' => 'required|string|min:2|max:255'
-        ]);
-
-        $perPage = (int) $request->input('per_page', 15);
-        $data = $this->service->searchByName($validated['search'], $perPage);
-
-        return $this->paginate($data, 'Skills search results fetched successfully');
     }
 
     /**
@@ -209,18 +184,15 @@ class SkillController extends Controller
     /**
      * Get skills by multiple IDs.
      *
-     * @param Request $request The HTTP request.
+     * @param SkillByIdsRequest $request The validated request.
      * @return JsonResponse
      */
-    public function getByIds(Request $request): JsonResponse
+    public function getByIds(SkillByIdsRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'skill_ids' => 'required|array|min:1',
-            'skill_ids.*' => 'required|integer|exists:skills,id'
-        ]);
+        $skillIds = $request->getSkillIds();
+        $perPage = $request->getPerPage();
 
-        $perPage = (int) $request->input('per_page', 15);
-        $data = $this->service->getByIds($validated['skill_ids'], $perPage);
+        $data = $this->service->getByIds($skillIds, $perPage);
 
         return $this->paginate($data, 'Skills by IDs fetched successfully');
     }
@@ -285,5 +257,19 @@ class SkillController extends Controller
         $data = $this->service->getRecentSkills($days, $perPage);
 
         return $this->paginate($data, 'Recent skills fetched successfully');
+    }
+
+    /**
+     * Get skills for the authenticated volunteer.
+     *
+     * @param Request $request The HTTP request.
+     * @return JsonResponse
+     */
+    public function getMySkills(Request $request): JsonResponse
+    {
+        $perPage = (int) $request->input('per_page', 15);
+        $data = $this->service->getMySkills($perPage);
+
+        return $this->paginate($data, 'My skills fetched successfully');
     }
 }
