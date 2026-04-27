@@ -170,4 +170,5 @@ class ProfileService
     {
         return $this->repository->getStatistics();
     }
-}
+
+    }

@@ -69,4 +69,31 @@ interface UserRepositoryInterface
      * @return string
      */
     public function hashPassword(string $plainPassword): string;
+
+    /**
+     * Search users by name, email with optional filters.
+     *
+     * @param string|null $search
+     * @param array $filters
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function search(?string $search = null, array $filters = [], int $perPage = 15): LengthAwarePaginator;
+
+    /**
+     * Get users filtered by various criteria.
+     *
+     * @param array $filters
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function filter(array $filters = [], int $perPage = 15): LengthAwarePaginator;
+
+    /**
+     * Inactive a user by setting status to 'inactive'.
+     *
+     * @param int|string $id The user ID.
+     * @return User
+     */
+    public function inactive(int|string $id): User;
 }

@@ -13,13 +13,14 @@
   use App\Http\Controllers\Api\ProfileSkillController;
   use App\Http\Controllers\Api\SkillController;
   use App\Http\Controllers\Api\UserController;
+  use App\Http\Controllers\Api\VolunteerDocumentController;
   use Illuminate\Support\Facades\Route;
 
   /*
-    |--------------------------------------------------------------------------
-    | Location Management - Limited access - Read only access
-    |--------------------------------------------------------------------------
-    */
+  |--------------------------------------------------------------------------
+  | Location Management - Limited access - Read only access
+  |--------------------------------------------------------------------------
+  */
   // API: {{baseURL}}/api/system/countries 
   Route::get('countries/active', [CountryController::class, 'active']);
   Route::get('countries/region/{region}', [CountryController::class, 'byRegion']);
@@ -43,16 +44,24 @@
   Route::apiResource('locations', LocationController::class);
 
   /*
-    |--------------------------------------------------------------------------
-    | Skill - Limited access - Read only access
-    |--------------------------------------------------------------------------
-    */
-  // API: {{baseURL}}/api/system/skills
-  // API: {{baseURL}}/api/system/skills/popular
-  // API: {{baseURL}}/api/system/skills/by-ids
-  // API: {{baseURL}}/api/system/skills/recent
-  // API: {{baseURL}}/api/system/skills/statistics
+  |--------------------------------------------------------------------------
+  | Document - full access
+  |--------------------------------------------------------------------------
+  */
+  // API: {{baseURL}}/api/system/volunteer-documents
+  Route::get('volunteer-documents/user/{userId}', [VolunteerDocumentController::class, 'getMyDocuments']);
+  Route::get('volunteer-documents/{id}/download', [VolunteerDocumentController::class, 'download']);
+  Route::get('volunteer-documents/{id}/read', [VolunteerDocumentController::class, 'read']);
+  Route::get('volunteer-documents/{id}/url', [VolunteerDocumentController::class, 'getFileUrl']);
+  Route::apiResource('volunteer-documents', VolunteerDocumentController::class);
 
+
+  /*
+  |--------------------------------------------------------------------------
+  | Skill - Limited access - Read only access
+  |--------------------------------------------------------------------------
+  */
+  // API: {{baseURL}}/api/system/skills
   Route::get('skills/popular', [SkillController::class, 'getPopular']);
   Route::get('skills/by-ids', [SkillController::class, 'getByIds']);
   Route::get('skills/recent', [SkillController::class, 'getRecent']);
@@ -60,31 +69,55 @@
   Route::apiResource('skills', SkillController::class)->only(['index', 'show']);
 
   /*
-    |--------------------------------------------------------------------------
-    | Profile 
-    |--------------------------------------------------------------------------
-    */
-  // API: {{baseURL}}/api/volunteer/profile
-  // API: {{baseURL}}/api/volunteer/profile/update
-  Route::get('profile', [ProfileController::class, 'getMyProfile']);
-  Route::put('profile/update', [ProfileController::class, 'updateMyProfile']);
-  // Profile viewing (read-only access to other profiles)
+  |--------------------------------------------------------------------------
+  | Users
+  |--------------------------------------------------------------------------
+  */
+  // API: {{baseURL}}/api/system/users
+  Route::apiResource('users', UserController::class);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Profile
+  |--------------------------------------------------------------------------
+  */
   // API: {{baseURL}}/api/system/profiles
-  Route::apiResource('profiles', ProfileController::class)->only(['index', 'show']);
-  // Profile filtering and search
-  // API: {{baseURL}}/api/system/profiles/by-gender
-  // API: {{baseURL}}/api/system/profiles/by-age-range
-  // API: {{baseURL}}/api/system/profiles/search
-  // API: {{baseURL}}/api/system/profiles/by-skills
-  Route::get('profiles/by-gender', [ProfileController::class, 'getByGender']);
-  Route::get('profiles/by-age-range', [ProfileController::class, 'getByAgeRange']);
-  Route::get('profiles/search', [ProfileController::class, 'search']);
-  Route::get('profiles/by-skills', [ProfileController::class, 'getBySkills']);
-  // Profile relationships
-  // API: {{baseURL}}/api/system/profiles/{id}/with-relations
-  // API: {{baseURL}}/api/system/profiles/with-relations
   Route::get('profiles/{id}/with-relations', [ProfileController::class, 'showWithRelations']);
   Route::get('profiles/with-relations', [ProfileController::class, 'indexWithRelations']);
+  Route::get('profiles/statistics', [ProfileController::class, 'getStatistics']);
+  Route::apiResource('profiles', ProfileController::class);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Organization Profiles
+  |--------------------------------------------------------------------------
+  */
+  // API: {{baseURL}}/api/admin/organization-profiles
+  Route::get('organization-profiles/statistics', [OrganizationProfileController::class, 'getStatistics']);
+  Route::get('organization-profiles/list-active', [OrganizationProfileController::class, 'listActive']);
+  Route::get('organization-profiles/list-not-active', [OrganizationProfileController::class, 'listNotActive']);
+  Route::get('organization-profiles/with-relations', [OrganizationProfileController::class, 'indexWithRelations']);
+  Route::get('organization-profiles/{id}/with-relations', [OrganizationProfileController::class, 'showWithRelations']);
+  Route::post('organization-profiles/{id}/activate', [OrganizationProfileController::class, 'activate']);
+  Route::post('organization-profiles/{id}/deactivate', [OrganizationProfileController::class, 'deactivate']);
+  Route::get('organization-profiles/user/{userId}', [OrganizationProfileController::class, 'getByUserId']);
+  Route::get('organization-profiles/check-user/{userId}', [OrganizationProfileController::class, 'userHasProfile']);
+  Route::apiResource('organization-profiles', OrganizationProfileController::class);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
 
   /*
     |--------------------------------------------------------------------------

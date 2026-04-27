@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Api\Document;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 class UpdateDocumentRequest extends FormRequest
 {
@@ -22,24 +22,18 @@ class UpdateDocumentRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $user = request()->user();
+        $rules = [
             'title' => ['sometimes', 'string', 'max:255'],
-            'file' => ['sometimes', 'file', 'max:10240'], // Max 10MB
+            'file' => ['sometimes', 'file', 'max:2048'], // Max 2MB (matching PHP limit)
         ];
-    }
 
-    /**
-     * Get custom messages for validation errors.
-     *
-     * @return array
-     */
-    public function messages(): array
-    {
-        return [
-            'title.string' => 'Document title must be a string.',
-            'title.max' => 'Document title may not be greater than 255 characters.',
-            'file.file' => 'The uploaded file must be a file.',
-            'file.max' => 'The file may not be greater than 10MB.',
-        ];
+        // For super admins and system admins, allow changing documentable ownership
+        if ($user && ($user->hasRole('super_administrator') || $user->hasRole('system_admin'))) {
+            $rules['documentable_id'] = ['sometimes', 'integer'];
+            $rules['documentable_type'] = ['sometimes', 'string', 'in:App\Models\Volunteer,App\Models\Opportunity'];
+        }
+
+        return $rules;
     }
 }

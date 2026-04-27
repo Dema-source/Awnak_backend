@@ -124,4 +124,5 @@ interface ProfileRepositoryInterface
      * @return array
      */
     public function getStatistics(): array;
-}
+
+    }

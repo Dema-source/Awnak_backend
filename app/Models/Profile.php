@@ -204,6 +204,20 @@ class Profile extends Model
                     case 'search':
                         $query->searchInBioOrInterests($value);
                         break;
+                    case 'created_on':
+                        $query->createdOn($value);
+                        break;
+                    case 'created_from':
+                        $query->createdFrom($value);
+                        break;
+                    case 'created_to':
+                        $query->createdTo($value);
+                        break;
+                    case 'active':
+                        $query->whereHas('user', function($q) use ($value) {
+                            $q->where('status', $value ? 'active' : 'notActive');
+                        });
+                        break;
                     default:
                         $query->where($field, $value);
                         break;
@@ -211,6 +225,51 @@ class Profile extends Model
             }
         }
 
+        return $query;
+    }
+
+    /**
+     * Scope to filter profiles by created date.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $date
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCreatedOn($query, ?string $date)
+    {
+        if ($date) {
+            return $query->whereDate('created_at', $date);
+        }
+        return $query;
+    }
+
+    /**
+     * Scope to filter profiles created from a specific date.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $date
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCreatedFrom($query, ?string $date)
+    {
+        if ($date) {
+            return $query->whereDate('created_at', '>=', $date);
+        }
+        return $query;
+    }
+
+    /**
+     * Scope to filter profiles created until a specific date.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string|null $date
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCreatedTo($query, ?string $date)
+    {
+        if ($date) {
+            return $query->whereDate('created_at', '<=', $date);
+        }
         return $query;
     }
 

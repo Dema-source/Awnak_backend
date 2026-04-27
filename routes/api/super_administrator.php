@@ -19,35 +19,26 @@
   use App\Http\Controllers\Api\OpportunityDocumentController;
   use Illuminate\Support\Facades\Route;
 
-
-/*
-|--------------------------------------------------------------------------
-| Roles & Permissions
-|--------------------------------------------------------------------------
-*/
-
+  /*
+  |--------------------------------------------------------------------------
+  | Roles & Permissions - Full Access
+  |--------------------------------------------------------------------------
+  */
+  // API: {{baseURL}}/api/admin/roles
+  Route::post('assign-permission-to-role', [RolePermissionController::class, 'assignPermissionToRole']);
+  Route::post('remove-permission-from-role', [RolePermissionController::class, 'removePermissionFromRole']);
+  Route::post('assign-role-to-user', [RolePermissionController::class, 'assignRoleToUser']);
+  Route::post('remove-role-from-user', [RolePermissionController::class, 'revokeRoleFromUser']);
+  Route::post('assign-permission-to-user', [RolePermissionController::class, 'assignPermissionToUser']);
+  Route::post('remove-permission-from-user', [RolePermissionController::class, 'revokePermissionFromUser']);
+  Route::get('check-permission', [RolePermissionController::class, 'checkPermission']);
+  Route::get('get-user-permissions/{user}', [RolePermissionController::class, 'getUserPermissions']);
   Route::apiResource('roles', RoleController::class);
 
-  Route::post('assign-permission-to-role', [RolePermissionController::class, 'assignPermissionToRole']);
-
-  Route::post('remove-permission-from-role', [RolePermissionController::class, 'removePermissionFromRole']);
-
-  Route::post('assign-role-to-user', [RolePermissionController::class, 'assignRoleToUser']);
-
-  Route::post('remove-role-from-user', [RolePermissionController::class, 'revokeRoleFromUser']);
-
-  Route::post('assign-permission-to-user', [RolePermissionController::class, 'assignPermissionToUser']);
-
-  Route::post('remove-permission-from-user', [RolePermissionController::class, 'revokePermissionFromUser']);
-
-  Route::get('check-permission', [RolePermissionController::class, 'checkPermission']);
-
-  Route::get('get-user-permissions/{user}', [RolePermissionController::class, 'getUserPermissions']);
-
   /*
-    |--------------------------------------------------------------------------
-    | Location Management - full access
-    |--------------------------------------------------------------------------
+  |--------------------------------------------------------------------------
+  | Location Management - Full Access
+  |--------------------------------------------------------------------------
   */
   // API: {{baseURL}}/api/admin/countries
   Route::get('countries/active', [CountryController::class, 'active']);
@@ -70,40 +61,39 @@
   Route::get('locations/within-radius', [LocationController::class, 'withinRadius']);
   Route::get('locations/with-opportunity', [LocationController::class, 'withOpportunity']);
   Route::apiResource('locations', LocationController::class);
-  
-    /*
-    |--------------------------------------------------------------------------
-    | Document - full access
-    |--------------------------------------------------------------------------
+
+  /*
+  |--------------------------------------------------------------------------
+  | Document - Full Access
+  |--------------------------------------------------------------------------
   */
   // API: {{baseURL}}/api/admin/volunteer-documents
-  Route::get('volunteer-documents/search', [VolunteerDocumentController::class, 'search']);
-  Route::get('volunteer-documents/type/{type}', [VolunteerDocumentController::class, 'getByType']);
-  Route::get('volunteer-documents/user/{userId}', [VolunteerDocumentController::class, 'index']);
+  Route::get('volunteer-documents/user/{userId}', [VolunteerDocumentController::class, 'getMyDocuments']);
+  Route::get('volunteer-documents/{id}/download', [VolunteerDocumentController::class, 'download']);
+  Route::get('volunteer-documents/{id}/read', [VolunteerDocumentController::class, 'read']);
+  Route::get('volunteer-documents/{id}/url', [VolunteerDocumentController::class, 'getFileUrl']);
   Route::apiResource('volunteer-documents', VolunteerDocumentController::class);
 
   // API: {{baseURL}}/api/admin/opportunity-documents
   Route::get('opportunity-documents/search', [OpportunityDocumentController::class, 'search']);
   Route::get('opportunity-documents/type/{type}', [OpportunityDocumentController::class, 'getByType']);
   Route::get('opportunity-documents/opportunity/{opportunity}', [OpportunityDocumentController::class, 'getByOpportunity']);
-  Route::get('opportunity-documents/organization/{organizationId}', [OpportunityDocumentController::class, 'index']);
+  Route::get('opportunity-documents/organization/{organizationId}', [OpportunityDocumentController::class, 'getMyOpportunityDocuments']);
   Route::apiResource('opportunity-documents', OpportunityDocumentController::class);
 
   // API: {{baseURL}}/api/admin/documents (all documents)
   Route::get('documents/search', [VolunteerDocumentController::class, 'search']);
   Route::get('documents/type/{type}', [VolunteerDocumentController::class, 'getByType']);
-  Route::get('documents/volunteer/{userId}', [VolunteerDocumentController::class, 'index']);
+  Route::get('documents/volunteer/{userId}', [VolunteerDocumentController::class, 'getMyDocuments']);
   Route::get('documents/opportunity/{opportunity}', [OpportunityDocumentController::class, 'getByOpportunity']);
-  Route::get('documents/organization/{organizationId}', [OpportunityDocumentController::class, 'index']);
+  Route::get('documents/organization/{organizationId}', [OpportunityDocumentController::class, 'getMyOpportunityDocuments']);
 
   /*
-    |--------------------------------------------------------------------------
-    | Skill - full access
-    |--------------------------------------------------------------------------
-    */
+  |--------------------------------------------------------------------------
+  | Skill - Full Access
+  |--------------------------------------------------------------------------
+  */
   // API: {{baseURL}}/api/admin/skills
-  // API: {{baseURL}}/api/admin/skills/statistics
-  // API: {{baseURL}}/api/admin/skills/with-relations
   Route::get('skills/with-relations', [SkillController::class, 'indexWithRelations']);
   Route::get('skills/{id}/with-relations', [SkillController::class, 'showWithRelations']);
   Route::get('skills/with-profiles-count', [SkillController::class, 'getWithProfilesCount']);
@@ -117,65 +107,70 @@
   Route::apiResource('skills', SkillController::class);
 
   /*
-    |--------------------------------------------------------------------------
-    | Profile
-    |--------------------------------------------------------------------------
-    */
-  // API: {{baseURL}}/api/admin/profile
-  // API: {{baseURL}}/api/admin/profile/update
-  // Route::get('profile', [ProfileController::class, 'getMyProfile']);
-  // Route::put('profile/update', [ProfileController::class, 'updateMyProfile']);
-  // Profile viewing (full access to other profiles)
-  // API: {{baseURL}}/api/admin/profiles
-  Route::apiResource('profiles', ProfileController::class);
-  // Profile filtering and search
-  // API: {{baseURL}}/api/admin/profiles/by-gender
-  // API: {{baseURL}}/api/admin/profiles/by-age-range
-  // API: {{baseURL}}/api/admin/profiles/search
-  // API: {{baseURL}}/api/admin/profiles/by-skills
-  Route::get('profiles/by-gender', [ProfileController::class, 'getByGender']);
-  Route::get('profiles/by-age-range', [ProfileController::class, 'getByAgeRange']);
-  Route::get('profiles/search', [ProfileController::class, 'search']);
-  Route::get('profiles/by-skills', [ProfileController::class, 'getBySkills']);
-  // Profile relationships
-  // API: {{baseURL}}/api/admin/profiles/{id}/with-relations
-  // API: {{baseURL}}/api/admin/profiles/with-relations
-  Route::get('profiles/{id}/with-relations', [ProfileController::class, 'showWithRelations']);
-  Route::get('profiles/with-relations', [ProfileController::class, 'indexWithRelations']);
-  // Profile statistics
-  // API: {{baseURL}}/api/admin/profiles/statistics
-  Route::get('profiles/statistics', [ProfileController::class, 'getStatistics']);
+  |--------------------------------------------------------------------------
+  | Users - Full Access
+  |--------------------------------------------------------------------------
+  */
+  // API: {{baseURL}}/api/admin/users
+  Route::patch('users/{user}/inactive', [UserController::class, 'inactive']);
+  Route::apiResource('users', UserController::class);
 
   /*
-    |--------------------------------------------------------------------------
-    | Profile-Skill
-    |--------------------------------------------------------------------------
-    */
+  |--------------------------------------------------------------------------
+  | Profile - Full Access
+  |--------------------------------------------------------------------------
+  */
+  // API: {{baseURL}}/api/admin/profiles
+  Route::get('profiles/{id}/with-relations', [ProfileController::class, 'showWithRelations']);
+  Route::get('profiles/with-relations', [ProfileController::class, 'indexWithRelations']);
+  Route::get('profiles/statistics', [ProfileController::class, 'getStatistics']);
+  Route::apiResource('profiles', ProfileController::class);
+
+  /*
+  |--------------------------------------------------------------------------
+  | Organization Profiles
+  |--------------------------------------------------------------------------
+  */
+  // API: {{baseURL}}/api/admin/organization-profiles
+  Route::get('organization-profiles/statistics', [OrganizationProfileController::class, 'getStatistics']);
+  Route::get('organization-profiles/list-active', [OrganizationProfileController::class, 'listActive']);
+  Route::get('organization-profiles/list-not-active', [OrganizationProfileController::class, 'listNotActive']);
+  Route::get('organization-profiles/with-relations', [OrganizationProfileController::class, 'indexWithRelations']);
+  Route::get('organization-profiles/{id}/with-relations', [OrganizationProfileController::class, 'showWithRelations']);
+  Route::post('organization-profiles/{id}/activate', [OrganizationProfileController::class, 'activate']);
+  Route::post('organization-profiles/{id}/deactivate', [OrganizationProfileController::class, 'deactivate']);
+  Route::get('organization-profiles/user/{userId}', [OrganizationProfileController::class, 'getByUserId']);
+  Route::get('organization-profiles/check-user/{userId}', [OrganizationProfileController::class, 'userHasProfile']);
+  Route::apiResource('organization-profiles', OrganizationProfileController::class);
+
+
+
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | Profile-Skill
+  |--------------------------------------------------------------------------
+  */
   // API: {{baseURL}}/api/admin/profile-skills
   Route::apiResource('profile-skills', ProfileSkillController::class)->except(['show']);
   Route::get('profile-skills/{profile}', [ProfileSkillController::class, 'show']);
-  Route::get('profile-skills/skill/{skill}/profiles', [ProfileSkillController::class, 'getProfilesBySkill']);
-  Route::get('profile-skills/{profile}/skill/{skill}/check', [ProfileSkillController::class, 'checkSkill']);
-  Route::get('skills-count/profile-skills', [ProfileSkillController::class, 'getSkillsCount']);
-  Route::get('popular-skills/profile-skills', [ProfileSkillController::class, 'getPopularSkills']);
+
 
   /*
-    |--------------------------------------------------------------------------
-    | Organization
-    |--------------------------------------------------------------------------
-    */
-  // API: {{baseURL}}/api/admin/notactive/organizationProfiles
-  // API: {{baseURL}}/api/admin/activate/organizationProfile/{id}
-  // API: {{baseURL}}/api/admin/organizationProfiles
-  Route::get('notactive/organizationProfiles', [OrganizationProfileController::class, 'listNotActive']);
-  Route::patch('activate/organizationProfile/{id}', [OrganizationProfileController::class, 'activateOrganization']);
-  Route::apiResource('organizationProfiles', OrganizationProfileController::class);
-
-  /*
-    |--------------------------------------------------------------------------
-    | Location-Opportunity
-    |--------------------------------------------------------------------------
-    */
+|--------------------------------------------------------------------------
+| Location-Opportunity
+|--------------------------------------------------------------------------
+*/
+  // API: {{baseURL}}/api/admin/location-opportunities
+  Route::apiResource('location-opportunities', LocationOpportunityController::class)->only(['index', 'show']);
+  Route::get('location-opportunities/location/{location}/opportunities', [LocationOpportunityController::class, 'getOpportunitiesByLocation']);
+  Route::post('location-opportunities/{opportunity}', [LocationOpportunityController::class, 'store']);
+  Route::put('location-opportunities/{opportunity}', [LocationOpportunityController::class, 'update']);
+  Route::delete('location-opportunities/{opportunity}', [LocationOpportunityController::class, 'destroy']);
+  Route::get('location-opportunities/{opportunity}/show', [LocationOpportunityController::class, 'showOpportunity']);
+  Route::put('location-opportunities/{opportunity}/location/{location}/pivot', [LocationOpportunityController::class, 'updatePivot']);
+  Route::get('location-opportunities/{opportunity}/location/{location}/pivot', [LocationOpportunityController::class, 'getPivot']);
   // API: {{baseURL}}/api/admin/location-opportunities
   Route::apiResource('location-opportunities', LocationOpportunityController::class)->only(['index', 'show']);
   Route::get('location-opportunities/location/{location}/opportunities', [LocationOpportunityController::class, 'getOpportunitiesByLocation']);
@@ -187,10 +182,10 @@
   Route::get('location-opportunities/{opportunity}/location/{location}/pivot', [LocationOpportunityController::class, 'getPivot']);
 
   /*
-    |--------------------------------------------------------------------------
-    | Opportunity-Skill
-    |--------------------------------------------------------------------------
-    */
+  |--------------------------------------------------------------------------
+  | Opportunity-Skill
+  |--------------------------------------------------------------------------
+  */
   // API: {{baseURL}}/api/admin/opportunity-skills
   Route::apiResource('opportunity-skills', OpportunitySkillController::class)->except(['show']);
   Route::get('opportunity-skills/{opportunity}', [OpportunitySkillController::class, 'show']);
@@ -202,20 +197,18 @@
   // =========================================//
   // =========================================//
   // =========================================//
-  // User Management
-  // API: {{baseURL}}/api/admin/users       
-  Route::apiResource('users', UserController::class);
+
 
 
 
   // Opportunity
   // API: {{baseURL}}/api/admin/opportunities  
-  Route::apiResource('opportunities', OpportunityController::class);
+  // Route::apiResource('opportunities', OpportunityController::class);
 
 
 
-  // Certificate
-  Route::apiResource('certificates', CertificateController::class);
+  // // Certificate
+  // Route::apiResource('certificates', CertificateController::class);
 
-  // Badge
-  Route::apiResource('badges', BadgeController::class);
+  // // Badge
+  // Route::apiResource('badges', BadgeController::class);

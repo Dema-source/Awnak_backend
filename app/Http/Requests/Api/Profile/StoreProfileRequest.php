@@ -22,12 +22,25 @@ class StoreProfileRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $user = auth()->user();
+        $isAdmin = $user && ($user->hasRole('super_administrator') || $user->hasRole('system_admin'));
+        
+        $rules = [
             'bio'       => ['nullable', 'string', 'max:1000'],
             'age'       => ['nullable', 'integer', 'min:18', 'max:120'],
             'gender'    => ['required', 'string', 'in:male,female'],
             'interests' => ['nullable', 'array'],
             'interests.*' => ['string', 'max:40'],
         ];
+        
+        // Add user_id validation for admin users
+        if ($isAdmin) {
+            $rules['user_id'] = ['required', 'integer', 'exists:users,id'];
+        } else {
+            // Regular users cannot specify user_id
+            $rules['user_id'] = ['prohibited'];
+        }
+        
+        return $rules;
     }
 }

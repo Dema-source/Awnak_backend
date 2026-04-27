@@ -22,12 +22,25 @@ class UpdateProfileRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $user = auth()->user();
+        $isAdmin = $user && ($user->hasRole('super_administrator') || $user->hasRole('system_admin'));
+        
+        $rules = [
             'bio'       => ['nullable', 'string', 'max:500'],
             'age'       => ['nullable', 'integer', 'min:1', 'max:120'],
             'gender'    => ['sometimes', 'string', 'in:male,female'],
             'interests' => ['nullable', 'array'],
             'interests.*' => ['string', 'max:40'],
         ];
+        
+        // Add user_id validation for admin users (optional for updates)
+        if ($isAdmin) {
+            $rules['user_id'] = ['sometimes', 'integer', 'exists:users,id'];
+        } else {
+            // Regular users cannot specify user_id
+            $rules['user_id'] = ['prohibited'];
+        }
+        
+        return $rules;
     }
 }

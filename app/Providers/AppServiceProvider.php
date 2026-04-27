@@ -65,7 +65,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(VolunteerCertificateRepositoryInterface::class, VolunteerCertificateRepository::class);
         $this->app->bind(RolePermissionRepositoryInterface::class, RolePermissionRepository::class);
         $this->app->bind(OpportunitySkillRepositoryInterface::class, OpportunitySkillRepository::class);
-        // $this->app->bind(DocumentRepositoryInterface::class, DocumentRepository::class);
+        $this->app->bind(DocumentRepositoryInterface::class, DocumentRepository::class);
         $this->app->bind(EvaluationRepositoryInterface::class, EvaluationRepository::class);
         $this->app->bind(TaskRepositoryInterface::class, TaskRepository::class);
         $this->app->bind(ApplicationRepositoryInterface::class, ApplicationRepository::class);
