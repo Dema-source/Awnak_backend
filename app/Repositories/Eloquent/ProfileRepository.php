@@ -12,7 +12,7 @@ class ProfileRepository implements ProfileRepositoryInterface
      * Dependency injection of the Eloquent model.  
      *  
      * @param Profile $model  
-     */ 
+     */
     public function __construct(
         protected Profile $model
     ) {}
@@ -23,14 +23,70 @@ class ProfileRepository implements ProfileRepositoryInterface
      * @param array $filters Key/value filters to apply to the query.  
      * @param int $perPage Number of items per page.  
      * @return LengthAwarePaginator  
-     */  
+     */
     public function getAll(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         $query = $this->model->query();
 
         foreach ($filters as $field => $value) {
             if ($value !== null && $value !== '') {
-                $query->where($field, $value);
+                if ($field === 'search') {
+                    // Handle search term
+                    $query->searchInBioOrInterests($value);
+                } elseif ($field === 'active') {
+                    // Handle active user filter
+                    $query->whereHas('user', function($q) use ($value) {
+                        $q->where('status', $value ? 'active' : 'notActive');
+                    });
+                } elseif ($field === 'gender') {
+                    // Handle gender filter
+                    $query->ofGender($value);
+                } elseif ($field === 'min_age') {
+                    // Handle age range (min)
+                    if (isset($filters['max_age'])) {
+                        $query->ofAgeRange($value, $filters['max_age']);
+                    }
+                } elseif ($field === 'max_age') {
+                    // Handle age range (max)
+                    if (isset($filters['min_age'])) {
+                        $query->ofAgeRange($filters['min_age'], $value);
+                    }
+                } elseif ($field === 'skill_ids') {
+                    // Handle skills filter
+                    if (is_array($value)) {
+                        $query->withSkills($value);
+                    }
+                } elseif ($field === 'age') {
+                    // Handle single age filter
+                    $query->where('age', $value);
+                } elseif ($field === 'bio') {
+                    // Handle bio filter
+                    $query->where('bio', 'like', "%{$value}%");
+                } elseif ($field === 'user_id') {
+                    // Handle user ID filter
+                    $query->where('user_id', $value);
+                } elseif ($field === 'created_on') {
+                    // Handle created on date filter
+                    $query->createdOn($value);
+                } elseif ($field === 'created_from') {
+                    // Handle created from date filter
+                    $query->createdFrom($value);
+                } elseif ($field === 'created_to') {
+                    // Handle created to date filter
+                    $query->createdTo($value);
+                } elseif ($field === 'interests') {
+                    // Handle interests filter (JSON contains)
+                    if (is_array($value)) {
+                        foreach ($value as $interest) {
+                            $query->orWhereJsonContains('interests', $interest);
+                        }
+                    } else {
+                        $query->whereJsonContains('interests', $value);
+                    }
+                } else {
+                    // Handle any other fields
+                    $query->where($field, $value);
+                }
             }
         }
 
@@ -42,10 +98,10 @@ class ProfileRepository implements ProfileRepositoryInterface
      *  
      * @param int|string $id  
      * @return Profile  
-     */ 
+     */
     public function findById(int|string $id): Profile
     {
-        return $this->model->findOrFail($id);
+        return $this->model->with(['user', 'skills'])->findOrFail($id);
     }
 
     /**  
@@ -92,7 +148,7 @@ class ProfileRepository implements ProfileRepositoryInterface
      *  
      * @param int|string $userId The user ID.  
      * @return Profile|null  
-     */ 
+     */
     public function findByUserId(int|string $userId): ?Profile
     {
         return $this->model->where('user_id', $userId)->first();
@@ -105,7 +161,7 @@ class ProfileRepository implements ProfileRepositoryInterface
      * @param array $filters Optional filters.  
      * @param int $perPage Items per page.  
      * @return LengthAwarePaginator  
-     */ 
+     */
     public function getAllWithRelations(array $relations = [], array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         $query = $this->model->with($relations);
@@ -125,7 +181,7 @@ class ProfileRepository implements ProfileRepositoryInterface
      * @param int|string $id The profile ID.  
      * @param array $relations Relations to load.  
      * @return Profile  
-     */ 
+     */
     public function findByIdWithRelations(int|string $id, array $relations = []): Profile
     {
         return $this->model->with($relations)->findOrFail($id);
@@ -137,7 +193,7 @@ class ProfileRepository implements ProfileRepositoryInterface
      * @param string $gender The gender to filter by.  
      * @param int $perPage Items per page.  
      * @return LengthAwarePaginator  
-     */ 
+     */
     public function getByGender(string $gender, int $perPage = 15): LengthAwarePaginator
     {
         return $this->model->ofGender($gender)->latest()->paginate($perPage);
@@ -150,7 +206,7 @@ class ProfileRepository implements ProfileRepositoryInterface
      * @param int $maxAge Maximum age.  
      * @param int $perPage Items per page.  
      * @return LengthAwarePaginator  
-     */ 
+     */
     public function getByAgeRange(int $minAge, int $maxAge, int $perPage = 15): LengthAwarePaginator
     {
         return $this->model->ofAgeRange($minAge, $maxAge)->latest()->paginate($perPage);
@@ -162,7 +218,7 @@ class ProfileRepository implements ProfileRepositoryInterface
      * @param string $searchTerm Search term.  
      * @param int $perPage Items per page.  
      * @return LengthAwarePaginator  
-     */ 
+     */
     public function searchByBioOrInterests(string $searchTerm, int $perPage = 15): LengthAwarePaginator
     {
         return $this->model->searchInBioOrInterests($searchTerm)->latest()->paginate($perPage);
@@ -174,7 +230,7 @@ class ProfileRepository implements ProfileRepositoryInterface
      * @param array $skillIds Array of skill IDs.  
      * @param int $perPage Items per page.  
      * @return LengthAwarePaginator  
-     */ 
+     */
     public function getBySkills(array $skillIds, int $perPage = 15): LengthAwarePaginator
     {
         return $this->model->withSkills($skillIds)->latest()->paginate($perPage);
@@ -188,7 +244,7 @@ class ProfileRepository implements ProfileRepositoryInterface
     public function getStatistics(): array
     {
         $totalProfiles = $this->model->count();
-        
+
         // Count profiles by gender
         $genderStats = $this->model->selectRaw('gender, COUNT(*) as count')
             ->groupBy('gender')
@@ -214,8 +270,7 @@ class ProfileRepository implements ProfileRepositoryInterface
         $avgAge = $this->model->avg('age');
 
         // Count profiles by skills count
-        $skillsCountStats = $this->model->withCount('skills')
-            ->selectRaw('skills_count, COUNT(*) as count')
+        $skillsCountStats = $this->model->selectRaw('(SELECT COUNT(*) FROM profile_skill WHERE profile_skill.profile_id = profiles.id) as skills_count, COUNT(*) as count')
             ->groupBy('skills_count')
             ->orderBy('skills_count')
             ->pluck('count', 'skills_count')
@@ -230,9 +285,10 @@ class ProfileRepository implements ProfileRepositoryInterface
             'average_age' => round($avgAge, 2),
             'skills_count_distribution' => $skillsCountStats,
             'profiles_without_skills' => $totalProfiles - $profilesWithSkills,
-            'skills_adoption_rate' => $totalProfiles > 0 
-                ? round(($profilesWithSkills / $totalProfiles) * 100, 2) 
+            'skills_adoption_rate' => $totalProfiles > 0
+                ? round(($profilesWithSkills / $totalProfiles) * 100, 2)
                 : 0
         ];
     }
-}
+
+    }

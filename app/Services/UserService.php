@@ -75,4 +75,40 @@ class UserService
     {
         return $this->repository->delete($id);
     }
+
+    /**
+     * Search users by name, email with optional filters.
+     *
+     * @param string|null $search
+     * @param array $filters
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function search(?string $search = null, array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->repository->search($search, $filters, $perPage);
+    }
+
+    /**
+     * Get users filtered by various criteria.
+     *
+     * @param array $filters
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function filter(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->repository->filter($filters, $perPage);
+    }
+
+    /**
+     * Inactive a user by setting status to 'inactive'.
+     *
+     * @param int|string $id The user ID.
+     * @return mixed
+     */
+    public function inactive(int|string $id): mixed
+    {
+        return $this->repository->inactive($id);
+    }
 }

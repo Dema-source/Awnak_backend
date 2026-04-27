@@ -23,38 +23,117 @@ class ProfileController extends Controller
     ) {}
 
     /**
-     * Display a paginated listing of Profiles.
+     * Display a paginated listing of Profiles with search and filtering capabilities.
+     * Super admin and system admin can see all profiles with any status.
+     * Regular users can only see profiles of active users.
      *
-     * @param Request $request The HTTP request containing query filters.
+     * @param Request $request The HTTP request containing query filters and search parameters.
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
-        $filters = $request->except(['page', 'per_page']);
+        $searchTerm = $request->input('search');
+        $filters = $request->except(['page', 'per_page', 'search']);
         $perPage = (int) $request->input('per_page', 15);
+
+        // Check user role and apply appropriate filtering
+        $user = Auth::user();
+        if ($user && !($user->hasRole('super_administrator') || $user->hasRole('system_admin'))) {
+            // Regular users can only see profiles of active users
+            $filters['active'] = true;
+        }
+
+        // Add search term to filters if provided
+        if ($searchTerm) {
+            $filters['search'] = $searchTerm;
+        }
 
         $data = $this->service->getAll($filters, $perPage);
 
-        return $this->paginate($data, 'Profile list fetched successfully');
+        return $this->paginate(ProfileResource::collection($data), 'Profile list fetched successfully');
     }
 
     /**
      * Store a newly created Profile in storage.
+     * Routes to appropriate method based on user role.
      *
      * @param StoreProfileRequest $request The validated form request.
      * @return JsonResponse
      */
     public function store(StoreProfileRequest $request): JsonResponse
     {
-        $data = $request->validated() + ['user_id' => Auth::user()->id];
+        $user = Auth::user();
 
-        $item = $this->service->create($data);
+        if ($user->hasRole('super_administrator') || $user->hasRole('system_admin')) {
+            return $this->storeForAdmin($request);
+        } else {
+            return $this->storeForUser($request);
+        }
+    }
+
+    /**
+     * Store a newly created Profile for admin users.
+     * Admin can create profile for any user by specifying user_id.
+     *
+     * @param StoreProfileRequest $request The validated form request.
+     * @return JsonResponse
+     */
+    public function storeForAdmin(StoreProfileRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        // Admin must specify user_id in request
+        if (isset($data['user_id'])) {
+            $userId = $data['user_id'];
+            unset($data['user_id']);
+        } else {
+            return $this->error('User ID is required for admin users', 422);
+        }
+
+        // Check if user already has a profile
+        $existingProfile = \App\Models\Profile::where('user_id', $userId)->first();
+        if ($existingProfile) {
+            return $this->error('User already has a profile. Each user can only have one profile.', 422);
+        }
+
+        // Create profile with the specified user_id
+        $finalData = array_merge($data, ['user_id' => $userId]);
+        $item = $this->service->create($finalData);
+
+        return $this->success(new ProfileResource($item), 'Profile created successfully by admin');
+    }
+
+    /**
+     * Store a newly created Profile for regular users.
+     * User can only create profile for themselves.
+     *
+     * @param StoreProfileRequest $request The validated form request.
+     * @return JsonResponse
+     */
+    public function storeForUser(StoreProfileRequest $request): JsonResponse
+    {
+        $user = Auth::user();
+        $data = $request->validated();
+
+        // Regular users can only create profile for themselves
+        $userId = $user->id;
+
+        // Check if user already has a profile
+        $existingProfile = \App\Models\Profile::where('user_id', $userId)->first();
+        if ($existingProfile) {
+            return $this->error('You already have a profile. Each user can only have one profile.', 422);
+        }
+
+        // Create profile with the authenticated user's ID
+        $finalData = array_merge($data, ['user_id' => $userId]);
+        $item = $this->service->create($finalData);
 
         return $this->success(new ProfileResource($item), 'Profile created successfully');
     }
 
     /**
      * Display the specified Profile.
+     * Any user can view profiles if the associated user is active.
      *
      * @param int|string $id The primary key value.
      * @return JsonResponse
@@ -62,6 +141,14 @@ class ProfileController extends Controller
     public function show(int|string $id): JsonResponse
     {
         $item = $this->service->findById($id);
+
+        // Check if user is not super admin or system admin, then verify activation
+        $user = Auth::user();
+        if ($user && !($user->hasRole('super_administrator') || $user->hasRole('system_admin'))) {        // Check if the user associated with this profile is active
+            if ($item->user && $item->user->status !== 'active') {
+                return $this->error('Profile not found', 404);
+            }
+        }
 
         return $this->success(new ProfileResource($item), 'Profile fetched successfully');
     }
@@ -81,6 +168,7 @@ class ProfileController extends Controller
 
     /**
      * Update the specified Profile in storage.
+     * Routes to appropriate method based on user role.
      * 
      * @param UpdateProfileRequest $request Validated input data.
      * @param int|string $id The primary key value.
@@ -88,6 +176,61 @@ class ProfileController extends Controller
      */
     public function update(UpdateProfileRequest $request, int|string $id): JsonResponse
     {
+        $user = Auth::user();
+
+        if ($user->hasRole('super_administrator') || $user->hasRole('system_admin')) {
+            return $this->updateForAdmin($request, $id);
+        } else {
+            return $this->updateForUser($request, $id);
+        }
+    }
+
+    /**
+     * Update the specified Profile for admin users.
+     * Admin can update any profile, but cannot change user_id if target user already has a profile.
+     * 
+     * @param UpdateProfileRequest $request Validated input data.
+     * @param int|string $id The primary key value.
+     * @return JsonResponse
+     */
+    public function updateForAdmin(UpdateProfileRequest $request, int|string $id): JsonResponse
+    {
+        $data = $request->validated();
+        $item = $this->service->findById($id);
+
+        // Check if admin is trying to change user_id
+        if (isset($data['user_id']) && $data['user_id'] !== $item->user_id) {
+            // Check if the new user_id already has a profile
+            $existingProfile = \App\Models\Profile::where('user_id', $data['user_id'])->first();
+            if ($existingProfile) {
+                return $this->error('Cannot transfer profile ownership: User already has a profile. Each user can only have one profile.', 422);
+            }
+        }
+
+        // Admin can update any profile
+        $item = $this->service->update($id, $data);
+
+        return $this->success(new ProfileResource($item), 'Profile updated successfully by admin');
+    }
+
+    /**
+     * Update the specified Profile for regular users.
+     * User can only update their own profile.
+     * 
+     * @param UpdateProfileRequest $request Validated input data.
+     * @param int|string $id The primary key value.
+     * @return JsonResponse
+     */
+    public function updateForUser(UpdateProfileRequest $request, int|string $id): JsonResponse
+    {
+        $item = $this->service->findById($id);
+        $user = Auth::user();
+
+        // User can only update their own profile
+        if ($item->user_id !== $user->id) {
+            return $this->error('You can only update your own profile', 403);
+        }
+
         $item = $this->service->update($id, $request->validated());
 
         return $this->success(new ProfileResource($item), 'Profile updated successfully');
@@ -95,12 +238,54 @@ class ProfileController extends Controller
 
     /**
      * Remove the specified Profile from storage.
+     * Routes to appropriate method based on user role.
      *
      * @param int|string $id The primary key value.
      * @return JsonResponse
      */
     public function destroy(int|string $id): JsonResponse
     {
+        $user = Auth::user();
+
+        if ($user->hasRole('super_administrator') || $user->hasRole('system_admin')) {
+            return $this->destroyForAdmin($id);
+        } else {
+            return $this->destroyForUser($id);
+        }
+    }
+
+    /**
+     * Remove the specified Profile for admin users.
+     * Admin can delete any profile.
+     *
+     * @param int|string $id The primary key value.
+     * @return JsonResponse
+     */
+    public function destroyForAdmin(int|string $id): JsonResponse
+    {
+        // Admin can delete any profile
+        $this->service->delete($id);
+
+        return $this->success(null, 'Profile deleted successfully by admin');
+    }
+
+    /**
+     * Remove the specified Profile for regular users.
+     * User can only delete their own profile.
+     *
+     * @param int|string $id The primary key value.
+     * @return JsonResponse
+     */
+    public function destroyForUser(int|string $id): JsonResponse
+    {
+        $item = $this->service->findById($id);
+        $user = Auth::user();
+
+        // User can only delete their own profile
+        if ($item->user_id !== $user->id) {
+            return $this->error('You can only delete your own profile', 403);
+        }
+
         $this->service->delete($id);
 
         return $this->success(null, 'Profile deleted successfully');
@@ -116,7 +301,7 @@ class ProfileController extends Controller
     {
         $validated = $request->validate([
             'relations' => 'sometimes|array',
-            'relations.*' => 'string|in:skills,users,volunteers'
+            'relations.*' => 'string|in:skills,user,volunteer'
         ]);
 
         $relations = $validated['relations'] ?? [];
@@ -139,7 +324,7 @@ class ProfileController extends Controller
     {
         $validated = $request->validate([
             'relations' => 'sometimes|array',
-            'relations.*' => 'string|in:skills,users,volunteers'
+            'relations.*' => 'string|in:skills,user,volunteer'
         ]);
 
         $relations = $validated['relations'] ?? [];
@@ -148,7 +333,7 @@ class ProfileController extends Controller
         return $this->success(new ProfileResource($item), 'Profile with relations fetched successfully');
     }
 
-        /**
+    /**
      * Search profiles by bio or interests.
      *
      * @param Request $request The HTTP request.

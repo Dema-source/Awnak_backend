@@ -91,4 +91,39 @@ interface DocumentRepositoryInterface
      * @return LengthAwarePaginator
      */
     public function searchByTitle(string $searchTerm, array $filters = [], int $perPage = 15): LengthAwarePaginator;
+
+    /**
+     * Search documents by title and/or type.
+     *
+     * @param string|null $searchTerm
+     * @param string|null $type
+     * @param array $filters
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function search(?string $searchTerm = null, ?string $type = null, array $filters = [], int $perPage = 15): LengthAwarePaginator;
+
+    /**
+     * Get file content for download.
+     *
+     * @param int|string $id
+     * @return array
+     */
+    public function getFileForDownload(int|string $id): array;
+
+    /**
+     * Get file content for inline display.
+     *
+     * @param int|string $id
+     * @return array
+     */
+    public function getFileForRead(int|string $id): array;
+
+    /**
+     * Get file URL and metadata.
+     *
+     * @param int|string $id
+     * @return array
+     */
+    public function getFileUrl(int|string $id): array;
 }

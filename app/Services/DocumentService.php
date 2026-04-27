@@ -56,7 +56,7 @@ class DocumentService
             $file = $data['file'];
             $data['path'] = $this->uploadFile($file);
             $data['type'] = $this->getFileType($file);
-            $data['original_name'] = $file->getClientOriginalName();
+            // $data['original_name'] = $file->getClientOriginalName();
             unset($data['file']);
         }
 
@@ -72,12 +72,13 @@ class DocumentService
      */
     public function update(int|string $id, array $data): mixed
     {
+        // dd($data);
         // Handle file upload if present
         if (isset($data['file']) && $data['file'] instanceof UploadedFile) {
             $file = $data['file'];
             $data['path'] = $this->uploadFile($file);
             $data['type'] = $this->getFileType($file);
-            $data['original_name'] = $file->getClientOriginalName();
+            // $data['original_name'] = $file->getClientOriginalName();
             
             // Delete old file
             $oldDocument = $this->findById($id);
@@ -170,7 +171,7 @@ class DocumentService
      */
     public function getByUser(int $userId, int $perPage = 15): LengthAwarePaginator
     {
-        return $this->repository->getByUser($userId, $perPage);
+        return $this->repository->getByVolunteer($userId, $perPage);
     }
 
     /**
@@ -209,5 +210,52 @@ class DocumentService
     public function searchByTitle(string $searchTerm, array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         return $this->repository->searchByTitle($searchTerm, $filters, $perPage);
+    }
+
+    /**
+     * Search documents by title and/or type.
+     *
+     * @param string|null $searchTerm
+     * @param string|null $type
+     * @param array $filters
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function search(?string $searchTerm = null, ?string $type = null, array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->repository->search($searchTerm, $type, $filters, $perPage);
+    }
+
+    /**
+     * Get file content for download.
+     *
+     * @param int|string $id
+     * @return array
+     */
+    public function getFileForDownload(int|string $id): array
+    {
+        return $this->repository->getFileForDownload($id);
+    }
+
+    /**
+     * Get file content for inline display.
+     *
+     * @param int|string $id
+     * @return array
+     */
+    public function getFileForRead(int|string $id): array
+    {
+        return $this->repository->getFileForRead($id);
+    }
+
+    /**
+     * Get file URL and metadata.
+     *
+     * @param int|string $id
+     * @return array
+     */
+    public function getFileUrl(int|string $id): array
+    {
+        return $this->repository->getFileUrl($id);
     }
 }

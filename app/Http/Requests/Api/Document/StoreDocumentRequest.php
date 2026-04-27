@@ -22,11 +22,17 @@ class StoreDocumentRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $user = request()->user();
+        $rules = [
             'title' => ['required', 'string', 'max:255'],
             'file' => ['required', 'file', 'max:10240'], // Max 10MB
-            'documentable_type' => ['required', 'string', 'in:App\Models\Volunteer,App\Models\Opportunity'],
-            'documentable_id' => ['required', 'integer'],
         ];
+
+        // For super admins and system admins, require documentable_id
+        if ($user && ($user->hasRole('super_administrator') || $user->hasRole('system_admin'))) {
+            $rules['documentable_id'] = ['required', 'integer'];
+       }
+
+        return $rules;
     }
 }

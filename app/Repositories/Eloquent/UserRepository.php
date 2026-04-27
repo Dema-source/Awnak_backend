@@ -110,4 +110,58 @@ class UserRepository implements UserRepositoryInterface
     {
         return Hash::make($plainPassword);
     }
+
+    /**
+     * Search users by name, email with optional filters.
+     *
+     * @param string|null $search
+     * @param array $filters
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function search(?string $search = null, array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        $query = $this->model->query();
+
+        // Apply search
+        if ($search) {
+            $query->search($search);
+        }
+
+        // Apply additional filters
+        $query->filter($filters);
+
+        return $query->latest()->paginate($perPage);
+    }
+
+    /**
+     * Get users filtered by various criteria.
+     *
+     * @param array $filters
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function filter(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        $query = $this->model->query();
+
+        // Apply all filters using the model scope
+        $query->filter($filters);
+
+        return $query->latest()->paginate($perPage);
+    }
+
+    /**
+     * Inactive a user by setting status to 'notActive'.
+     *
+     * @param int|string $id The user ID.
+     * @return User
+     */
+    public function inactive(int|string $id): User
+    {
+        $user = $this->findById($id);
+        $user->update(['status' => 'notActive']);
+
+        return $user->fresh();
+    }
 }
