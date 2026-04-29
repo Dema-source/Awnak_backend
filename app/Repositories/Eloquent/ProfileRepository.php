@@ -30,62 +30,106 @@ class ProfileRepository implements ProfileRepositoryInterface
 
         foreach ($filters as $field => $value) {
             if ($value !== null && $value !== '') {
-                if ($field === 'search') {
-                    // Handle search term
-                    $query->searchInBioOrInterests($value);
-                } elseif ($field === 'active') {
-                    // Handle active user filter
-                    $query->whereHas('user', function($q) use ($value) {
-                        $q->where('status', $value ? 'active' : 'notActive');
-                    });
-                } elseif ($field === 'gender') {
-                    // Handle gender filter
-                    $query->ofGender($value);
-                } elseif ($field === 'min_age') {
-                    // Handle age range (min)
-                    if (isset($filters['max_age'])) {
-                        $query->ofAgeRange($value, $filters['max_age']);
-                    }
-                } elseif ($field === 'max_age') {
-                    // Handle age range (max)
-                    if (isset($filters['min_age'])) {
-                        $query->ofAgeRange($filters['min_age'], $value);
-                    }
-                } elseif ($field === 'skill_ids') {
-                    // Handle skills filter
-                    if (is_array($value)) {
-                        $query->withSkills($value);
-                    }
-                } elseif ($field === 'age') {
-                    // Handle single age filter
-                    $query->where('age', $value);
-                } elseif ($field === 'bio') {
-                    // Handle bio filter
-                    $query->where('bio', 'like', "%{$value}%");
-                } elseif ($field === 'user_id') {
-                    // Handle user ID filter
-                    $query->where('user_id', $value);
-                } elseif ($field === 'created_on') {
-                    // Handle created on date filter
-                    $query->createdOn($value);
-                } elseif ($field === 'created_from') {
-                    // Handle created from date filter
-                    $query->createdFrom($value);
-                } elseif ($field === 'created_to') {
-                    // Handle created to date filter
-                    $query->createdTo($value);
-                } elseif ($field === 'interests') {
-                    // Handle interests filter (JSON contains)
-                    if (is_array($value)) {
-                        foreach ($value as $interest) {
-                            $query->orWhereJsonContains('interests', $interest);
+                switch ($field) {
+                    case 'search':
+                        // Handle search term across bio and interests
+                        $query->searchInBioOrInterests($value);
+                        break;
+                        
+                    case 'active':
+                        // Handle active user filter
+                        $query->whereHas('user', function($q) use ($value) {
+                            $q->where('status', $value ? 'active' : 'notActive');
+                        });
+                        break;
+                        
+                    case 'gender':
+                        // Handle gender filter
+                        $query->ofGender($value);
+                        break;
+                        
+                    case 'min_age':
+                        // Handle age range (min) - only process if max_age is also set
+                        if (isset($filters['max_age']) && $filters['max_age'] !== '') {
+                            $query->ofAgeRange((int)$value, (int)$filters['max_age']);
                         }
-                    } else {
-                        $query->whereJsonContains('interests', $value);
-                    }
-                } else {
-                    // Handle any other fields
-                    $query->where($field, $value);
+                        break;
+                        
+                    case 'max_age':
+                        // Handle age range (max) - only process if min_age is also set
+                        if (isset($filters['min_age']) && $filters['min_age'] !== '') {
+                            $query->ofAgeRange((int)$filters['min_age'], (int)$value);
+                        }
+                        break;
+                        
+                    case 'skill_ids':
+                        // Handle skills filter
+                        if (is_array($value) && !empty($value)) {
+                            $query->withSkills($value);
+                        }
+                        break;
+                        
+                    case 'age':
+                        // Handle single age filter
+                        $query->where('age', (int)$value);
+                        break;
+                        
+                    case 'bio':
+                        // Handle bio filter with LIKE
+                        $query->where('bio', 'like', "%{$value}%");
+                        break;
+                        
+                    case 'user_id':
+                        // Handle user ID filter
+                        $query->where('user_id', (int)$value);
+                        break;
+                        
+                    case 'created_on':
+                        // Handle created on date filter
+                        try {
+                            $query->createdOn($value);
+                        } catch (\Exception $e) {
+                            // Skip invalid date format
+                        }
+                        break;
+                        
+                    case 'created_from':
+                        // Handle created from date filter
+                        try {
+                            $query->createdFrom($value);
+                        } catch (\Exception $e) {
+                            // Skip invalid date format
+                        }
+                        break;
+                        
+                    case 'created_to':
+                        // Handle created to date filter
+                        try {
+                            $query->createdTo($value);
+                        } catch (\Exception $e) {
+                            // Skip invalid date format
+                        }
+                        break;
+                        
+                    case 'interests':
+                        // Handle interests filter (translatable field - use LIKE)
+                        if (is_array($value) && !empty($value)) {
+                            $query->where(function ($q) use ($value) {
+                                foreach ($value as $interest) {
+                                    $q->orWhere('interests', 'like', '%"' . $interest . '"%');
+                                }
+                            });
+                        } elseif (!is_array($value) && $value !== '') {
+                            $query->where('interests', 'like', '%"' . $value . '"%');
+                        }
+                        break;
+                        
+                    default:
+                        // Handle any other fields with proper escaping
+                        if (in_array($field, $this->model->getFillable())) {
+                            $query->where($field, $value);
+                        }
+                        break;
                 }
             }
         }
@@ -154,8 +198,8 @@ class ProfileRepository implements ProfileRepositoryInterface
         return $this->model->where('user_id', $userId)->first();
     }
 
-    /**  
-     * Get profiles with relationships loaded.  
+    /**
+     * Get profiles with relationships loaded.
      *  
      * @param array $relations Relations to load.  
      * @param array $filters Optional filters.  
@@ -168,7 +212,63 @@ class ProfileRepository implements ProfileRepositoryInterface
 
         foreach ($filters as $field => $value) {
             if ($value !== null && $value !== '') {
-                $query->where($field, $value);
+                if ($field === 'search') {
+                    // Handle search term
+                    $query->searchInBioOrInterests($value);
+                } elseif ($field === 'active') {
+                    // Handle active user filter
+                    $query->whereHas('user', function($q) use ($value) {
+                        $q->where('status', $value ? 'active' : 'notActive');
+                    });
+                } elseif ($field === 'gender') {
+                    // Handle gender filter
+                    $query->ofGender($value);
+                } elseif ($field === 'min_age') {
+                    // Handle age range (min)
+                    if (isset($filters['max_age'])) {
+                        $query->ofAgeRange($value, $filters['max_age']);
+                    }
+                } elseif ($field === 'max_age') {
+                    // Handle age range (max)
+                    if (isset($filters['min_age'])) {
+                        $query->ofAgeRange($filters['min_age'], $value);
+                    }
+                } elseif ($field === 'skill_ids') {
+                    // Handle skills filter
+                    if (is_array($value)) {
+                        $query->withSkills($value);
+                    }
+                } elseif ($field === 'age') {
+                    // Handle single age filter
+                    $query->where('age', $value);
+                } elseif ($field === 'bio') {
+                    // Handle bio filter
+                    $query->where('bio', 'like', "%{$value}%");
+                } elseif ($field === 'user_id') {
+                    // Handle user ID filter
+                    $query->where('user_id', $value);
+                } elseif ($field === 'created_on') {
+                    // Handle created on date filter
+                    $query->createdOn($value);
+                } elseif ($field === 'created_from') {
+                    // Handle created from date filter
+                    $query->createdFrom($value);
+                } elseif ($field === 'created_to') {
+                    // Handle created to date filter
+                    $query->createdTo($value);
+                } elseif ($field === 'interests') {
+                    // Handle interests filter (JSON contains)
+                    if (is_array($value)) {
+                        foreach ($value as $interest) {
+                            $query->orWhere('interests', $interest);
+                        }
+                    } else {
+                        $query->where('interests', $value);
+                    }
+                } else {
+                    // Handle any other fields
+                    $query->where($field, $value);
+                }
             }
         }
 

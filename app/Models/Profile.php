@@ -253,7 +253,7 @@ class Profile extends Model
     public function scopeCreatedFrom($query, ?string $date)
     {
         if ($date) {
-            return $query->whereDate('created_at', '>=', $date);
+            return $query->where('created_at', '>=', $date);
         }
         return $query;
     }
@@ -268,7 +268,7 @@ class Profile extends Model
     public function scopeCreatedTo($query, ?string $date)
     {
         if ($date) {
-            return $query->whereDate('created_at', '<=', $date);
+            return $query->where('created_at', '<=', $date);
         }
         return $query;
     }

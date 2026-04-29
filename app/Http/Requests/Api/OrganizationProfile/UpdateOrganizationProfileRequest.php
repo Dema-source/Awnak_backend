@@ -35,7 +35,7 @@ class UpdateOrganizationProfileRequest extends FormRequest
         
         // Role-based validation
         if ($isAdmin) {
-            $rules['status'] = ['sometimes', 'string', 'in:active,notactive'];
+            // $rules['status'] = ['sometimes', 'string', 'in:active,notactive'];
             $rules['user_id'] = ['sometimes', 'integer', 'exists:users,id'];
         } else {
             // Organization admins cannot change user_id or status

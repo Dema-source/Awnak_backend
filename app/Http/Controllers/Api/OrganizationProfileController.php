@@ -131,12 +131,12 @@ class OrganizationProfileController extends Controller
     public function show(int|string $id): JsonResponse
     {
         $item = $this->service->findById($id);
-        
+
         // Check if user is not super admin or system admin, then verify activation
         $user = Auth::user();
         if ($user && !($user->hasRole('super_administrator') || $user->hasRole('system_admin'))) {
-            // Regular users can only view active organization profiles
-            if ($item->user && $item->user->status !== 'active' && $item->status !== 'active') {
+            // Regular users can only view active organization profiles with active users
+            if ($item->user && ($item->user->status !== 'active' || $item->status !== 'active')) {
                 return $this->error('Organization profile is not active', 403);
             }
         }
@@ -267,6 +267,76 @@ class OrganizationProfileController extends Controller
     }
 
     /**
+     * Display a paginated listing of Organization Profiles with relationships loaded.
+     *
+     * @param Request $request The HTTP request containing query filters and relations.
+     * @return JsonResponse
+     */
+    public function indexWithRelations(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'relations' => 'sometimes|array',
+            'relations.*' => 'string|in:user,opportunities'
+        ]);
+
+        $searchTerm = $request->input('search');
+        $filters = $request->except(['page', 'per_page', 'search', 'relations']);
+        $relations = $validated['relations'] ?? [];
+        $perPage = (int) $request->input('per_page', 15);
+
+        // Check user role and apply appropriate filtering
+        $user = Auth::user();
+        if ($user && !($user->hasRole('super_administrator') || $user->hasRole('system_admin'))) {
+            // Regular users can only see active organization profiles
+            $filters['status'] = 'active';
+        }
+
+        // Add search term to filters if provided
+        if ($searchTerm) {
+            $filters['search'] = $searchTerm;
+        }
+
+        $data = $this->service->getAllWithRelations($relations, $filters, $perPage);
+
+        return $this->paginate(OrganizationProfileResource::collection($data), 'OrganizationProfile list with relations fetched successfully');
+    }
+
+    /**
+     * Display the specified OrganizationProfile with relationships loaded.
+     *
+     * @param int|string $id The primary key value.
+     * @param Request $request The HTTP request containing relations parameter.
+     * @return JsonResponse
+     */
+    public function showWithRelations(int|string $id, Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'relations' => 'sometimes|array',
+            'relations.*' => 'string|in:user,opportunities'
+        ]);
+
+        $relations = $validated['relations'] ?? [];
+
+        // Parse relations parameter
+        if (is_string($relations)) {
+            $relations = explode(',', $relations);
+        }
+
+        $item = $this->service->findByIdWithRelations($id, $relations);
+
+        // Check if user is not super admin or system admin, then verify activation
+        $user = Auth::user();
+        if ($user && !($user->hasRole('super_administrator') || $user->hasRole('system_admin'))) {
+            // Regular users can only view active organization profiles with active users
+            if ($item->user && ($item->user->status !== 'active' || $item->status !== 'active')) {
+                return $this->error('Organization profile is not active', 403);
+            }
+        }
+
+        return $this->success(new OrganizationProfileResource($item), 'OrganizationProfile with relations fetched successfully');
+    }
+
+    /**
      * List all active organizations.
      *
      * @param Request $request
@@ -322,88 +392,6 @@ class OrganizationProfileController extends Controller
         $this->service->deactivate($id);
 
         return $this->success(null, 'OrganizationProfile deactivated successfully');
-    }
-
-    /**
-     * Display a paginated listing of Organization Profiles with relationships loaded.
-     *
-     * @param Request $request The HTTP request containing query filters and relations.
-     * @return JsonResponse
-     */
-    public function indexWithRelations(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'relations' => 'sometimes|array',
-            'relations.*' => 'string|in:user,opportunities'
-        ]);
-
-        $searchTerm = $request->input('search');
-        $filters = $request->except(['page', 'per_page', 'search', 'relations']);
-        $relations = $validated['relations'] ?? [];
-        $perPage = (int) $request->input('per_page', 15);
-
-        // Check user role and apply appropriate filtering
-        $user = Auth::user();
-        if ($user && !($user->hasRole('super_administrator') || $user->hasRole('system_admin'))) {
-            // Regular users can only see active organization profiles
-            $filters['status'] = 'active';
-        }
-
-        // Add search term to filters if provided
-        if ($searchTerm) {
-            $filters['search'] = $searchTerm;
-        }
-
-        $data = $this->service->getAllWithRelations($relations, $filters, $perPage);
-
-        return $this->paginate(OrganizationProfileResource::collection($data), 'OrganizationProfile list with relations fetched successfully');
-    }
-
-    /**
-     * Display the specified OrganizationProfile with relationships loaded.
-     *
-     * @param int|string $id The primary key value.
-     * @param Request $request The HTTP request containing relations parameter.
-     * @return JsonResponse
-     */
-    public function showWithRelations(int|string $id, Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'relations' => 'sometimes|array',
-            'relations.*' => 'string|in:user,opportunities'
-        ]);
-
-        $relations = $validated['relations'] ?? [];
-        
-        // Parse relations parameter
-        if (is_string($relations)) {
-            $relations = explode(',', $relations);
-        }
-
-        $item = $this->service->findByIdWithRelations($id, $relations);
-        
-        // Check if user is not super admin or system admin, then verify activation
-        $user = Auth::user();
-        if ($user && !($user->hasRole('super_administrator') || $user->hasRole('system_admin'))) {
-            // Regular users can only view active organization profiles
-            if ($item->user && $item->user->status !== 'active' && $item->status !== 'active') {
-                return $this->error('Organization profile is not active', 403);
-            }
-        }
-
-        return $this->success(new OrganizationProfileResource($item), 'OrganizationProfile with relations fetched successfully');
-    }
-
-    /**
-     * Get organization statistics.
-     *
-     * @return JsonResponse
-     */
-    public function statistics(): JsonResponse
-    {
-        $statistics = $this->service->getStatistics();
-
-        return $this->success($statistics, 'OrganizationProfile statistics fetched successfully');
     }
 
     /**
@@ -472,5 +460,98 @@ class OrganizationProfileController extends Controller
         $opportunities = $this->service->getOrganizationOpportunities($id);
 
         return $this->success($opportunities, 'Organization opportunities fetched successfully');
+    }
+
+    /**
+     * Check if user has an organization profile.
+     *
+     * @param int $userId
+     * @return JsonResponse
+     */
+    public function userHasProfile(int $userId): JsonResponse
+    {
+        $hasProfile = $this->service->userHasProfile($userId);
+
+        return $this->success([
+            'user_id' => $userId,
+            'has_profile' => $hasProfile
+        ], 'User profile check completed successfully');
+    }
+
+    /**
+     * Get organization profile by user ID.
+     *
+     * @param int $userId
+     * @return JsonResponse
+     */
+    public function getByUserId(int $userId): JsonResponse
+    {
+        $profile = $this->service->findByUserId($userId);
+
+        if (!$profile) {
+            return $this->error('Organization profile not found for this user', 404);
+        }
+
+        return $this->success(new OrganizationProfileResource($profile), 'Organization profile fetched successfully');
+    }
+
+    /**
+     * Get the current user's organization profile.
+     *
+     * @return JsonResponse
+     */
+    public function getMyOrganizationProfile(): JsonResponse
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return $this->error('User not authenticated', 401);
+        }
+
+        $profile = $this->service->findByUserId($user->id);
+
+        if (!$profile) {
+            return $this->error('Organization profile not found for this user', 404);
+        }
+
+        return $this->success(new OrganizationProfileResource($profile), 'My organization profile fetched successfully');
+    }
+
+    /**
+     * Update the current user's organization profile.
+     *
+     * @param UpdateOrganizationProfileRequest $request
+     * @return JsonResponse
+     */
+    public function updateMyOrganizationProfile(UpdateOrganizationProfileRequest $request): JsonResponse
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return $this->error('User not authenticated', 401);
+        }
+
+        $profile = $this->service->findByUserId($user->id);
+
+        if (!$profile) {
+            return $this->error('Organization profile not found for this user', 404);
+        }
+
+        $data = $request->validated();
+        $updatedProfile = $this->service->update($profile->id, $data);
+
+        return $this->success(new OrganizationProfileResource($updatedProfile), 'My organization profile updated successfully');
+    }
+
+    /**
+     * Get organization statistics.
+     *
+     * @return JsonResponse
+     */
+    public function statistics(): JsonResponse
+    {
+        $statistics = $this->service->getStatistics();
+
+        return $this->success($statistics, 'OrganizationProfile statistics fetched successfully');
     }
 }

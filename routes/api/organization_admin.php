@@ -14,6 +14,7 @@
   use App\Http\Controllers\Api\SkillController;
   use App\Http\Controllers\Api\UserController;
   use App\Http\Controllers\Api\VolunteerDocumentController;
+  use App\Http\Controllers\Api\VolunteerController;
   use Illuminate\Support\Facades\Route;
 
 
@@ -88,12 +89,32 @@
   |--------------------------------------------------------------------------
   */
   // API: {{baseURL}}/api/admin/organization-profiles
+  Route::get('organization-profiles/my-profile', [OrganizationProfileController::class, 'getMyOrganizationProfile']);
+  Route::put('organization-profiles/update/my-profile', [OrganizationProfileController::class, 'updateMyOrganizationProfile']);
   Route::get('organization-profiles/with-relations', [OrganizationProfileController::class, 'indexWithRelations']);
   Route::get('organization-profiles/{id}/with-relations', [OrganizationProfileController::class, 'showWithRelations']);
-  Route::get('organization-profiles/check-user/{userId}', [OrganizationProfileController::class, 'userHasProfile']);
   Route::apiResource('organization-profiles', OrganizationProfileController::class)->only(['index', 'show']);
 
-
+  /*
+  |--------------------------------------------------------------------------
+  | Volunteer
+  |--------------------------------------------------------------------------
+  */
+  // API: {{baseURL}}/api/organization/volunteers
+  // Route::get('volunteers/statistics', [VolunteerController::class, 'getStatistics']);
+  // Route::get('volunteers/list-active', [VolunteerController::class, 'listActive']);
+  // Route::get('volunteers/list-inactive', [VolunteerController::class, 'listInactive']);
+  // Route::get('volunteers/list-pending', [VolunteerController::class, 'listPending']);
+  // Route::get('volunteers/list-blocked', [VolunteerController::class, 'listBlocked']);
+  // Route::patch('volunteers/{id}/activate', [VolunteerController::class, 'activate']);
+  // Route::patch('volunteers/{id}/deactivate', [VolunteerController::class, 'deactivate']);
+  // Route::patch('volunteers/{id}/block', [VolunteerController::class, 'block']);
+  // Route::get('volunteers/{id}/with-relations', [VolunteerController::class, 'showWithRelations']);
+  // Route::get('volunteers/with-relations', [VolunteerController::class, 'indexWithRelations']);
+  // Route::get('volunteers/profile/{profileId}', [VolunteerController::class, 'getByProfileId']);
+  // Route::get('volunteers/user/{userId}', [VolunteerController::class, 'getByUserId']);
+  // Route::get('volunteers/check-user/{userId}', [VolunteerController::class, 'userHasVolunteer']);
+  // Route::apiResource('volunteers', VolunteerController::class);
 
 
 

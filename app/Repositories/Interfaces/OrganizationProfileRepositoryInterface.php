@@ -55,7 +55,33 @@ interface OrganizationProfileRepositoryInterface
      */
     public function delete(int|string $id): bool;
 
-    
+    /**
+     * Find organization profile by user ID.
+     *
+     * @param int $userId
+     * @return OrganizationProfile|null
+     */
+    public function findByUserId(int $userId): ?OrganizationProfile;
+
+    /**
+     * Get a paginated list of records with relationships loaded.
+     *
+     * @param array $relations Relations to load.
+     * @param array $filters Optional filters.
+     * @param int $perPage Items per page.
+     * @return LengthAwarePaginator
+     */
+    public function getAllWithRelations(array $relations = [], array $filters = [], int $perPage = 15): LengthAwarePaginator;
+
+    /**
+     * Find a record by its ID with relationships loaded.
+     *
+     * @param int|string $id The primary key value.
+     * @param array $relations Relations to load.
+     * @return OrganizationProfile
+     */
+    public function findByIdWithRelations(int|string $id, array $relations = []): OrganizationProfile;
+
     /**
      * List all not-active organizations.
      * 
@@ -91,46 +117,12 @@ interface OrganizationProfileRepositoryInterface
     public function deactivate(OrganizationProfile $organization): bool;
 
     /**
-     * Find organization profile by user ID.
-     *
-     * @param int $userId
-     * @return OrganizationProfile|null
-     */
-    public function findByUserId(int $userId): ?OrganizationProfile;
-
-    /**
      * Get all opportunities for a specific organization.
      * 
      * @param int $organizationId
      * @return Collection
      */
     public function getOrganizationOpportunities(int $organizationId): Collection;
-
-    /**
-     * Get a paginated list of records with relationships loaded.
-     *
-     * @param array $relations Relations to load.
-     * @param array $filters Optional filters.
-     * @param int $perPage Items per page.
-     * @return LengthAwarePaginator
-     */
-    public function getAllWithRelations(array $relations = [], array $filters = [], int $perPage = 15): LengthAwarePaginator;
-
-    /**
-     * Find a record by its ID with relationships loaded.
-     *
-     * @param int|string $id The primary key value.
-     * @param array $relations Relations to load.
-     * @return OrganizationProfile
-     */
-    public function findByIdWithRelations(int|string $id, array $relations = []): OrganizationProfile;
-
-    /**
-     * Get profile statistics.
-     *
-     * @return array
-     */
-    public function getStatistics(): array;
 
     /**
      * Get organizations by type.
@@ -169,4 +161,11 @@ interface OrganizationProfileRepositoryInterface
      * @return LengthAwarePaginator
      */
     public function getByDateRange(string $fromDate, string $toDate, array $filters = [], int $perPage = 15): LengthAwarePaginator;
+
+    /**
+     * Get profile statistics.
+     *
+     * @return array
+     */
+    public function getStatistics(): array;
 }
