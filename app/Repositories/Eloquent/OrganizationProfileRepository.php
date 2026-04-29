@@ -81,7 +81,7 @@ class OrganizationProfileRepository implements OrganizationProfileRepositoryInte
      */
     public function findById(int|string $id): OrganizationProfile
     {
-        return $this->model->findOrFail($id);
+        return $this->model->with(['user', 'opportunities'])->findOrFail($id);
     }
 
     /**  
@@ -121,6 +121,83 @@ class OrganizationProfileRepository implements OrganizationProfileRepositoryInte
         $item = $this->findById($id);
 
         return (bool) $item->delete();
+    }
+
+    /**
+     * Find organization profile by user ID.
+     *
+     * @param int $userId
+     * @return OrganizationProfile|null
+     */
+    public function findByUserId(int $userId): ?OrganizationProfile
+    {
+        return $this->model->where('user_id', $userId)->first();
+    }
+
+    /**
+     * Get a paginated list of records with relationships loaded.
+     *
+     * @param array $relations Relations to load.
+     * @param array $filters Optional filters.
+     * @param int $perPage Items per page.
+     * @return LengthAwarePaginator
+     */
+    public function getAllWithRelations(array $relations = [], array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        $query = $this->model->with($relations);
+
+        foreach ($filters as $field => $value) {
+            if ($value !== null && $value !== '') {
+                if ($field === 'search') {
+                    // Handle search term
+                    $query->search($value);
+                } elseif ($field === 'active') {
+                    // Handle active user filter
+                    $query->byActiveUser($value);
+                } elseif ($field === 'status') {
+                    // Handle status filter
+                    $query->byStatus($value);
+                } elseif ($field === 'type') {
+                    // Handle type filter
+                    $query->byType($value);
+                } elseif ($field === 'license_number') {
+                    // Handle license number filter
+                    $query->byLicenseNumber($value);
+                } elseif ($field === 'website') {
+                    // Handle website filter
+                    $query->byWebsite($value);
+                } elseif ($field === 'bio') {
+                    // Handle bio filter
+                    $query->byBio($value);
+                } elseif ($field === 'user_id') {
+                    // Handle user ID filter
+                    $query->byUserId($value);
+                } elseif ($field === 'created_from') {
+                    // Handle date range start
+                    $query->whereDate('created_at', '>=', $value);
+                } elseif ($field === 'created_to') {
+                    // Handle date range end
+                    $query->whereDate('created_at', '<=', $value);
+                } else {
+                    // Handle any other fields
+                    $query->where($field, $value);
+                }
+            }
+        }
+
+        return $query->latest()->paginate($perPage);
+    }
+
+    /**
+     * Retrieve a single record by ID with relationships or throw an exception if not found.
+     *
+     * @param int|string $id
+     * @param array $relations Relations to load.
+     * @return OrganizationProfile
+     */
+    public function findByIdWithRelations(int|string $id, array $relations = []): OrganizationProfile
+    {
+        return $this->model->with($relations)->findOrFail($id);
     }
 
     /**
@@ -231,59 +308,6 @@ class OrganizationProfileRepository implements OrganizationProfileRepositoryInte
     }
 
     /**
-     * Find organization profile by user ID.
-     *
-     * @param int $userId
-     * @return OrganizationProfile|null
-     */
-    public function findByUserId(int $userId): ?OrganizationProfile
-    {
-        return $this->model->where('user_id', $userId)->first();
-    }
-
-    /**
-     * Get organization statistics.
-     *
-     * @return array
-     */
-    public function getStatistics(): array
-    {
-        $totalProfiles = $this->model->count();
-        
-        // Status distribution
-        $statusStats = $this->model->selectRaw('status, COUNT(*) as count')
-            ->groupBy('status')
-            ->pluck('count', 'status')
-            ->toArray();
-
-        // Type distribution
-        $typeStats = $this->model->selectRaw('type, COUNT(*) as count')
-            ->groupBy('type')
-            ->pluck('count', 'type')
-            ->toArray();
-
-        // Count organizations with opportunities
-        $organizationsWithOpportunities = $this->model->whereHas('opportunities')->count();
-
-        // Count recent organizations (last 30 days)
-        $recentOrganizations = $this->model->where('created_at', '>=', now()->subDays(30))->count();
-
-        // Count active organizations (with active users)
-        $activeOrganizations = $this->model->whereHas('user', function ($query) {
-            $query->where('status', 'active');
-        })->count();
-
-        return [
-            'total_profiles' => $totalProfiles,
-            'status_distribution' => $statusStats,
-            'type_distribution' => $typeStats,
-            'organizations_with_opportunities' => $organizationsWithOpportunities,
-            'recent_organizations' => $recentOrganizations,
-            'active_organizations' => $activeOrganizations,
-        ];
-    }
-
-    /**
      * Get organizations by type.
      *
      * @param string $type
@@ -321,5 +345,77 @@ class OrganizationProfileRepository implements OrganizationProfileRepositoryInte
     {
         $query = $this->model->query()->byDateRange($fromDate, $toDate);
         return $this->applyFilters($query, $filters)->latest()->paginate($perPage);
+    }
+
+    /**
+     * Get organizations with opportunities.
+     *
+     * @param array $filters
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     */
+    public function getWithOpportunities(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        $query = $this->model->query()->withOpportunities();
+        return $this->applyFilters($query, $filters)->latest()->paginate($perPage);
+    }
+
+    /**
+     * Get all opportunities for a specific organization.
+     * 
+     * @param int $organizationId
+     * @return Collection
+     */
+    public function getOrganizationOpportunities(int $organizationId): Collection
+    {
+        $profile = $this->findById($organizationId);
+
+        if (!$profile) {
+            return collect([]);
+        }
+
+        return $profile->opportunities ?? collect([]);
+    }
+
+    /**
+     * Get organization statistics.
+     *
+     * @return array
+     */
+    public function getStatistics(): array
+    {
+        $totalProfiles = $this->model->count();
+
+        // Status distribution
+        $statusStats = $this->model->selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        // Type distribution
+        $typeStats = $this->model->selectRaw('type, COUNT(*) as count')
+            ->groupBy('type')
+            ->pluck('count', 'type')
+            ->toArray();
+
+        // Count organizations with opportunities
+        $organizationsWithOpportunities = $this->model->whereHas('opportunities')->count();
+
+        // Count recent organizations (last 30 days)
+        $recentOrganizations = $this->model->where('created_at', '>=', now()->subDays(30))->count();
+
+        // Count active organizations (with active users)
+        $activeOrganizations = $this->model->whereHas('user', function ($query) {
+            $query->where('status', 'active');
+        })->count();
+
+        return [
+            'total_profiles' => $totalProfiles,
+            'status_distribution' => $statusStats,
+            'type_distribution' => $typeStats,
+            'organizations_with_opportunities' => $organizationsWithOpportunities,
+            'recent_organizations' => $recentOrganizations,
+            'active_organizations' => $activeOrganizations,
+        ];
     }
 }

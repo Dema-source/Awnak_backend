@@ -19,6 +19,7 @@ class VolunteerResource extends JsonResource
             'user_id' => $this->user_id,
             'profile_id' => $this->profile_id,
             'status' => $this->status,
+            'languages' => $this->languages,
             'availability' => $this->availability,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

@@ -305,8 +305,21 @@ class ProfileController extends Controller
         ]);
 
         $relations = $validated['relations'] ?? [];
-        $filters = $request->except(['page', 'per_page', 'relations']);
+        $searchTerm = $request->input('search');
+        $filters = $request->except(['page', 'per_page', 'relations', 'search']);
         $perPage = (int) $request->input('per_page', 15);
+
+        // Check user role and apply appropriate filtering
+        $user = Auth::user();
+        if ($user && !($user->hasRole('super_administrator') || $user->hasRole('system_admin'))) {
+            // Regular users can only see profiles of active users
+            $filters['active'] = true;
+        }
+
+        // Add search term to filters if provided
+        if ($searchTerm) {
+            $filters['search'] = $searchTerm;
+        }
 
         $data = $this->service->getAllWithRelations($relations, $filters, $perPage);
 

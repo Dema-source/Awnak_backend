@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Api\Volunteer;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationRule;
 
 class StoreVolunteerRequest extends FormRequest
 {
@@ -22,15 +22,25 @@ class StoreVolunteerRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $user = request()->user();
+        $isAdmin = $user && ($user->hasRole('super_administrator') || $user->hasRole('system_admin'));
+        
+        $rules = [
             'languages' => ['nullable', 'array', 'max:5'],
-            'languages.*' => ['string', 'in:Arabic,English,Spanish,French,Portuguese,German,Italian,Dutch,Russian,Chinese,Japanese,Korean,Vietnamese,Thai,Indonesian,Malay,Turkish,Persian,Hebrew,Hindi,Urdu,Bengali,Punjabi,Amharic,Swahili,French Canadian,Brazilian Portuguese,Mexican Spanish,Australian English'],
+            'languages.*' => ['string'],
             'availability' => ['nullable', 'array', 'min:1', 'max:7'],
-            'availability.*.days' => ['required', 'string', 'regex:/^((sunday|monday|tuesday|wednesday|thursday|friday|saturday)(-(sunday|monday|tuesday|wednesday|thursday|friday|saturday))?)(,(sunday|monday|tuesday|wednesday|thursday|friday|saturday)(-(sunday|monday|tuesday|wednesday|thursday|friday|saturday))?)*/i'],
+            'availability.*.days' => ['required', 'string'],
             'availability.*.from' => ['required', 'string', 'regex:/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/'],
             'availability.*.to' => ['required', 'string', 'regex:/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/'],
             'experience_years' => ['nullable', 'string', 'in:1,2,3,4,5'],
-            // 'status' => ['required', 'string', 'in:active, In_active, pending, blocked'],
         ];
+
+        // Admin-specific rules
+        if ($isAdmin) {
+            $rules['profile_id'] = ['required', 'integer', 'exists:profiles,id'];
+            $rules['status'] = ['sometimes', 'string', 'in:active,In_active,pending,blocked'];
+        }
+
+        return $rules;
     }
 }
