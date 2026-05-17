@@ -21,7 +21,6 @@ use Spatie\Translatable\HasTranslations;
 /**
  * App/Model/User
  * presents a registered user in the application.
- * Users can book tickets for events and write reviews.
  * 
  * @property int $id
  * @property string $name
